@@ -1111,3 +1111,31 @@ fn matches_saved_upstream_results() {
         failures.join("\n")
     );
 }
+
+#[test]
+fn scripts_that_never_end_fail_at_the_step_limit() {
+    for code in [
+        "function f() { for (; true; ) {} }",
+        "function f() { for (var i = 0; i < 10; i++) { i = i - 1 } }",
+        // Ends, but only after millions of statements.
+        "function f() { for (var i = 0; i < 9999; i++) { for (var j = 0; j < 9999; j++) {} } }",
+    ] {
+        let jsi = JsInterpreter::new(code);
+        // Start near the limit, so the test does not run all of it.
+        jsi.steps.set(STEP_LIMIT - 2_000);
+        let error = jsi
+            .call_function("f", Vec::new())
+            .expect_err(code)
+            .to_string();
+        assert!(error.contains("Step limit reached"), "{code}: {error}");
+    }
+    // A script that ends is unaffected.
+    let jsi = JsInterpreter::new(
+        "function f() { var a = 0; for (var i = 0; i < 300; i++) { a += i } return a }",
+    );
+    jsi.steps.set(STEP_LIMIT - 2_000);
+    assert_eq!(
+        jsi.call_function("f", Vec::new()).unwrap(),
+        JsValue::Int(44_850)
+    );
+}

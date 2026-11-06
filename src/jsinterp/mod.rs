@@ -37,6 +37,13 @@ use value::{
 type Result<T> = std::result::Result<T, JsError>;
 
 /// `_OPERATORS` in precedence order (`None`-valued ones first).
+/// Port limit: statements one interpreter evaluates (every loop iteration,
+/// call and callback passes through one). Upstream has none, so a script
+/// that never ends (`for (; true; ) {}`) hangs the run; here it fails
+/// within about half a second of release time instead. Upstream's test
+/// scripts need at most a few hundred.
+pub(super) const STEP_LIMIT: u64 = 500_000;
+
 const OPERATORS: [&str; 23] = [
     "?", "??", "||", "&&", "|", "^", "&", "===", "!==", "==", "!=", "<=", ">=", "<", ">", ">>",
     "<<", "+", "-", "*", "%", "/", "**",
@@ -678,6 +685,8 @@ pub struct JsInterpreter {
     objects: RefCell<HashMap<String, JsValue>>,
     undefined_varnames: RefCell<BTreeSet<String>>,
     named_object_counter: Cell<u64>,
+    /// Statements evaluated so far (see [`STEP_LIMIT`]).
+    steps: Cell<u64>,
 }
 
 impl JsInterpreter {
@@ -693,6 +702,7 @@ impl JsInterpreter {
             objects: RefCell::new(objects),
             undefined_varnames: RefCell::new(BTreeSet::new()),
             named_object_counter: Cell::new(0),
+            steps: Cell::new(0),
         }
     }
 
@@ -908,6 +918,11 @@ impl JsInterpreter {
         if allow_recursion < 0 {
             return Err(exception("Recursion limit reached", None));
         }
+        let steps = self.steps.get() + 1;
+        if steps > STEP_LIMIT {
+            return Err(exception("Step limit reached", None));
+        }
+        self.steps.set(steps);
         let allow_recursion = allow_recursion - 1;
         let mut sub_statements = separate(stmt, ";", None);
         let last = sub_statements.pop().unwrap_or("");

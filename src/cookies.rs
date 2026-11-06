@@ -11,7 +11,10 @@ use std::{
     fs::{self, File},
     io::{Read, Write},
     path::Path,
-    sync::RwLock,
+    sync::{
+        RwLock,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 use url::Url;
 
@@ -106,10 +109,6 @@ struct State {
     nameless: HashSet<Key>,
     next: u64,
     bytes: usize,
-    warning: bool,
-    /// Library request-scope cookies (`RequestScope`), by scope: matched
-    /// like stored cookies but never saved or shown in info dicts.
-    scoped: Vec<(u64, Cookie<'static>)>,
 }
 
 /// A synchronized cookie provider. Cookie contents are omitted from Debug and
@@ -117,6 +116,9 @@ struct State {
 #[derive(Default)]
 pub struct CookieJar {
     state: RwLock<State>,
+    /// Set by response insertion and header limits (lookups take only the
+    /// read lock).
+    warning: AtomicBool,
 }
 impl std::fmt::Debug for CookieJar {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -390,6 +392,7 @@ impl CookieJar {
         }
         Ok(Self {
             state: RwLock::new(state),
+            warning: AtomicBool::new(false),
         })
     }
     /// Atomically replace an existing regular cookie file, or create a new one.
@@ -542,15 +545,10 @@ impl CookieJar {
 
     /// Drain bounded generic warnings produced by response insertion/header limits.
     pub fn take_warnings(&self) -> Vec<String> {
-        match self.state.write() {
-            Ok(mut state) => {
-                if std::mem::take(&mut state.warning) {
-                    vec![WARNING.into()]
-                } else {
-                    Vec::new()
-                }
-            }
-            Err(_) => Vec::new(),
+        if self.warning.swap(false, Ordering::Relaxed) {
+            vec![WARNING.into()]
+        } else {
+            Vec::new()
         }
     }
 }
@@ -623,6 +621,30 @@ fn parse_record(line: &str, http_only: bool) -> std::result::Result<(Cookie<'sta
     Ok((cookie, nameless))
 }
 
+/// `DefaultCookiePolicy.set_ok_domain` (without `strict_domain`): a
+/// `Domain` attribute needs an embedded dot unless the effective request
+/// host is local (no dot, or `.local`), so a site cannot set a cookie for a
+/// whole top-level domain. Rejected silently, as upstream does.
+fn domain_ok(domain: Option<&str>, url: &Url) -> bool {
+    let Some(domain) = domain else {
+        return true;
+    };
+    let host = url.host_str().unwrap_or_default().to_ascii_lowercase();
+    domain.trim_start_matches('.').contains('.') || !host.contains('.') || host.ends_with(".local")
+}
+
+/// The request-scope cookies `scoped` sends to `url`.
+pub(crate) fn scope_matches<'a>(
+    scoped: &'a [Cookie<'static>],
+    url: &Url,
+) -> Vec<&'a Cookie<'static>> {
+    scoped
+        .iter()
+        .filter(|cookie| cookie.matches(url) && !cookie.is_expired())
+        .filter(|cookie| !cookie.secure().unwrap_or(false) || url.scheme() == "https")
+        .collect()
+}
+
 /// A `Set-Cookie` header value as if `url` had sent it (validated like
 /// response cookies; a `Domain` must cover `url`'s host).
 pub(crate) fn parse_set_cookie(header: &str, url: &Url) -> Result<Cookie<'static>> {
@@ -653,29 +675,6 @@ impl CookieJar {
         self.set_cookies(&mut std::iter::once(&value), url);
         Ok(())
     }
-
-    /// Add a request scope's cookies until [`remove_scoped`](Self::remove_scoped).
-    pub(crate) fn push_scoped(&self, id: u64, url: &Url, headers: &[String]) -> Result<()> {
-        let cookies = headers
-            .iter()
-            .map(|header| parse_set_cookie(header, url))
-            .collect::<Result<Vec<_>>>()?;
-        let mut state = self
-            .state
-            .write()
-            .map_err(|_| error("cookie jar lock poisoned"))?;
-        state
-            .scoped
-            .extend(cookies.into_iter().map(|cookie| (id, cookie)));
-        Ok(())
-    }
-
-    /// Drop a request scope's cookies.
-    pub(crate) fn remove_scoped(&self, id: u64) {
-        if let Ok(mut state) = self.state.write() {
-            state.scoped.retain(|(scope, _)| *scope != id);
-        }
-    }
 }
 
 /// The jar as the HTTP client's cookie store; a private adapter, so the
@@ -699,31 +698,34 @@ impl CookieJar {
             return;
         };
         if !matches!(url.scheme(), "http" | "https") {
-            state.warning = true;
+            self.warning.store(true, Ordering::Relaxed);
             return;
         }
         for header in headers {
             let Ok(text) = header.to_str() else {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 continue;
             };
             if text.len() > MAX_LINE || text.chars().any(char::is_control) {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 continue;
             }
             let first = text.split(';').next().unwrap_or("").trim();
             let nameless = !first.contains('=');
             let normalized = nameless.then(|| text.replacen(first, &format!("{first}="), 1));
             let Ok(raw) = RawCookie::parse(normalized.as_deref().unwrap_or(text)) else {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 continue;
             };
             if !valid_name(raw.name()) || !valid_value(raw.value()) {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
+                continue;
+            }
+            if !domain_ok(raw.domain(), url) {
                 continue;
             }
             let Ok(cookie) = Cookie::try_from_raw_cookie(&raw, url).map(Cookie::into_owned) else {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 continue;
             };
             let key = key(&cookie);
@@ -745,11 +747,11 @@ impl CookieJar {
                 continue;
             }
             if (old_size == 0 && state.creation.len() >= MAX_COOKIES) || bytes > MAX_FILE {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 continue;
             }
             if state.store.insert(cookie, url).is_err() {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 continue;
             }
             let actual_size = state
@@ -772,9 +774,17 @@ impl CookieJar {
             }
         }
     }
-    /// The `Cookie` header for a request to `url`.
+    /// The `Cookie` header for a request to `url`, with the cookies of the
+    /// [`RequestScope`](crate::RequestScope) the calling thread's library
+    /// call holds for this jar.
     pub(crate) fn cookies(&self, url: &Url) -> Option<HeaderValue> {
-        let Ok(mut state) = self.state.write() else {
+        let scoped = crate::control::scope_cookies(self);
+        self.header(url, scoped.as_ref().map_or(&[], |scoped| &scoped.cookies))
+    }
+    /// The `Cookie` header for a request to `url`: the stored cookies plus
+    /// `scoped` ones (which replace stored cookies of the same name).
+    pub(crate) fn header(&self, url: &Url, scoped: &[Cookie<'static>]) -> Option<HeaderValue> {
+        let Ok(state) = self.state.read() else {
             return None;
         };
         if !matches!(url.scheme(), "http" | "https") {
@@ -783,13 +793,7 @@ impl CookieJar {
         let secure_ok = |cookie: &&Cookie<'static>| {
             !cookie.secure().unwrap_or(false) || url.scheme() == "https"
         };
-        let scoped: Vec<&Cookie<'static>> = state
-            .scoped
-            .iter()
-            .map(|(_, cookie)| cookie)
-            .filter(|cookie| cookie.matches(url) && !cookie.is_expired())
-            .filter(secure_ok)
-            .collect();
+        let scoped = scope_matches(scoped, url);
         // A request-scope cookie replaces a stored one of the same name.
         let mut cookies: Vec<_> = state
             .store
@@ -798,7 +802,6 @@ impl CookieJar {
             .filter(secure_ok)
             .filter(|cookie| !scoped.iter().any(|own| own.name() == cookie.name()))
             .collect();
-        let scoped: Vec<Cookie<'static>> = scoped.into_iter().cloned().collect();
         cookies.sort_by_key(|cookie| {
             (
                 std::cmp::Reverse(cookie.path.len()),
@@ -816,7 +819,7 @@ impl CookieJar {
                 + if bare { 0 } else { 1 + cookie.value().len() }
                 + if header.is_empty() { 0 } else { 2 };
             if header.len().saturating_add(length) > MAX_HEADER {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 return None;
             }
             if !header.is_empty() {
@@ -828,13 +831,13 @@ impl CookieJar {
                 header.push_str(cookie.value());
             }
         }
-        for cookie in &scoped {
+        for cookie in scoped {
             let length = cookie.name().len()
                 + 1
                 + cookie.value().len()
                 + if header.is_empty() { 0 } else { 2 };
             if header.len().saturating_add(length) > MAX_HEADER {
-                state.warning = true;
+                self.warning.store(true, Ordering::Relaxed);
                 return None;
             }
             if !header.is_empty() {
@@ -853,7 +856,7 @@ impl CookieJar {
                     Some(header)
                 }
                 Err(_) => {
-                    state.warning = true;
+                    self.warning.store(true, Ordering::Relaxed);
                     None
                 }
             }
@@ -1130,6 +1133,31 @@ mod tests {
         let path = directory.path().join("too-large");
         fs::write(&path, vec![b'x'; MAX_FILE + 1]).unwrap();
         assert!(CookieJar::load(path).is_err());
+    }
+    #[test]
+    fn response_cookies_cannot_cover_a_top_level_domain() {
+        let jar = CookieJar::default();
+        response(
+            &jar,
+            "https://evil.com/",
+            &[
+                "tld=1; Domain=com",
+                "dot=1; Domain=.com",
+                "own=1; Domain=evil.com",
+            ],
+        );
+        assert_eq!(header(&jar, "https://bank.com/"), None);
+        assert_eq!(
+            header(&jar, "https://www.evil.com/").as_deref(),
+            Some("own=1")
+        );
+        // Local hosts (no dot, or `.local`) may name a dotless domain.
+        response(&jar, "http://localhost/", &["local=1; Domain=localhost"]);
+        assert_eq!(
+            header(&jar, "http://localhost/").as_deref(),
+            Some("local=1")
+        );
+        assert!(jar.take_warnings().is_empty());
     }
     #[test]
     fn invalid_response_cookies_and_oversized_headers_have_only_bounded_generic_warnings() {

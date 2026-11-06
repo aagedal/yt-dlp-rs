@@ -26,7 +26,7 @@ static INITIAL_DATA: LazyLock<Regex> = LazyLock::new(|| {
 /// A continuation to request: its token, the player offset and its click
 /// tracking parameters.
 #[derive(Debug, Default, PartialEq)]
-struct Next {
+pub(crate) struct Next {
     continuation: Option<String>,
     offset: i64,
     click_tracking: Option<String>,
@@ -52,7 +52,7 @@ fn json_line(value: &Value, output: &mut Vec<u8>) -> Result<()> {
 
 /// `parse_actions_replay`: every action, the last replayed offset and, when
 /// there was one, the replay continuation.
-fn parse_actions_replay(chat: &Value, output: &mut Vec<u8>) -> Result<Next> {
+pub(crate) fn parse_actions_replay(chat: &Value, output: &mut Vec<u8>) -> Result<Next> {
     let mut offset = None;
     for action in chat
         .get("actions")
@@ -193,7 +193,7 @@ fn parse_live_timestamp(action: &Value) -> Option<i64> {
 /// `parse_actions_live`: each action wrapped like a replayed one, with its
 /// offset from the download's start, then the next continuation after its
 /// `timeoutMs`.
-fn parse_actions_live(
+pub(crate) fn parse_actions_live(
     chat: &Value,
     start_ms: i64,
     live_offset: &mut i64,
@@ -206,7 +206,7 @@ fn parse_actions_live(
         .flatten()
     {
         if let Some(timestamp) = parse_live_timestamp(action) {
-            *live_offset = timestamp - start_ms;
+            *live_offset = timestamp.saturating_sub(start_ms);
         }
         let pseudo = json!({
             "replayChatItemAction": {"actions": [action]},
@@ -236,7 +236,9 @@ fn parse_actions_live(
             Some(Value::String(text)) => text.trim().parse::<i64>().ok().map(|n| n as f64),
             _ => None,
         }
-        .map(|ms| Duration::from_secs_f64((ms / 1000.0).max(0.0)));
+        // A wait too long for a `Duration` (upstream's `time.sleep` raises
+        // OverflowError) waits until interrupted.
+        .map(|ms| Duration::try_from_secs_f64((ms / 1000.0).max(0.0)).unwrap_or(Duration::MAX));
     }
     Ok((next, wait))
 }
@@ -571,5 +573,16 @@ mod tests {
                 .unwrap()
                 .ends_with("\"videoOffsetTimeMsec\": \"2000\", \"isLive\": true}\n")
         );
+    }
+
+    #[test]
+    fn huge_live_timeouts_and_offsets_do_not_panic() {
+        let chat = json!({
+            "actions": [{"addChatItemAction": {"item": {"liveChatTextMessageRenderer": {"timestampUsec": "-9223372036854775808"}}}}],
+            "continuations": [{"timedContinuationData": {"continuation": "T", "timeoutMs": 1e300}}],
+        });
+        let (mut offset, mut output) = (0, Vec::new());
+        let (_, wait) = parse_actions_live(&chat, i64::MAX, &mut offset, &mut output).unwrap();
+        assert_eq!(wait, Some(Duration::MAX));
     }
 }

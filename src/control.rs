@@ -10,7 +10,7 @@ use std::{
     cell::RefCell,
     sync::{
         Arc,
-        atomic::{AtomicU8, AtomicU64, Ordering},
+        atomic::{AtomicU8, Ordering},
     },
 };
 use url::Url;
@@ -183,14 +183,21 @@ pub(crate) struct ClientSettings {
 pub(crate) struct Context {
     interrupt: Option<Interrupt>,
     scope: Option<Arc<RequestScope>>,
+    /// The scope's cookies; only this call's requests send them.
+    scope_cookies: Option<Arc<ScopeCookies>>,
     settings: Option<Arc<ClientSettings>>,
+}
+
+/// A [`RequestScope`]'s parsed cookies and the jar of the client whose call
+/// holds them.
+pub(crate) struct ScopeCookies {
+    jar: Arc<CookieJar>,
+    pub(crate) cookies: Vec<cookie_store::Cookie<'static>>,
 }
 
 thread_local! {
     static ACTIVE: RefCell<Option<Arc<Context>>> = const { RefCell::new(None) };
 }
-
-static NEXT_SCOPE: AtomicU64 = AtomicU64::new(1);
 
 /// `--keep-partial-on-stop`: nested downloads holding [`SignalStop`]; while
 /// any does, SIGINT/SIGTERM count as an [`Interrupt::stop`].
@@ -283,17 +290,13 @@ impl Drop for SignalInterrupt {
     }
 }
 
-/// Restores the previous context (and removes scoped cookies) when dropped.
+/// Restores the previous context when dropped.
 pub(crate) struct Guard {
     previous: Option<Arc<Context>>,
-    cookies: Option<(Arc<CookieJar>, u64)>,
 }
 
 impl Drop for Guard {
     fn drop(&mut self) {
-        if let Some((jar, id)) = self.cookies.take() {
-            jar.remove_scoped(id);
-        }
         let previous = self.previous.take();
         ACTIVE.with(|active| *active.borrow_mut() = previous);
     }
@@ -306,13 +309,11 @@ pub(crate) fn enter_client(settings: &Arc<ClientSettings>) -> Guard {
     let context = Context {
         interrupt: previous.as_ref().and_then(|p| p.interrupt.clone()),
         scope: previous.as_ref().and_then(|p| p.scope.clone()),
+        scope_cookies: previous.as_ref().and_then(|p| p.scope_cookies.clone()),
         settings: Some(settings.clone()),
     };
     ACTIVE.with(|active| *active.borrow_mut() = Some(Arc::new(context)));
-    Guard {
-        previous,
-        cookies: None,
-    }
+    Guard { previous }
 }
 
 /// Install a client's `settings`, `interrupt` and `scope` for one library
@@ -327,12 +328,18 @@ pub(crate) fn enter(
         return Ok(enter_client(settings));
     }
     let previous = current();
-    let mut cookies = None;
-    if let Some(scope) = scope.filter(|scope| !scope.cookies.is_empty()) {
-        let id = NEXT_SCOPE.fetch_add(1, Ordering::Relaxed);
-        jar.push_scoped(id, &scope.url, &scope.cookies)?;
-        cookies = Some((jar.clone(), id));
-    }
+    let scope_cookies = match scope {
+        Some(scope) if !scope.cookies.is_empty() => Some(Arc::new(ScopeCookies {
+            jar: jar.clone(),
+            cookies: scope
+                .cookies
+                .iter()
+                .map(|header| crate::cookies::parse_set_cookie(header, &scope.url))
+                .collect::<Result<_>>()?,
+        })),
+        Some(_) => None,
+        None => previous.as_ref().and_then(|p| p.scope_cookies.clone()),
+    };
     let context = Context {
         interrupt: interrupt
             .cloned()
@@ -340,10 +347,11 @@ pub(crate) fn enter(
         scope: scope
             .map(|scope| Arc::new(scope.clone()))
             .or_else(|| previous.as_ref().and_then(|p| p.scope.clone())),
+        scope_cookies,
         settings: Some(settings.clone()),
     };
     ACTIVE.with(|active| *active.borrow_mut() = Some(Arc::new(context)));
-    Ok(Guard { previous, cookies })
+    Ok(Guard { previous })
 }
 
 /// This thread's context, to [`resume`] on a worker thread.
@@ -355,10 +363,7 @@ pub(crate) fn current() -> Option<Arc<Context>> {
 pub(crate) fn resume(context: Option<Arc<Context>>) -> Guard {
     let previous = current();
     ACTIVE.with(|active| *active.borrow_mut() = context);
-    Guard {
-        previous,
-        cookies: None,
-    }
+    Guard { previous }
 }
 
 /// The settings of the client whose call is running on this thread; `None`
@@ -440,12 +445,15 @@ pub(crate) fn sleep(duration: std::time::Duration) -> bool {
         std::thread::sleep(duration);
         return true;
     };
-    let until = std::time::Instant::now() + duration;
+    // Beyond what an `Instant` holds, sleep until interrupted.
+    let until = std::time::Instant::now().checked_add(duration);
     loop {
         if watch.requested() {
             return false;
         }
-        let remaining = until.saturating_duration_since(std::time::Instant::now());
+        let remaining = until.map_or(std::time::Duration::MAX, |until| {
+            until.saturating_duration_since(std::time::Instant::now())
+        });
         if remaining.is_zero() {
             return true;
         }
@@ -462,21 +470,62 @@ pub(crate) fn check() -> Result<()> {
     }
 }
 
+/// The active scope's cookies when they belong to `jar` (another client's
+/// jar never sends them).
+pub(crate) fn scope_cookies(jar: &CookieJar) -> Option<Arc<ScopeCookies>> {
+    ACTIVE.with(|active| {
+        active
+            .borrow()
+            .as_ref()?
+            .scope_cookies
+            .clone()
+            .filter(|scoped| std::ptr::eq(&*scoped.jar, jar))
+    })
+}
+
 /// Add the active scope's headers to `request` when its URL has the
-/// scope's origin.
+/// scope's origin, and its cookies (with the jar's) when one matches the
+/// URL. The cookies go in an explicit `Cookie` header, which the client's
+/// jar does not replace: the jar itself is shared by every call.
 pub(crate) fn apply(request: &mut reqwest::blocking::Request) {
     ACTIVE.with(|active| {
         let active = active.borrow();
-        let Some(scope) = active.as_ref().and_then(|context| context.scope.as_ref()) else {
+        let Some(context) = active.as_ref() else {
             return;
         };
-        if request.url().origin() != scope.url.origin() {
-            return;
+        if let Some(scope) = &context.scope
+            && request.url().origin() == scope.url.origin()
+        {
+            for (name, value) in &scope.headers {
+                request.headers_mut().insert(name.clone(), value.clone());
+            }
         }
-        for (name, value) in &scope.headers {
-            request.headers_mut().insert(name.clone(), value.clone());
+        if let Some(scoped) = &context.scope_cookies
+            && !request.headers().contains_key(reqwest::header::COOKIE)
+            && !crate::cookies::scope_matches(&scoped.cookies, request.url()).is_empty()
+            && let Some(header) = scoped.jar.header(request.url(), &scoped.cookies)
+        {
+            request
+                .headers_mut()
+                .insert(reqwest::header::COOKIE, header);
         }
     });
+}
+
+/// A redirect hop to `request`'s new URL: the scope's headers stay with its
+/// origin, and its cookies are matched again (the hop's `Cookie` header was
+/// already removed).
+pub(crate) fn rescope(request: &mut reqwest::blocking::Request) {
+    ACTIVE.with(|active| {
+        if let Some(scope) = active.borrow().as_ref().and_then(|c| c.scope.as_ref())
+            && request.url().origin() != scope.url.origin()
+        {
+            for (name, _) in &scope.headers {
+                request.headers_mut().remove(name);
+            }
+        }
+    });
+    apply(request);
 }
 
 /// An extraction request about to be sent: `Err` once an interrupt was
@@ -562,6 +611,19 @@ mod tests {
     }
 
     #[test]
+    fn sleeps_past_an_instant_end_at_an_interrupt() {
+        let jar = Arc::new(CookieJar::default());
+        let interrupt = Interrupt::new();
+        let _guard = enter(&Default::default(), Some(&interrupt), None, &jar).unwrap();
+        let stop = interrupt.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(50));
+            stop.stop();
+        });
+        assert!(!sleep(std::time::Duration::MAX));
+    }
+
+    #[test]
     fn an_interrupt_fails_the_next_request() {
         let jar = Arc::new(CookieJar::default());
         let interrupt = Interrupt::new();
@@ -620,6 +682,63 @@ mod tests {
             header("https://media.example.test/a.ts").as_deref(),
             Some("stored=1")
         );
+    }
+
+    #[test]
+    fn scoped_cookies_stay_with_their_call() {
+        let jar = Arc::new(CookieJar::default());
+        let url = Url::parse("https://media.example.test/a.ts").unwrap();
+        let scope = RequestScope::new(&url)
+            .unwrap()
+            .cookie("session", "secret")
+            .unwrap();
+        let _guard = enter(&Default::default(), None, Some(&scope), &jar).unwrap();
+        assert!(jar.cookies(&url).is_some());
+        // Another call on the same client, on another thread, sends none.
+        let (other, target) = (jar.clone(), url.clone());
+        std::thread::spawn(move || {
+            let _guard = enter(&Default::default(), None, None, &other).unwrap();
+            assert!(other.cookies(&target).is_none());
+            let mut request = reqwest::blocking::Client::new()
+                .get(target.as_str())
+                .build()
+                .unwrap();
+            apply(&mut request);
+            assert!(request.headers().get("cookie").is_none());
+        })
+        .join()
+        .unwrap();
+        // Nor does another client's jar on this thread.
+        assert!(CookieJar::default().cookies(&url).is_none());
+    }
+
+    #[test]
+    fn redirect_hops_rescope_headers_and_cookies() {
+        let jar = Arc::new(CookieJar::default());
+        let origin = Url::parse("https://media.example.test/a.m3u8").unwrap();
+        let scope = RequestScope::new(&origin)
+            .unwrap()
+            .header("X-Token", "secret")
+            .unwrap()
+            .set_cookie("cdn=1; Domain=example.test")
+            .unwrap();
+        let _guard = enter(&Default::default(), None, Some(&scope), &jar).unwrap();
+        let mut request = prepare(reqwest::blocking::Client::new().get(origin.as_str()))
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(request.headers()["x-token"], "secret");
+        assert_eq!(request.headers()["cookie"], "cdn=1");
+        // A hop elsewhere (whose `Cookie` the redirect removed).
+        request.headers_mut().remove("cookie");
+        *request.url_mut() = Url::parse("https://cdn.example.test/a.m3u8").unwrap();
+        rescope(&mut request);
+        assert!(request.headers().get("x-token").is_none());
+        assert_eq!(request.headers()["cookie"], "cdn=1");
+        request.headers_mut().remove("cookie");
+        *request.url_mut() = Url::parse("https://other.test/a.m3u8").unwrap();
+        rescope(&mut request);
+        assert!(request.headers().get("cookie").is_none());
     }
 
     #[test]

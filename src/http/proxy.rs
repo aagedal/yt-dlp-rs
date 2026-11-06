@@ -146,7 +146,8 @@ impl ProxyConfig {
 
 /// An explicit endpoint as a connector URL and the HTTP proxy's
 /// `Proxy-Authorization` value: upstream's SOCKS4 USERID (the username; a
-/// password is not sent) goes through a loopback relay that inserts it, and
+/// password is not sent) goes through a loopback relay that inserts it
+/// (reached over authenticated SOCKS5, `socks5h` for SOCKS4a), and
 /// SOCKS5 offers authentication only with both fields nonempty.
 fn endpoint(
     url: &Url,
@@ -157,15 +158,24 @@ fn endpoint(
     {
         let host = url.host_str().ok_or_else(error)?;
         let host = host.trim_start_matches('[').trim_end_matches(']');
-        let local = super::socks4_relay::port(
+        let relay = super::socks4_relay::start(
             host,
             url.port().unwrap_or(1080),
             username.as_bytes(),
             super::DEFAULT_SOCKET_TIMEOUT,
         )
         .map_err(|_| error())?;
-        let relay =
-            Url::parse(&format!("{}://127.0.0.1:{local}", url.scheme())).map_err(|_| error())?;
+        let scheme = if url.scheme() == "socks4a" {
+            "socks5h"
+        } else {
+            "socks5"
+        };
+        let relay = Url::parse(&format!(
+            "{scheme}://{token}:{token}@127.0.0.1:{}",
+            relay.port,
+            token = relay.token
+        ))
+        .map_err(|_| error())?;
         return Ok((relay, None));
     }
     let mut endpoint = url.clone();

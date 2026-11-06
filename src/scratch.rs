@@ -3,7 +3,9 @@
 //! process that created them, so ones a killed run left behind (SIGKILL, a
 //! crash or a power loss skip their cleanup) are removed the next time this
 //! port writes to the directory. Entries of live processes, other hosts
-//! (containers sharing a volume) and untagged names are never touched.
+//! (containers sharing a volume), other PID namespaces on Linux (a sandbox
+//! or container with the host's name, whose process IDs mean something
+//! else) and untagged names are never touched.
 //!
 //! A postprocessing workspace may hold the only copy of a finished download
 //! (`source.EXT`, moved there before the processors ran). It is moved back
@@ -20,12 +22,24 @@ pub(crate) const DESTINATION_MARKER: &str = "destination";
 
 static SWEPT: Mutex<Option<HashSet<PathBuf>>> = Mutex::new(None);
 
-/// FNV-1a of the host name: the same in every process on this host.
+/// FNV-1a of the host name and PID namespace: the same in every process
+/// whose process IDs this one can check.
 static HOST: LazyLock<u32> = LazyLock::new(|| {
-    host_name().bytes().fold(0x811c_9dc5_u32, |hash, byte| {
-        (hash ^ u32::from(byte)).wrapping_mul(0x0100_0193)
-    })
+    (host_name() + &pid_namespace())
+        .bytes()
+        .fold(0x811c_9dc5_u32, |hash, byte| {
+            (hash ^ u32::from(byte)).wrapping_mul(0x0100_0193)
+        })
 });
+
+/// The PID namespace (`pid:[INODE]`); empty where there are none.
+fn pid_namespace() -> String {
+    #[cfg(target_os = "linux")]
+    if let Ok(link) = fs::read_link("/proc/self/ns/pid") {
+        return link.to_string_lossy().into_owned();
+    }
+    String::new()
+}
 
 static TAGGED: LazyLock<regex::Regex> = LazyLock::new(|| {
     regex::Regex::new(r"^\.yt-dlp-rs-(?:[a-z]+-)*([0-9a-f]{8})-pid([0-9]+)-").unwrap()
@@ -207,6 +221,12 @@ mod tests {
 
     // Only Unix has the liveness check the sweep needs.
     #[cfg(unix)]
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn tags_name_the_pid_namespace() {
+        assert!(pid_namespace().starts_with("pid:["), "{}", pid_namespace());
+    }
+
     #[test]
     fn dead_processes_entries_are_removed_and_a_finished_download_recovered() {
         let directory = tempfile::tempdir().unwrap();

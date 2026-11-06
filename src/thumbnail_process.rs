@@ -230,6 +230,28 @@ fn nested<'a>(stream: &'a Value, outer: &str, inner: &str) -> Option<&'a Value> 
     lookup(lookup(stream, outer)?, inner)
 }
 
+/// A native embedder from `media` to a new `output`, which a failure
+/// removes again.
+fn stream(
+    media: &Path,
+    output: &Path,
+    embed: impl FnOnce(&mut std::fs::File, &mut std::io::BufWriter<std::fs::File>) -> Result<()>,
+) -> Result<()> {
+    let mut input = std::fs::File::open(media)?;
+    let result = std::fs::File::create(output)
+        .map_err(Error::from)
+        .and_then(|file| {
+            let mut out = std::io::BufWriter::with_capacity(1 << 20, file);
+            embed(&mut input, &mut out)?;
+            std::io::Write::flush(&mut out)?;
+            Ok(())
+        });
+    if result.is_err() {
+        let _ = std::fs::remove_file(output);
+    }
+    result
+}
+
 /// Embed `thumbnail` into `media` (container `ext`, shown as `display`),
 /// writing `output`. Non-JPEG/PNG thumbnails are converted to PNG first
 /// except for Matroska.
@@ -272,14 +294,14 @@ pub fn embed(
             crate::cover_art::image_type(&data).unwrap_or("None")
         );
         let picture = crate::cover_art::picture(&data, &mime, crate::cover_art::image_size(&data));
-        let file = std::fs::read(media)?;
-        let embedded = if ext == "flac" {
-            crate::cover_art::embed_flac(&file, &picture)?
-        } else {
-            crate::cover_art::embed_ogg(&file, &picture)?
-        };
-        std::fs::write(output, embedded)?;
-        return Ok(());
+        return stream(media, output, |input, out| {
+            let mut input = std::io::BufReader::new(input);
+            if ext == "flac" {
+                crate::cover_art::embed_flac_into(&mut input, out, &picture)
+            } else {
+                crate::cover_art::embed_ogg_into(&mut input, out, &picture)
+            }
+        });
     }
     // Upstream's first method for MP4: mutagen's `covr` atom; a failure is a
     // warning before the FFmpeg fallback.
@@ -290,15 +312,17 @@ pub fn embed(
         ));
         let data = std::fs::read(&thumbnail)?;
         let embedded = match crate::cover_art::image_type(&data) {
-            Some("jpeg") => crate::cover_art::embed_mp4(&std::fs::read(media)?, &data, 13),
-            Some("png") => crate::cover_art::embed_mp4(&std::fs::read(media)?, &data, 14),
+            Some("jpeg") => Ok(13),
+            Some("png") => Ok(14),
             _ => Err(Error::Postprocess("could not determine image type".into())),
-        };
+        }
+        .and_then(|format| {
+            stream(media, output, |input, out| {
+                crate::cover_art::embed_mp4_into(input, out, &data, format)
+            })
+        });
         match embedded {
-            Ok(embedded) => {
-                std::fs::write(output, embedded)?;
-                return Ok(());
-            }
+            Ok(()) => return Ok(()),
             Err(error) => {
                 let text = match error {
                     Error::Postprocess(text) => text,

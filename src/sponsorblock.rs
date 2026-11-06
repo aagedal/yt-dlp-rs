@@ -250,7 +250,10 @@ pub(crate) fn chapters(
         }
         if category == "poi_highlight" {
             end = match end {
-                PyNumber::Int(end) => PyNumber::Int(end + 1),
+                // Past `i64` (a Python int has no limit), the float.
+                PyNumber::Int(end) => end
+                    .checked_add(1)
+                    .map_or(PyNumber::Float(end as f64 + 1.0), PyNumber::Int),
                 PyNumber::Float(end) => PyNumber::Float(end + 1.0),
             };
         }

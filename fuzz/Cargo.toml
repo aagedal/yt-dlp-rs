@@ -122,3 +122,31 @@ path = "fuzz_targets/cover_art.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "webvtt"
+path = "fuzz_targets/webvtt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sanitize_filename"
+path = "fuzz_targets/sanitize_filename.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "live_chat"
+path = "fuzz_targets/live_chat.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "jsinterp"
+path = "fuzz_targets/jsinterp.rs"
+test = false
+doc = false
+bench = false

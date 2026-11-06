@@ -266,6 +266,44 @@ fn write_thumbnail_follows_upstream_messages_overwrites_and_flag_order() {
     assert!(text(&none.stdout).contains("[info] There are no video thumbnails to download"));
 }
 
+#[test]
+fn write_all_thumbnails_keeps_site_ids_inside_the_output_directory() {
+    let server = Server::new();
+    let root = tempfile::tempdir().unwrap();
+    let work = root.path().join("dl");
+    std::fs::create_dir(&work).unwrap();
+    let dump = cli(&["-j", &server.url("/page.html")], &work);
+    let mut info: serde_json::Value = serde_json::from_slice(&dump.stdout).unwrap();
+    // Ids naming a path outside the directory (as from a SMIL `type`).
+    info["thumbnails"] = serde_json::json!([
+        {"id": "/../../", "url": server.url("/poster.jpg")},
+        {"id": "..\\..\\x", "url": server.url("/poster.jpg")},
+    ]);
+    std::fs::write(work.join("in.info.json"), info.to_string()).unwrap();
+    let output = cli(
+        &[
+            "--load-info-json",
+            "in.info.json",
+            "--write-all-thumbnails",
+            "--skip-download",
+            "-o",
+            "T.%(ext)s",
+        ],
+        &work,
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    let mut names: Vec<_> = std::fs::read_dir(&work)
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+        .collect();
+    names.sort();
+    #[cfg(unix)]
+    assert_eq!(names, ["T...\\..\\x.jpg", "T._.._.._.jpg", "in.info.json"]);
+    #[cfg(windows)]
+    assert_eq!(names, ["T..._.._x.jpg", "T._.._.._.jpg", "in.info.json"]);
+    assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 1);
+}
+
 /// Fake ffmpeg/ffprobe pair built from the shared video pipeline helper.
 struct Tools {
     _directory: tempfile::TempDir,

@@ -1,11 +1,41 @@
 //! Native cover art for Ogg (Opus, Vorbis) and FLAC files: what upstream's
 //! `EmbedThumbnailPP` does through mutagen (`Picture`, `METADATA_BLOCK_PICTURE`
 //! and `FLAC.add_picture`), since FFmpeg cannot embed pictures there.
+//!
+//! Each embedder reads the media file's metadata and streams the rest from
+//! input to output, so a large file is never held in memory; the slice
+//! forms are for tests and fuzzing.
 use crate::{Error, Result};
 use base64::Engine;
+use std::io::{Read, Seek, SeekFrom, Write};
 
 fn invalid(message: &str) -> Error {
     Error::Postprocess(format!("Unable to embed the thumbnail: {message}"))
+}
+
+/// Fill `buffer` from `input`; fewer bytes only at the end of the input.
+fn read_full(input: &mut impl Read, buffer: &mut [u8]) -> Result<usize> {
+    let mut filled = 0;
+    while filled < buffer.len() {
+        match input.read(&mut buffer[filled..]) {
+            Ok(0) => break,
+            Ok(count) => filled += count,
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => {}
+            Err(error) => return Err(error.into()),
+        }
+    }
+    Ok(filled)
+}
+
+/// Exactly `length` bytes of `input` (allocated as they arrive), or
+/// `truncated`.
+fn read_exact_vec(input: &mut impl Read, length: u64, truncated: &str) -> Result<Vec<u8>> {
+    let mut data = Vec::new();
+    input.take(length).read_to_end(&mut data)?;
+    if data.len() as u64 != length {
+        return Err(invalid(truncated));
+    }
+    Ok(data)
 }
 
 /// `imghdr.what` for the formats a converted thumbnail can have (`None`
@@ -76,24 +106,35 @@ pub(crate) fn picture(data: &[u8], mime: &str, size: Option<(u32, u32)>) -> Vec<
 
 /// `FLAC.add_picture` and `save()`: the picture is the last metadata block
 /// before any padding.
+#[cfg(any(test, fuzzing))]
 pub(crate) fn embed_flac(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
-    if !file.starts_with(b"fLaC") {
+    let mut out = Vec::with_capacity(file.len() + picture.len() + 4);
+    embed_flac_into(&mut std::io::Cursor::new(file), &mut out, picture)?;
+    Ok(out)
+}
+
+/// [`embed_flac`] from `input` to `out`: the metadata blocks are read, the
+/// audio frames copied.
+pub(crate) fn embed_flac_into(
+    input: &mut impl Read,
+    out: &mut impl Write,
+    picture: &[u8],
+) -> Result<()> {
+    let mut magic = [0u8; 4];
+    if read_full(input, &mut magic)? != 4 || &magic != b"fLaC" {
         return Err(invalid("not a FLAC file"));
     }
-    let mut blocks: Vec<(u8, &[u8])> = Vec::new();
-    let mut at = 4;
+    let mut blocks: Vec<(u8, Vec<u8>)> = Vec::new();
     loop {
-        let header = file
-            .get(at..at + 4)
-            .ok_or_else(|| invalid("truncated FLAC metadata"))?;
+        let mut header = [0u8; 4];
+        if read_full(input, &mut header)? != 4 {
+            return Err(invalid("truncated FLAC metadata"));
+        }
         let last = header[0] & 0x80 != 0;
         let kind = header[0] & 0x7f;
-        let length = u32::from_be_bytes([0, header[1], header[2], header[3]]) as usize;
-        let body = file
-            .get(at + 4..at + 4 + length)
-            .ok_or_else(|| invalid("truncated FLAC metadata"))?;
+        let length = u32::from_be_bytes([0, header[1], header[2], header[3]]);
+        let body = read_exact_vec(input, u64::from(length), "truncated FLAC metadata")?;
         blocks.push((kind, body));
-        at += 4 + length;
         if last {
             break;
         }
@@ -103,18 +144,17 @@ pub(crate) fn embed_flac(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
     }
     let padding = blocks.iter().position(|(kind, _)| *kind == 1);
     let index = padding.unwrap_or(blocks.len());
-    blocks.insert(index, (6, picture));
-    let mut out = Vec::with_capacity(file.len() + picture.len() + 4);
-    out.extend(b"fLaC");
+    blocks.insert(index, (6, picture.to_vec()));
+    out.write_all(b"fLaC")?;
     let count = blocks.len();
     for (position, (kind, body)) in blocks.into_iter().enumerate() {
         let last = if position + 1 == count { 0x80 } else { 0 };
-        out.push(last | kind);
-        out.extend(&(body.len() as u32).to_be_bytes()[1..]);
-        out.extend(body);
+        out.write_all(&[last | kind])?;
+        out.write_all(&(body.len() as u32).to_be_bytes()[1..])?;
+        out.write_all(&body)?;
     }
-    out.extend(&file[at..]);
-    Ok(out)
+    std::io::copy(input, out)?;
+    Ok(())
 }
 
 /// The Ogg page checksum (polynomial 0x04C11DB7, unreflected, zero start).
@@ -139,45 +179,40 @@ fn ogg_crc(page: &[u8]) -> u32 {
     })
 }
 
-struct Page<'a> {
+struct Page {
+    /// The page as read: its 27-byte header, lacing values and body.
+    header: [u8; 27],
     header_type: u8,
     granule: [u8; 8],
     serial: u32,
     sequence: u32,
-    lacing: &'a [u8],
-    body: &'a [u8],
+    lacing: Vec<u8>,
+    body: Vec<u8>,
 }
 
-fn pages(file: &[u8]) -> Result<Vec<Page<'_>>> {
-    let mut pages = Vec::new();
-    let mut at = 0;
-    while at < file.len() {
-        let header = file
-            .get(at..at + 27)
-            .ok_or_else(|| invalid("truncated Ogg page"))?;
-        if &header[..4] != b"OggS" || header[4] != 0 {
-            return Err(invalid("not an Ogg page"));
-        }
-        let segments = usize::from(header[26]);
-        let lacing = file
-            .get(at + 27..at + 27 + segments)
-            .ok_or_else(|| invalid("truncated Ogg page"))?;
-        let size: usize = lacing.iter().map(|&value| usize::from(value)).sum();
-        let start = at + 27 + segments;
-        let body = file
-            .get(start..start + size)
-            .ok_or_else(|| invalid("truncated Ogg page"))?;
-        pages.push(Page {
-            header_type: header[5],
-            granule: header[6..14].try_into().unwrap(),
-            serial: u32::from_le_bytes(header[14..18].try_into().unwrap()),
-            sequence: u32::from_le_bytes(header[18..22].try_into().unwrap()),
-            lacing,
-            body,
-        });
-        at = start + size;
+/// The next Ogg page of `input`; `None` at its end.
+fn read_page(input: &mut impl Read) -> Result<Option<Page>> {
+    let mut header = [0u8; 27];
+    match read_full(input, &mut header)? {
+        0 => return Ok(None),
+        27 => {}
+        _ => return Err(invalid("truncated Ogg page")),
     }
-    Ok(pages)
+    if &header[..4] != b"OggS" || header[4] != 0 {
+        return Err(invalid("not an Ogg page"));
+    }
+    let lacing = read_exact_vec(input, u64::from(header[26]), "truncated Ogg page")?;
+    let size: u64 = lacing.iter().map(|&value| u64::from(value)).sum();
+    let body = read_exact_vec(input, size, "truncated Ogg page")?;
+    Ok(Some(Page {
+        header,
+        header_type: header[5],
+        granule: header[6..14].try_into().unwrap(),
+        serial: u32::from_le_bytes(header[14..18].try_into().unwrap()),
+        sequence: u32::from_le_bytes(header[18..22].try_into().unwrap()),
+        lacing,
+        body,
+    }))
 }
 
 fn write_page(
@@ -246,13 +281,23 @@ fn parse_comments(data: &[u8]) -> Result<Comments<'_>> {
 /// `f['METADATA_BLOCK_PICTURE'] = value; f.save()` for an Ogg Opus or
 /// Vorbis file: the comment header gets the base64 picture (replacing any
 /// earlier one), the header pages are laced again and later pages renumbered.
+#[cfg(fuzzing)]
 pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
-    let pages = pages(file)?;
-    let first = pages.first().ok_or_else(|| invalid("empty Ogg file"))?;
+    let mut out = Vec::with_capacity(file.len() + picture.len() * 4 / 3 + 1024);
+    embed_ogg_into(&mut std::io::Cursor::new(file), &mut out, picture)?;
+    Ok(out)
+}
+
+/// [`embed_ogg`] from `input` to `out`: the header pages are read and laced
+/// again, the audio pages renumbered one at a time.
+pub(crate) fn embed_ogg_into(
+    input: &mut impl Read,
+    out: &mut impl Write,
+    picture: &[u8],
+) -> Result<()> {
+    let first = read_page(input)?.ok_or_else(|| invalid("empty Ogg file"))?;
     let serial = first.serial;
-    if pages.iter().any(|page| page.serial != serial) {
-        return Err(invalid("multiplexed Ogg streams are not supported"));
-    }
+    let multiplexed = || invalid("multiplexed Ogg streams are not supported");
     let (opus, headers) = if first.body.starts_with(b"OpusHead") {
         (true, 1)
     } else if first.body.starts_with(b"\x01vorbis") {
@@ -264,10 +309,13 @@ pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
     // the last header packet (headers end their pages).
     let mut packets: Vec<Vec<u8>> = Vec::new();
     let mut current = Vec::new();
-    let mut last_header_page = None;
-    for (index, page) in pages.iter().enumerate().skip(1) {
+    loop {
+        let page = read_page(input)?.ok_or_else(|| invalid("missing Ogg header packets"))?;
+        if page.serial != serial {
+            return Err(multiplexed());
+        }
         let mut offset = 0;
-        for &value in page.lacing {
+        for &value in &page.lacing {
             current.extend(&page.body[offset..offset + usize::from(value)]);
             offset += usize::from(value);
             if value < 255 {
@@ -278,11 +326,9 @@ pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
             if packets.len() > headers || !current.is_empty() {
                 return Err(invalid("an Ogg header packet does not end its page"));
             }
-            last_header_page = Some(index);
             break;
         }
     }
-    let last_header_page = last_header_page.ok_or_else(|| invalid("missing Ogg header packets"))?;
     let signature: &[u8] = if opus { b"OpusTags" } else { b"\x03vorbis" };
     let comment = packets[0]
         .strip_prefix(signature)
@@ -327,17 +373,19 @@ pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
     }
     packets[0] = packet;
     // Lace the header packets onto pages of at most 255 segments.
-    let mut out = Vec::with_capacity(file.len() + picture.len() * 4 / 3 + 1024);
-    out.extend(&file[..27 + first.lacing.len() + first.body.len()]);
-    let mut sequence = first.sequence + 1;
+    out.write_all(&first.header)?;
+    out.write_all(&first.lacing)?;
+    out.write_all(&first.body)?;
+    let mut page = Vec::new();
+    let mut sequence = first.sequence.wrapping_add(1);
     let mut lacing: Vec<u8> = Vec::new();
     let mut body: Vec<u8> = Vec::new();
     // Whether the page being filled begins with a continued packet.
     let mut continued = false;
     let mut flush =
-        |out: &mut Vec<u8>, lacing: &mut Vec<u8>, body: &mut Vec<u8>, continued: bool| {
+        |page: &mut Vec<u8>, lacing: &mut Vec<u8>, body: &mut Vec<u8>, continued: bool| {
             write_page(
-                out,
+                page,
                 u8::from(continued),
                 [0; 8],
                 serial,
@@ -345,7 +393,7 @@ pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
                 lacing,
                 body,
             );
-            sequence += 1;
+            sequence = sequence.wrapping_add(1);
             lacing.clear();
             body.clear();
         };
@@ -354,7 +402,7 @@ pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
         let mut started = false;
         loop {
             if lacing.len() == 255 {
-                flush(&mut out, &mut lacing, &mut body, continued);
+                flush(&mut page, &mut lacing, &mut body, continued);
                 continued = started;
             }
             let take = remaining.len().min(255);
@@ -368,23 +416,29 @@ pub(crate) fn embed_ogg(file: &[u8], picture: &[u8]) -> Result<Vec<u8>> {
         }
     }
     if !lacing.is_empty() {
-        flush(&mut out, &mut lacing, &mut body, continued);
+        flush(&mut page, &mut lacing, &mut body, continued);
     }
     drop(flush);
+    out.write_all(&page)?;
     // Renumber the audio pages.
-    for page in &pages[last_header_page + 1..] {
+    while let Some(audio) = read_page(input)? {
+        if audio.serial != serial {
+            return Err(multiplexed());
+        }
+        page.clear();
         write_page(
-            &mut out,
-            page.header_type,
-            page.granule,
+            &mut page,
+            audio.header_type,
+            audio.granule,
             serial,
             sequence,
-            page.lacing,
-            page.body,
+            &audio.lacing,
+            &audio.body,
         );
-        sequence += 1;
+        out.write_all(&page)?;
+        sequence = sequence.wrapping_add(1);
     }
-    Ok(out)
+    Ok(())
 }
 
 /// An MP4 box: its type and either children (containers on the path to
@@ -440,53 +494,81 @@ impl Mp4Box {
 /// A box of a byte range: its type, offsets and payload.
 struct RawBox<'a> {
     kind: [u8; 4],
-    start: usize,
-    end: usize,
     payload: &'a [u8],
 }
 
+/// The boxes of `data`, which they must fill exactly.
 fn mp4_boxes(data: &[u8]) -> Result<Vec<RawBox<'_>>> {
+    let mut input = std::io::Cursor::new(data);
+    let boxes = mp4_box_ranges(&mut input, data.len() as u64)?;
+    Ok(boxes
+        .into_iter()
+        .map(|range| RawBox {
+            kind: range.kind,
+            payload: &data[range.payload as usize..range.end as usize],
+        })
+        .collect())
+}
+
+/// A box found from its header: type, start, payload start and end.
+struct BoxRange {
+    kind: [u8; 4],
+    start: u64,
+    payload: u64,
+    end: u64,
+}
+
+/// The boxes of `input`'s first `length` bytes, which they must fill
+/// exactly, read from their headers alone.
+fn mp4_box_ranges(input: &mut (impl Read + Seek), length: u64) -> Result<Vec<BoxRange>> {
+    let truncated = || invalid("truncated MP4 box");
     let mut boxes = Vec::new();
-    let mut at = 0;
-    while at + 8 <= data.len() {
-        let size = u32::from_be_bytes(data[at..at + 4].try_into().unwrap()) as u64;
-        let kind: [u8; 4] = data[at + 4..at + 8].try_into().unwrap();
-        let (header, size) = match size {
-            0 => (8, (data.len() - at) as u64),
-            1 => {
-                let large = data
-                    .get(at + 8..at + 16)
-                    .ok_or_else(|| invalid("truncated MP4 box"))?;
-                (16, u64::from_be_bytes(large.try_into().unwrap()))
-            }
+    let mut at = 0u64;
+    while at + 8 <= length {
+        input.seek(SeekFrom::Start(at))?;
+        let mut header = [0u8; 16];
+        let read = read_full(input, &mut header[..(length - at).min(16) as usize])?;
+        let size = u64::from(u32::from_be_bytes(header[..4].try_into().unwrap()));
+        let kind: [u8; 4] = header[4..8].try_into().unwrap();
+        let (header_size, size) = match size {
+            0 => (8, length - at),
+            1 if read >= 16 => (16, u64::from_be_bytes(header[8..16].try_into().unwrap())),
+            1 => return Err(truncated()),
             size => (8, size),
         };
         let end = at
-            .checked_add(usize::try_from(size).map_err(|_| invalid("MP4 box too large"))?)
-            .filter(|end| *end <= data.len() && size >= header as u64)
-            .ok_or_else(|| invalid("truncated MP4 box"))?;
-        boxes.push(RawBox {
+            .checked_add(size)
+            .filter(|end| *end <= length && size >= header_size)
+            .ok_or_else(truncated)?;
+        boxes.push(BoxRange {
             kind,
             start: at,
+            payload: at + header_size,
             end,
-            payload: &data[at + header..end],
         });
         at = end;
     }
-    if at != data.len() {
-        return Err(invalid("truncated MP4 box"));
+    if at != length {
+        return Err(truncated());
     }
     Ok(boxes)
 }
 
+/// How deep `moov`'s containers may nest (a real file needs about six
+/// levels); deeper input would exhaust the stack.
+const MP4_DEPTH: usize = 32;
+
 /// The tree under `moov`: containers down to `ilst` and `stco`/`co64`.
-fn mp4_tree(kind: [u8; 4], payload: &[u8]) -> Result<Mp4Box> {
+fn mp4_tree(kind: [u8; 4], payload: &[u8], depth: usize) -> Result<Mp4Box> {
     let container = matches!(
         &kind,
         b"moov" | b"trak" | b"mdia" | b"minf" | b"stbl" | b"udta" | b"meta" | b"ilst"
     );
     if !container {
         return Ok(Mp4Box::leaf(&kind, payload.to_vec()));
+    }
+    if depth >= MP4_DEPTH {
+        return Err(invalid("MP4 boxes nested too deeply"));
     }
     // `meta` is a full box (version and flags first).
     let skip = if &kind == b"meta" { 4 } else { 0 };
@@ -496,7 +578,7 @@ fn mp4_tree(kind: [u8; 4], payload: &[u8]) -> Result<Mp4Box> {
         .to_vec();
     let children = mp4_boxes(&payload[skip..])?
         .into_iter()
-        .map(|raw| mp4_tree(raw.kind, raw.payload))
+        .map(|raw| mp4_tree(raw.kind, raw.payload, depth + 1))
         .collect::<Result<Vec<_>>>()?;
     Ok(Mp4Box::new(&kind, prefix, children))
 }
@@ -549,14 +631,31 @@ fn shift_offsets(node: &mut Mp4Box, after: u64, delta: i64) -> Result<()> {
 /// mutagen `MP4.tags['covr'] = [MP4Cover(data, imageformat)]; save()`: the
 /// `moov.udta.meta.ilst` cover (JPEG 13, PNG 14), creating the boxes it
 /// needs, with chunk offsets moved when `moov` precedes the media data.
+#[cfg(any(test, fuzzing))]
 pub(crate) fn embed_mp4(file: &[u8], image: &[u8], format: u32) -> Result<Vec<u8>> {
-    let boxes = mp4_boxes(file).map_err(|_| invalid("not a MP4 file"))?;
-    let (moov_start, moov_end, moov_payload) = boxes
+    let mut out = Vec::with_capacity(file.len() + image.len() + 64);
+    embed_mp4_into(&mut std::io::Cursor::new(file), &mut out, image, format)?;
+    Ok(out)
+}
+
+/// [`embed_mp4`] from `input` to `out`: only `moov` is read; the boxes
+/// around it are copied.
+pub(crate) fn embed_mp4_into(
+    input: &mut (impl Read + Seek),
+    out: &mut impl Write,
+    image: &[u8],
+    format: u32,
+) -> Result<()> {
+    let length = input.seek(SeekFrom::End(0))?;
+    let boxes = mp4_box_ranges(input, length).map_err(|_| invalid("not a MP4 file"))?;
+    let range = boxes
         .iter()
-        .find(|raw| &raw.kind == b"moov")
-        .map(|raw| (raw.start, raw.end, raw.payload))
+        .find(|range| &range.kind == b"moov")
         .ok_or_else(|| invalid("not a MP4 file"))?;
-    let mut moov = mp4_tree(*b"moov", moov_payload)?;
+    let (moov_start, moov_end) = (range.start, range.end);
+    input.seek(SeekFrom::Start(range.payload))?;
+    let moov_payload = read_exact_vec(input, moov_end - range.payload, "truncated MP4 box")?;
+    let mut moov = mp4_tree(*b"moov", &moov_payload, 0)?;
     let mut data = format.to_be_bytes().to_vec();
     data.extend(0u32.to_be_bytes());
     data.extend(image);
@@ -595,15 +694,24 @@ pub(crate) fn embed_mp4(file: &[u8], image: &[u8], format: u32) -> Result<Vec<u8
     moov.render(&mut rendered);
     let delta = rendered.len() as i64 - (moov_end - moov_start) as i64;
     if delta != 0 {
-        shift_offsets(&mut moov, moov_end as u64, delta)?;
+        shift_offsets(&mut moov, moov_end, delta)?;
         rendered.clear();
         moov.render(&mut rendered);
     }
-    let mut out = Vec::with_capacity(file.len() + image.len() + 64);
-    out.extend(&file[..moov_start]);
-    out.extend(rendered);
-    out.extend(&file[moov_end..]);
-    Ok(out)
+    input.seek(SeekFrom::Start(0))?;
+    copy_exact(input, out, moov_start)?;
+    out.write_all(&rendered)?;
+    input.seek(SeekFrom::Start(moov_end))?;
+    copy_exact(input, out, length - moov_end)?;
+    Ok(())
+}
+
+/// Copy `length` bytes of `input`, which must have them.
+fn copy_exact(input: &mut impl Read, out: &mut impl Write, length: u64) -> Result<()> {
+    if std::io::copy(&mut input.take(length), out)? != length {
+        return Err(invalid("the media file changed while it was read"));
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -628,6 +736,56 @@ mod tests {
         assert_eq!(image_type(jpeg), Some("jpeg"));
         assert_eq!(image_size(jpeg), Some((480, 360)));
         assert_eq!(image_type(b"GIF89a"), None);
+    }
+
+    fn mp4_box(kind: &[u8; 4], payload: &[u8]) -> Vec<u8> {
+        let mut out = ((payload.len() + 8) as u32).to_be_bytes().to_vec();
+        out.extend(kind);
+        out.extend(payload);
+        out
+    }
+
+    #[test]
+    fn deeply_nested_mp4_boxes_fail_instead_of_overflowing_the_stack() {
+        let mut moov = Vec::new();
+        for _ in 0..100_000 {
+            moov = mp4_box(b"moov", &moov);
+        }
+        let error = embed_mp4(&moov, b"PNG", 14).unwrap_err().to_string();
+        assert!(error.ends_with("MP4 boxes nested too deeply"), "{error}");
+    }
+
+    #[test]
+    fn mp4_media_around_moov_is_copied_and_offsets_shifted() {
+        // `moov` with one chunk offset into the `mdat` after it.
+        let mut stco = vec![0; 4];
+        stco.extend(1u32.to_be_bytes());
+        let ftyp = mp4_box(b"ftyp", b"isom");
+        let moov_len = 8 + 8 + 8 + 8 + 8 + 8 + 12;
+        stco.extend(((ftyp.len() + moov_len + 8) as u32).to_be_bytes());
+        let stbl = mp4_box(b"stbl", &mp4_box(b"stco", &stco));
+        let minf = mp4_box(b"minf", &stbl);
+        let mdia = mp4_box(b"mdia", &minf);
+        let trak = mp4_box(b"trak", &mdia);
+        let moov = mp4_box(b"moov", &trak);
+        assert_eq!(moov.len(), moov_len);
+        let mut file = ftyp.clone();
+        file.extend(&moov);
+        file.extend(mp4_box(b"mdat", b"frames"));
+        let out = embed_mp4(&file, b"PNG", 14).unwrap();
+        assert!(out.starts_with(&ftyp));
+        assert!(out.ends_with(&mp4_box(b"mdat", b"frames")));
+        // The offset still points at the `mdat` payload.
+        let mdat = out.len() - 6;
+        let at = out.windows(4).position(|w| w == b"stco").unwrap() + 12;
+        assert_eq!(
+            u32::from_be_bytes(out[at..at + 4].try_into().unwrap()) as usize,
+            mdat
+        );
+        // A 64-bit size field cut short is not a MP4 file.
+        let mut cut = file.clone();
+        cut.extend([0, 0, 0, 1, b'f', b'r', b'e', b'e', 0]);
+        assert!(embed_mp4(&cut, b"PNG", 14).is_err());
     }
 
     #[test]

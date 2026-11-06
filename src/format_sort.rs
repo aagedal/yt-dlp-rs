@@ -481,17 +481,22 @@ fn py_float(text: &str) -> Option<f64> {
     text.replace('_', "").parse().ok()
 }
 
-/// `re.match(pattern, value)` for a static order pattern, compiled once.
-fn order_regex(pattern: &'static str) -> regex::Regex {
+/// `re.match(pattern, value)` for a static order pattern, compiled once
+/// (the patterns are a fixed set, so each lives for the process; a clone
+/// would start with an empty match cache every time).
+fn order_regex(pattern: &'static str) -> &'static regex::Regex {
     static CACHE: std::sync::LazyLock<
-        std::sync::Mutex<std::collections::HashMap<&'static str, regex::Regex>>,
+        std::sync::Mutex<std::collections::HashMap<&'static str, &'static regex::Regex>>,
     > = std::sync::LazyLock::new(Default::default);
     CACHE
         .lock()
-        .unwrap()
+        .unwrap_or_else(|poison| poison.into_inner())
         .entry(pattern)
-        .or_insert_with(|| regex::Regex::new(&format!("^(?:{pattern})")).unwrap())
-        .clone()
+        .or_insert_with(|| {
+            Box::leak(Box::new(
+                regex::Regex::new(&format!("^(?:{pattern})")).unwrap(),
+            ))
+        })
 }
 
 /// A configured sorter for one sort-order list.

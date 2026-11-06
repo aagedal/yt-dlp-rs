@@ -342,7 +342,9 @@ fn elements_matching(
         values.join("|")
     );
     let element = Regex::new(&pattern).map_err(|error| error.to_string())?;
-    let quoted = Regex::new(r#"(?s)^(?:"(.*)"|'(.*)')$"#).unwrap();
+    static QUOTED: std::sync::LazyLock<Regex> =
+        std::sync::LazyLock::new(|| Regex::new(r#"(?s)^(?:"(.*)"|'(.*)')$"#).unwrap());
+    let quoted = &*QUOTED;
     let mut found = Vec::new();
     for matched in element.captures_iter(html) {
         let start = matched.get(0).map_or(0, |whole| whole.start());

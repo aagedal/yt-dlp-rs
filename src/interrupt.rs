@@ -26,6 +26,34 @@ static NESTED: AtomicUsize = AtomicUsize::new(0);
 #[cfg(any(unix, windows))]
 static GUARDS: AtomicUsize = AtomicUsize::new(0);
 
+/// The handlers guards replaced, installed by the first guard and restored
+/// by the last one: guards on different threads (library calls side by
+/// side) drop in any order, so none may restore its own predecessor.
+#[cfg(any(unix, windows))]
+struct Installed {
+    guards: usize,
+    /// SIGINT's handler before the first guard.
+    interrupt: usize,
+    /// Guards also handling SIGTERM, and its handler before the first.
+    terminating: usize,
+    terminate: usize,
+}
+
+#[cfg(any(unix, windows))]
+static INSTALLED: std::sync::Mutex<Installed> = std::sync::Mutex::new(Installed {
+    guards: 0,
+    interrupt: 0,
+    terminating: 0,
+    terminate: 0,
+});
+
+#[cfg(any(unix, windows))]
+fn installed() -> std::sync::MutexGuard<'static, Installed> {
+    INSTALLED
+        .lock()
+        .unwrap_or_else(|poison| poison.into_inner())
+}
+
 /// Whether a signal ends the process at once (a prompt waiting for input,
 /// where upstream's `input()` raises `KeyboardInterrupt` immediately).
 #[cfg(any(unix, windows))]
@@ -113,29 +141,29 @@ extern "C" fn record(signum: i32) {
     }
 }
 
-/// The installed handler; dropping it restores the previous one.
+/// The installed handler; dropping the last guard restores the previous
+/// one.
 pub(crate) struct Guard {
-    #[cfg(any(unix, windows))]
-    previous: usize,
     /// With the run-wide handler in place, whether a signal was already
     /// pending for it: a signal this guard handled is not left for it to see.
     #[cfg(any(unix, windows))]
     nested: Option<bool>,
-    /// SIGTERM's previous handler, when it is handled too.
+    /// Whether SIGTERM is handled too.
     #[cfg(any(unix, windows))]
-    terminate: Option<usize>,
+    terminate: bool,
 }
 
 impl Guard {
     pub(crate) fn install() -> Self {
         #[cfg(any(unix, windows))]
         {
-            // Over another guard, whose SIGINT handler is not the previous
-            // one when SIGINT is ignored (`replace` keeps it ignored) but
-            // which still handles SIGTERM.
-            let nested =
-                (GUARDS.load(Ordering::SeqCst) > 0).then(|| INTERRUPTED.load(Ordering::SeqCst));
-            let previous = replace(SIGINT);
+            let mut installed = installed();
+            // Over another guard, which already installed the handler.
+            let nested = (installed.guards > 0).then(|| INTERRUPTED.load(Ordering::SeqCst));
+            if installed.guards == 0 {
+                installed.interrupt = replace(SIGINT);
+            }
+            installed.guards += 1;
             if nested.is_some() {
                 NESTED.fetch_add(1, Ordering::SeqCst);
             }
@@ -144,9 +172,8 @@ impl Guard {
             }
             GUARDS.fetch_add(1, Ordering::SeqCst);
             Self {
-                previous,
                 nested,
-                terminate: None,
+                terminate: false,
             }
         }
         #[cfg(not(any(unix, windows)))]
@@ -160,7 +187,12 @@ impl Guard {
         #[cfg(any(unix, windows))]
         {
             let mut guard = Self::install();
-            guard.terminate = Some(replace(SIGTERM));
+            let mut installed = installed();
+            if installed.terminating == 0 {
+                installed.terminate = replace(SIGTERM);
+            }
+            installed.terminating += 1;
+            guard.terminate = true;
             guard
         }
         #[cfg(not(any(unix, windows)))]
@@ -260,13 +292,19 @@ impl Drop for Guard {
     fn drop(&mut self) {
         #[cfg(any(unix, windows))]
         {
+            let mut installed = installed();
             GUARDS.fetch_sub(1, Ordering::SeqCst);
-            // SAFETY: restores the handlers `install` replaced.
-            unsafe {
-                if let Some(previous) = self.terminate {
-                    signal(SIGTERM, previous);
+            installed.guards -= 1;
+            if self.terminate {
+                installed.terminating -= 1;
+                if installed.terminating == 0 {
+                    // SAFETY: restores the handler the first guard replaced.
+                    unsafe { signal(SIGTERM, installed.terminate) };
                 }
-                signal(SIGINT, self.previous);
+            }
+            if installed.guards == 0 {
+                // SAFETY: as above.
+                unsafe { signal(SIGINT, installed.interrupt) };
             }
             match self.nested {
                 // The live download, wait or recording handled a signal of
@@ -278,5 +316,35 @@ impl Drop for Guard {
                 None => EXIT_ON_REPEAT.store(false, Ordering::SeqCst),
             }
         }
+    }
+}
+
+#[cfg(all(test, unix))]
+mod tests {
+    use super::*;
+
+    /// SIGINT's current handler (set back at once).
+    fn current() -> usize {
+        // SAFETY: reinstalls the handler it read.
+        unsafe {
+            let handler = signal(SIGINT, SIG_IGN);
+            signal(SIGINT, handler);
+            handler
+        }
+    }
+
+    #[test]
+    fn guards_dropped_out_of_order_restore_the_original_handler_last() {
+        let original = current();
+        let handler = record as extern "C" fn(i32) as usize;
+        // Two library calls' guards, the first dropped first.
+        let first = Guard::install_with_terminate();
+        let second = Guard::install();
+        drop(first);
+        assert_eq!(current(), handler);
+        assert!(guarded());
+        drop(second);
+        assert_eq!(current(), original);
+        assert!(!guarded());
     }
 }

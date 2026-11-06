@@ -1119,22 +1119,21 @@ fn fetch(
     loop {
         let block = blocks
             .read(&mut response, None)
-            .map_err(|error| body_failure(crate::http::read_error(error)))?
-            .to_vec();
+            .map_err(|error| body_failure(crate::http::read_error(error)))?;
         let count = block.len();
         limiter.consume(count);
-        blocks.finished(count);
         let data = match &mut pending {
             Some(buffered) => {
-                buffered.extend_from_slice(&block);
+                buffered.extend_from_slice(block);
                 if buffered.len() < 512 && count > 0 {
+                    blocks.finished(count);
                     continue;
                 }
                 sniff(&buffered[..buffered.len().min(512)])?;
-                pending.take().unwrap()
+                std::borrow::Cow::Owned(pending.take().unwrap())
             }
             None if count == 0 => break,
-            None => block,
+            None => std::borrow::Cow::Borrowed(block),
         };
         if !data.is_empty() {
             reporter.fragment = Some(crate::FragmentBytes {
@@ -1146,6 +1145,8 @@ fn fetch(
             });
             append(file, &data, stored, &mut received, expected, reporter)?;
         }
+        drop(data);
+        blocks.finished(count);
         if count == 0 {
             break;
         }

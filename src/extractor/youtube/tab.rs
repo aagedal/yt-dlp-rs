@@ -431,8 +431,13 @@ fn extract_video(renderer: &Value) -> Map<String, Value> {
         )
         .and_then(Value::as_str)
         .unwrap_or_default();
-        // `(ago)(?!.*\1)`: the last `ago`.
-        if let Some(position) = label.to_lowercase().rfind("ago") {
+        // `(ago)(?!.*\1)`: the last `ago`, any case (found in `label`
+        // itself: lowercasing can change other characters' lengths).
+        if let Some(position) = label
+            .as_bytes()
+            .windows(3)
+            .rposition(|window| window.eq_ignore_ascii_case(b"ago"))
+        {
             duration = AGO
                 .captures(&label[position..])
                 .and_then(|found| crate::parse_duration(&found["duration"]))
@@ -3211,6 +3216,28 @@ pub(super) fn follow(target: &Url) -> ExtractResult {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn accessibility_label_durations_survive_case_changing_characters() {
+        let video = |label: &str| {
+            extract_video(&json!({
+                "videoId": "BaW_jenozKc",
+                "title": {"accessibility": {"accessibilityData": {"label": label}}},
+            }))
+        };
+        // Lowercasing changes these characters' lengths.
+        for label in [
+            "K\u{20ac} ago",
+            "\u{1e9e}\u{20ac}ago",
+            "\u{130}\u{130}\u{130}\u{130}ago\u{20ac}",
+        ] {
+            video(label);
+        }
+        assert_eq!(
+            video("Title \u{130}\u{130} 2 years AGO 3 minutes, 5 seconds")["duration"],
+            185
+        );
+    }
 
     #[test]
     fn tab_urls_exclude_single_videos_and_reserved_paths() {

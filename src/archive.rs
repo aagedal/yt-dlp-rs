@@ -13,12 +13,48 @@ const LOCK_TIMEOUT: Duration = Duration::from_secs(5);
 const LOCK_POLL: Duration = Duration::from_millis(25);
 
 /// A local archive cache. Membership reflects loading and this instance's records;
-/// every record re-reads the same locked file to deduplicate concurrent writers.
+/// every record reads what other writers appended to the locked file since,
+/// to deduplicate concurrent writers.
 #[derive(Debug)]
 pub struct DownloadArchive {
     path: PathBuf,
     entries: HashSet<String>,
     lock_timeout: Duration,
+    /// The file as last read, so a record reads only what was appended.
+    seen: Option<Seen>,
+}
+
+/// How far the archive file was read.
+#[derive(Debug, Clone, Copy, PartialEq)]
+struct Seen {
+    file: FileId,
+    length: u64,
+    modified: Option<std::time::SystemTime>,
+    /// Where the last, unterminated line starts (`length` when it ended
+    /// with a line break): a reader continues there.
+    resume: u64,
+    /// Whether the file ends without a line break.
+    separator: bool,
+}
+
+/// The file's identity (a replaced archive is read again in full): its
+/// device and inode, or its creation time where there are none.
+#[derive(Debug, Clone, Copy, PartialEq)]
+struct FileId(
+    #[cfg(unix)] (u64, u64),
+    #[cfg(not(unix))] Option<std::time::SystemTime>,
+);
+
+impl FileId {
+    fn of(metadata: &fs::Metadata) -> Self {
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::MetadataExt;
+            Self((metadata.dev(), metadata.ino()))
+        }
+        #[cfg(not(unix))]
+        Self(metadata.created().ok())
+    }
 }
 
 /// The supported identity is exactly lowercase extractor key, one space, and ID.
@@ -45,23 +81,24 @@ impl DownloadArchive {
         Self::load_with_timeout(path.into(), LOCK_TIMEOUT)
     }
     fn load_with_timeout(path: PathBuf, lock_timeout: Duration) -> Result<Self> {
-        let entries = if regular_path(&path)? {
+        let mut entries = HashSet::new();
+        let mut seen = None;
+        if regular_path(&path)? {
             match File::open(&path) {
                 Ok(file) => {
                     regular_file(&file, &path)?;
                     let mut file = LockedFile::acquire(file, false, lock_timeout, &path)?;
-                    read(&mut file, &path)?.0
+                    seen = Some(read(&mut file, &path, None, &mut entries)?);
                 }
-                Err(error) if error.kind() == std::io::ErrorKind::NotFound => HashSet::new(),
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
                 Err(error) => return Err(io_error("open", &path, error)),
             }
-        } else {
-            HashSet::new()
-        };
+        }
         Ok(Self {
             path,
             entries,
             lock_timeout,
+            seen,
         })
     }
     /// Upstream `in_download_archive`: the identity or any of the info's
@@ -100,13 +137,13 @@ impl DownloadArchive {
             .map_err(|error| io_error("open for append", &self.path, error))?;
         regular_file(&file, &self.path)?;
         let mut file = LockedFile::acquire(file, true, self.lock_timeout, &self.path)?;
-        let (entries, separator) = read(&mut file, &self.path)?;
-        self.entries = entries;
+        let seen = read(&mut file, &self.path, self.seen.take(), &mut self.entries)?;
+        self.seen = Some(seen);
         if self.entries.contains(&identity) {
             return Ok(());
         }
         let mut append = String::with_capacity(identity.len() + 2);
-        if separator {
+        if seen.separator {
             append.push('\n');
         }
         append.push_str(&identity);
@@ -116,6 +153,14 @@ impl DownloadArchive {
             file.sync_data()
         })?;
         self.entries.insert(identity);
+        // The next record reads from the end of this one.
+        self.seen = file.metadata().ok().map(|metadata| Seen {
+            file: FileId::of(&metadata),
+            length: metadata.len(),
+            modified: metadata.modified().ok(),
+            resume: metadata.len(),
+            separator: false,
+        });
         Ok(())
     }
 }
@@ -270,23 +315,51 @@ fn lock(file: &File, exclusive: bool, timeout: Duration, path: &Path) -> Result<
 fn python_whitespace(c: char) -> bool {
     c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}')
 }
-fn read(file: &mut File, path: &Path) -> Result<(HashSet<String>, bool)> {
-    file.seek(SeekFrom::Start(0))
+/// Read the archive's records into `entries`: after `seen` when the same
+/// file only grew since (appends of other writers), else all of it into a
+/// fresh set.
+fn read(
+    file: &mut File,
+    path: &Path,
+    seen: Option<Seen>,
+    entries: &mut HashSet<String>,
+) -> Result<Seen> {
+    let metadata = file
+        .metadata()
+        .map_err(|error| io_error("inspect", path, error))?;
+    let (id, length, modified) = (
+        FileId::of(&metadata),
+        metadata.len(),
+        metadata.modified().ok(),
+    );
+    let start = match seen {
+        Some(seen) if seen.file == id && seen.length == length && seen.modified == modified => {
+            return Ok(seen);
+        }
+        Some(seen) if seen.file == id && seen.length < length => seen.resume,
+        _ => {
+            entries.clear();
+            0
+        }
+    };
+    file.seek(SeekFrom::Start(start))
         .map_err(|error| io_error("seek", path, error))?;
     let mut reader = BufReader::new(file);
-    let mut entries = HashSet::new();
     let mut line = String::new();
-    let mut last = None;
+    let (mut at, mut resume, mut last) = (start, start, None);
     loop {
         line.clear();
-        if reader
+        let count = reader
             .read_line(&mut line)
-            .map_err(|error| io_error("read UTF-8", path, error))?
-            == 0
-        {
+            .map_err(|error| io_error("read UTF-8", path, error))?;
+        if count == 0 {
             break;
         }
         last = line.as_bytes().last().copied();
+        at += count as u64;
+        if matches!(last, Some(b'\r' | b'\n')) {
+            resume = at;
+        }
         // Python's text-mode universal newlines also recognize lone CR.
         for record in line.split('\r') {
             let record = record.trim_matches(python_whitespace);
@@ -295,10 +368,13 @@ fn read(file: &mut File, path: &Path) -> Result<(HashSet<String>, bool)> {
             }
         }
     }
-    Ok((
-        entries,
-        last.is_some_and(|last| !matches!(last, b'\r' | b'\n')),
-    ))
+    Ok(Seen {
+        file: id,
+        length: at,
+        modified,
+        resume,
+        separator: last.is_some_and(|last| !matches!(last, b'\r' | b'\n')),
+    })
 }
 
 #[cfg(test)]
@@ -509,7 +585,7 @@ mod tests {
         let mut file = LockedFile::acquire(open(&path), true, LOCK_TIMEOUT, &path).unwrap();
         let duplicate = file.try_clone().unwrap();
         let result = (|| -> Result<()> {
-            read(&mut file, &path)?;
+            read(&mut file, &path, None, &mut HashSet::new())?;
             Ok(())
         })();
         assert!(result.is_err());
@@ -518,6 +594,34 @@ mod tests {
         contender.try_lock().unwrap();
         contender.unlock().unwrap();
         drop(duplicate);
+    }
+
+    #[test]
+    fn records_read_only_what_other_writers_appended() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("archive.txt");
+        fs::write(&path, "youtube a\nyoutube par").unwrap();
+        let mut ours = DownloadArchive::load(&path).unwrap();
+        let mut theirs = DownloadArchive::load(&path).unwrap();
+        // Another writer completes the unterminated line, then appends.
+        fs::write(&path, "youtube a\nyoutube partial\n").unwrap();
+        theirs.record(&info("Youtube", "b")).unwrap();
+        ours.record(&info("Youtube", "c")).unwrap();
+        for id in ["a", "partial", "b", "c"] {
+            assert!(ours.contains(&info("Youtube", id)).unwrap(), "{id}");
+        }
+        // Recording what the other writer recorded appends nothing.
+        ours.record(&info("Youtube", "b")).unwrap();
+        assert_eq!(
+            fs::read_to_string(&path).unwrap(),
+            "youtube a\nyoutube partial\nyoutube b\nyoutube c\n"
+        );
+        // A shorter (replaced) archive is read again in full.
+        fs::write(&path, "youtube z\n").unwrap();
+        ours.record(&info("Youtube", "d")).unwrap();
+        assert!(!ours.contains(&info("Youtube", "a")).unwrap());
+        assert!(ours.contains(&info("Youtube", "z")).unwrap());
+        assert_eq!(fs::read_to_string(&path).unwrap(), "youtube z\nyoutube d\n");
     }
 
     #[test]
