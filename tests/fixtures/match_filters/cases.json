@@ -495,6 +495,20 @@
     "x": 1
    },
    "error": "ValueError"
+  },
+  {
+   "filter": "x>5 & <tag>",
+   "dict": {
+    "x": 1
+   },
+   "result": false
+  },
+  {
+   "filter": "x>0 & <tag>",
+   "dict": {
+    "x": 1
+   },
+   "error": "ValueError"
   }
  ]
 }
