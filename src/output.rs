@@ -18,6 +18,7 @@ pub(crate) use formats::render_formats_listing;
 pub(crate) use formats::render_table;
 pub(crate) use links::{iri_to_uri, link_file};
 pub(crate) use print::{ForcedFields, PrintTemplate, PrintToFile, StagePaths};
+pub(crate) use template::validate as validate_template;
 
 /// The case-insensitive `WHEN:` stage name of a `--print` value (`video`
 /// when absent), as upstream's `when_prefix` splits it.

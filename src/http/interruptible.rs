@@ -111,6 +111,11 @@ pub(crate) fn send(
     let head = loop {
         match receiver.recv_timeout(POLL) {
             Ok(Ok(head)) => break head,
+            // The helper can end a redirect chain at the interrupt before
+            // this loop's next poll sees it.
+            Ok(Err(crate::Error::ExtractionCancelled)) if watch.requested() => {
+                return Err(Interrupted);
+            }
             Ok(Err(error)) => return Ok(Err(error)),
             Err(mpsc::RecvTimeoutError::Timeout) if watch.requested() => {
                 return Err(Interrupted);

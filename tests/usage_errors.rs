@@ -83,6 +83,31 @@ fn validation_messages_and_layout_follow_upstream() {
             ".netrc, netrc command and username/password are mutually exclusive options",
         ),
         (vec!["-p", "pw"], "account username missing"),
+        // Upstream `validate_outtmpl`, by option dict order.
+        (
+            vec!["-o", "subtitle,thumbnail:%(a)5", "-o", "x%(b"],
+            r#"invalid subtitle output template "%(a)5": stray % at position 0"#,
+        ),
+        (
+            vec!["-o", "x%(b", "-O", "%(a)z"],
+            r#"invalid default output template "x%(b": stray % or incomplete format key at position 1"#,
+        ),
+        (
+            vec!["-O", "after_move:%(a", "-O", "pre_process:%(b"],
+            r#"invalid after_move print template "%(a": stray % or incomplete format key at position 0"#,
+        ),
+        (
+            vec!["--print-to-file", "ok", "f%(x"],
+            r#"invalid video print to file filename "f%(x": stray % or incomplete format key at position 1"#,
+        ),
+        (
+            vec!["--sponsorblock-chapter-title", "%(x"],
+            r#"invalid SponsorBlock chapter title "%(x": stray % or incomplete format key at position 0"#,
+        ),
+        (
+            vec!["--progress-template", "download-title:%(a)é"],
+            r#"invalid download console title template "%(a)é": stray % at position 0 or unexpected format character 'é' (U+00E9) at position 4"#,
+        ),
     ] {
         let mut all = args.clone();
         all.push(url);

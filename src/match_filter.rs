@@ -189,7 +189,7 @@ fn parse_part(part: &str) -> Result<Part> {
                         rest[1..rest.len() - 1].replace(&format!("\\{quote}"), &quote.to_string())
                     }
                     _ if !rest.is_empty() => rest.to_owned(),
-                    _ => return Err(invalid(format!("Invalid filter part {part:?}"))),
+                    _ => return Err(invalid_part(part)),
                 };
                 let regex = (*op == Op::Search)
                     .then(|| {
@@ -219,7 +219,14 @@ fn parse_part(part: &str) -> Result<Part> {
             });
         }
     }
-    Err(invalid(format!("Invalid filter part {part:?}")))
+    Err(invalid_part(part))
+}
+
+fn invalid_part(part: &str) -> Error {
+    invalid(format!(
+        "Invalid filter part {}",
+        crate::batch::py_repr(part)
+    ))
 }
 
 /// Python `int(text)` for ASCII digits with optional sign and single underscores.
@@ -551,10 +558,12 @@ impl Part {
 }
 
 /// One `--match-filters` value: `&`-joined conditions (`\&` is literal).
+/// Like upstream's short-circuiting `all()`, a condition after the first is
+/// only rejected as invalid once the ones before it pass.
 #[derive(Debug, Clone)]
 struct Conjunction {
     text: String,
-    parts: Vec<Part>,
+    parts: Vec<std::result::Result<Part, String>>,
 }
 
 impl Conjunction {
@@ -571,12 +580,22 @@ impl Conjunction {
             previous = Some(c);
         }
         parts.push(current);
+        let parts = parts
+            .iter()
+            .map(|part| {
+                parse_part(&part.replace("\\&", "&")).map_err(|error| match error {
+                    Error::MatchFilter(message) => message,
+                    other => other.to_string(),
+                })
+            })
+            .collect::<Vec<_>>();
+        // The first condition is always evaluated: report it before extraction.
+        if let Some(Err(error)) = parts.first() {
+            return Err(Error::MatchFilter(error.clone()));
+        }
         Ok(Self {
             text: text.into(),
-            parts: parts
-                .iter()
-                .map(|part| parse_part(&part.replace("\\&", "&")))
-                .collect::<Result<_>>()?,
+            parts,
         })
     }
 
@@ -586,6 +605,9 @@ impl Conjunction {
         incomplete: &dyn Fn(&str) -> bool,
     ) -> Result<bool> {
         for part in &self.parts {
+            let part = part
+                .as_ref()
+                .map_err(|error| Error::MatchFilter(error.clone()))?;
             if !part.matches(dict, incomplete)? {
                 return Ok(false);
             }

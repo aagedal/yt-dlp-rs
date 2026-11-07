@@ -47,7 +47,7 @@ pub enum Stage {
 impl Stage {
     /// Split a case-insensitive `WHEN:` prefix from `value`, defaulting to
     /// `default` when the prefix is absent or not a `POSTPROCESS_WHEN` name.
-    pub(super) fn split<'a>(value: &'a str, default: &str) -> (String, &'a str) {
+    pub(crate) fn split<'a>(value: &'a str, default: &str) -> (String, &'a str) {
         match value.split_once(':') {
             Some((when, rest)) if WHEN.iter().any(|w| w.eq_ignore_ascii_case(when)) => {
                 (when.to_ascii_lowercase(), rest)

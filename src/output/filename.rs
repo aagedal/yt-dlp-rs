@@ -72,6 +72,22 @@ impl OutputTemplates {
         Self { templates }
     }
 
+    /// Each type's last `-o` template, in order of the type's first
+    /// appearance (upstream's `outtmpl` dict).
+    pub fn typed(values: &[String]) -> Vec<(String, &str)> {
+        let mut typed: Vec<(String, &str)> = Vec::new();
+        for value in values {
+            let (keys, template) = parse_typed(value, is_output_type, "default");
+            for key in keys {
+                match typed.iter_mut().find(|(name, _)| *name == key) {
+                    Some(entry) => entry.1 = template,
+                    None => typed.push((key, template)),
+                }
+            }
+        }
+        typed
+    }
+
     /// Whether `values` set the default (untyped or `default:`) template.
     pub fn sets_default(values: &[String]) -> bool {
         values.iter().any(|value| {
