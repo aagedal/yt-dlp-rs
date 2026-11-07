@@ -1352,6 +1352,165 @@ pub(super) fn render_kind(
     Ok(output.into())
 }
 
+/// Upstream `YoutubeDL.validate_outtmpl`: the `ValueError` text Python's `%`
+/// operator raises for `template` once `escape_outtmpl` has made unkeyed `%`
+/// sequences literal, as worded by CPython 3.15. Positions count characters
+/// of the escaped template. Like upstream, field names and values are not
+/// checked; every field formats as the integer 0.
+pub(crate) fn validate(template: &str) -> std::result::Result<(), String> {
+    let mut chars: Vec<char> = template.chars().collect();
+    // The `[ljhqBUDS]` conversions validate as `s`.
+    let mut i = 0;
+    while i < chars.len() {
+        let run = chars[i..].iter().take_while(|&&c| c == '%').count();
+        if run == 0 {
+            i += 1;
+            continue;
+        }
+        i += run;
+        if run % 2 == 0 || chars.get(i) != Some(&'(') {
+            continue;
+        }
+        let Some(close) = chars[i..].iter().position(|&c| c == ')') else {
+            break;
+        };
+        let mut j = i + close + 1;
+        while chars.get(j).is_some_and(|c| "#0-+ ".contains(*c)) {
+            j += 1;
+        }
+        while chars.get(j).is_some_and(char::is_ascii_digit) {
+            j += 1;
+        }
+        if chars.get(j) == Some(&'.') && chars.get(j + 1).is_some_and(char::is_ascii_digit) {
+            j += 1;
+            while chars.get(j).is_some_and(char::is_ascii_digit) {
+                j += 1;
+            }
+        }
+        // `[hlL]?` backtracks when it took the conversion itself.
+        let mut ends = vec![j];
+        if chars.get(j).is_some_and(|c| "hlL".contains(*c)) {
+            ends.insert(0, j + 1);
+        }
+        if let Some(end) = ends
+            .into_iter()
+            .find(|&end| chars.get(end).is_some_and(|c| "ljhqBUDS".contains(*c)))
+        {
+            chars[end] = 's';
+            i = end + 1;
+        }
+    }
+
+    let digits = |j: &mut usize, what: &str, start: usize| {
+        let mut value: i64 = 0;
+        while let Some(digit) = chars.get(*j).and_then(|c| c.to_digit(10)) {
+            value = value
+                .checked_mul(10)
+                .and_then(|value| value.checked_add(digit.into()))
+                .ok_or_else(|| format!("{what} too big at position {start}"))?;
+            *j += 1;
+        }
+        Ok::<(), String>(())
+    };
+    // Characters `escape_outtmpl` inserted before the current one.
+    let mut shift = 0;
+    let mut keyed = false;
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i] != '%' {
+            i += 1;
+            continue;
+        }
+        let start = i + shift;
+        match chars.get(i + 1) {
+            Some('%') => {
+                i += 2;
+                continue;
+            }
+            Some('(') => {}
+            Some('\0') if keyed => {
+                return Err(format!(
+                    "format requires a parenthesised mapping key at position {start}"
+                ));
+            }
+            Some('\0') => {
+                return Err(unexpected(start, '\0', start + 1));
+            }
+            _ => {
+                shift += 1;
+                i += 1;
+                continue;
+            }
+        }
+        keyed = true;
+        let mut j = i + 2;
+        let mut depth = 1;
+        while depth > 0 {
+            match chars.get(j) {
+                Some(')') => depth -= 1,
+                Some('(') => depth += 1,
+                Some(_) => {}
+                None => {
+                    return Err(format!(
+                        "stray % or incomplete format key at position {start}"
+                    ));
+                }
+            }
+            j += 1;
+        }
+        while chars.get(j).is_some_and(|c| "-+ #0".contains(*c)) {
+            j += 1;
+        }
+        let star =
+            || format!("* cannot be used with a parenthesised mapping key at position {start}");
+        if chars.get(j) == Some(&'*') {
+            return Err(star());
+        }
+        digits(&mut j, "width", start)?;
+        if chars.get(j) == Some(&'.') {
+            j += 1;
+            if chars.get(j) == Some(&'*') {
+                return Err(star());
+            }
+            digits(&mut j, "precision", start)?;
+        }
+        if chars.get(j).is_some_and(|c| "hlL".contains(*c)) {
+            j += 1;
+        }
+        let Some(&conversion) = chars.get(j) else {
+            return Err(format!("stray % at position {start}"));
+        };
+        if !"diouxXeEfFgGcrsa".contains(conversion) {
+            return Err(if conversion.is_ascii_alphabetic() {
+                format!("unsupported format %{conversion} at position {start}")
+            } else {
+                unexpected(start, conversion, j + shift)
+            });
+        }
+        i = j + 1;
+    }
+    Ok(())
+}
+
+/// CPython's message for a conversion character that is not a letter.
+fn unexpected(start: usize, c: char, position: usize) -> String {
+    // Python `str.isprintable`, approximated without Unicode category tables.
+    let printable = !(c.is_control()
+        || (c.is_whitespace() && c != ' ')
+        || matches!(c, '\u{ad}' | '\u{200b}'..='\u{200f}' | '\u{202a}'..='\u{202e}'
+            | '\u{2060}'..='\u{2064}' | '\u{feff}' | '\u{fff9}'..='\u{fffb}'
+            | '\u{e0001}'..='\u{e007f}' | '\u{e000}'..='\u{f8ff}' | '\u{f0000}'..));
+    let character = match c {
+        '\'' => "\"'\"".to_owned(),
+        c if !printable => format!("U+{:04X}", c as u32),
+        c if c.is_ascii() => format!("'{c}'"),
+        c => format!("'{c}' (U+{:04X})", c as u32),
+    };
+    format!(
+        "stray % at position {start} or unexpected format character {character} at position {position}"
+    )
+}
+
 /// Expand a template to text: unsanitized for `Source::Print`, otherwise
 /// with filename-component sanitization.
 pub(super) fn expand(
@@ -1378,8 +1537,9 @@ pub(super) fn expand(
             continue;
         }
         let Some((key, spec)) = rest.strip_prefix('(').and_then(|s| s.split_once(')')) else {
-            // `escape_outtmpl` keeps other `%` sequences literal in commands.
-            if info.exec() {
+            // `escape_outtmpl` keeps other `%` sequences literal (all of
+            // them in commands).
+            if info.exec() || !rest.starts_with(['(', '\0']) {
                 append(&mut output, "%")?;
                 continue;
             }
@@ -1444,6 +1604,115 @@ pub(crate) mod tests {
         .unwrap()
         .to_string_lossy()
         .into_owned()
+    }
+
+    #[test]
+    fn unkeyed_percent_signs_stay_literal() {
+        let info = info();
+        assert_eq!(
+            output("100% %(id)s %d %5 50%off %", &info),
+            "100% 42 %d %5 50%off %"
+        );
+        assert_eq!(output("%%(id)s %%%(id)s", &info), "%(id)s %42");
+    }
+
+    #[test]
+    fn validation_matches_python_percent_formatting() {
+        // Messages captured from pinned upstream `validate_outtmpl` (CPython 3.15).
+        for (template, error) in [
+            ("%(a", "stray % or incomplete format key at position 0"),
+            (
+                "%(a)s 5% x %(b",
+                "stray % or incomplete format key at position 12",
+            ),
+            ("%(a(b)s", "stray % or incomplete format key at position 0"),
+            ("%(a)5", "stray % at position 0"),
+            ("%(a)L", "stray % at position 0"),
+            ("%(a)z", "unsupported format %z at position 0"),
+            ("%(a)s\0%(b)z", "unsupported format %z at position 6"),
+            (
+                "%(a)*d",
+                "* cannot be used with a parenthesised mapping key at position 0",
+            ),
+            (
+                "%(a).*d",
+                "* cannot be used with a parenthesised mapping key at position 0",
+            ),
+            ("%(a)99999999999999999999d", "width too big at position 0"),
+            (
+                "%(a).9223372036854775808d",
+                "precision too big at position 0",
+            ),
+            (
+                "%(a)%",
+                "stray % at position 0 or unexpected format character '%' at position 4",
+            ),
+            (
+                "%(a)5$s",
+                "stray % at position 0 or unexpected format character '$' at position 5",
+            ),
+            (
+                "%(a)'",
+                "stray % at position 0 or unexpected format character \"'\" at position 4",
+            ),
+            (
+                "%(a)\\",
+                "stray % at position 0 or unexpected format character '\\' at position 4",
+            ),
+            (
+                "%(a)\u{7f}",
+                "stray % at position 0 or unexpected format character U+007F at position 4",
+            ),
+            (
+                "%(a)\u{200b}",
+                "stray % at position 0 or unexpected format character U+200B at position 4",
+            ),
+            (
+                "%(a)é",
+                "stray % at position 0 or unexpected format character 'é' (U+00E9) at position 4",
+            ),
+            (
+                "%(a)🎉",
+                "stray % at position 0 or unexpected format character '🎉' (U+1F389) at position 4",
+            ),
+            (
+                "x%\0",
+                "stray % at position 1 or unexpected format character U+0000 at position 2",
+            ),
+            (
+                "%(a)s %\0",
+                "format requires a parenthesised mapping key at position 6",
+            ),
+        ] {
+            assert_eq!(validate(template), Err(error.into()), "{template:?}");
+        }
+        for template in [
+            "",
+            "%",
+            "a %",
+            "%5",
+            "%d",
+            "%%(a",
+            "%(a)s%",
+            "%(a)s %s",
+            "x%(a)s%-",
+            "%(a)-5.3ld",
+            "%(a)ls",
+            "%(a)ll",
+            "%(a)l",
+            "%(a)h",
+            "%(a).x",
+            "%(a)Ls",
+            "%(a)-5.3lz",
+            "%(a)c",
+            "%(a(b)c)s",
+            "%()s",
+            "%(a>%H)s",
+            "%(a)#05.3Lx",
+            "%(title)D %(id)#U %(x)B",
+        ] {
+            assert_eq!(validate(template), Ok(()), "{template:?}");
+        }
     }
 
     #[test]
@@ -1650,8 +1919,6 @@ pub(crate) mod tests {
         for template in [
             "",
             "-",
-            "%",
-            "%s",
             "%(id)",
             "%(id).s",
             "%(id).d",

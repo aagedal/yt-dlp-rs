@@ -2214,6 +2214,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .iter()
             .map(|url| crate::batch::py_strip(url).to_owned()),
     );
+    validate_templates(&args)?;
     let mut print_templates = args
         .print
         .iter()
@@ -2271,11 +2272,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 ..Default::default()
             };
             for value in &args.progress_template {
-                static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
-                    regex::Regex::new(r"(?is)^(?P<keys>(?:download|postprocess)(?:-title)?(?:,(?:download|postprocess)(?:-title)?)*):(?P<val>.*)$")
-                        .unwrap()
-                });
-                let (keys, text) = match KEYS.captures(value) {
+                let (keys, text) = match PROGRESS_KEYS.captures(value) {
                     Some(captures) => (
                         captures["keys"].to_lowercase(),
                         captures.name("val").unwrap().as_str().to_owned(),
@@ -7524,6 +7521,80 @@ fn config_arguments(cli: Vec<String>) -> Result<(Vec<String>, Vec<String>), Usag
         node.debug_lines(&mut debug);
     }
     Ok((flatten(&configs), debug))
+}
+
+/// `--progress-template`'s `TYPES:` prefix (`_dict_from_options_callback`).
+static PROGRESS_KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+    regex::Regex::new(r"(?is)^(?P<keys>(?:download|postprocess)(?:-title)?(?:,(?:download|postprocess)(?:-title)?)*):(?P<val>.*)$")
+        .unwrap()
+});
+
+/// Upstream `parse_options`' `validate_outtmpl` calls, in its order: output
+/// templates by type, then print, print-to-file (template, then filename),
+/// SponsorBlock chapter title and progress templates.
+fn validate_templates(args: &Args) -> std::result::Result<(), UsageError> {
+    // Group values by their first-seen `WHEN:`/type key, like the option dicts.
+    fn grouped<T>(items: impl Iterator<Item = (String, T)>) -> Vec<(String, Vec<T>)> {
+        let mut groups: Vec<(String, Vec<T>)> = Vec::new();
+        for (key, item) in items {
+            match groups.iter_mut().find(|(name, _)| *name == key) {
+                Some(group) => group.1.push(item),
+                None => groups.push((key, vec![item])),
+            }
+        }
+        groups
+    }
+    let mut checks: Vec<(String, &str)> = OutputTemplates::typed(&args.output)
+        .into_iter()
+        .map(|(kind, template)| (format!("{kind} output template"), template))
+        .collect();
+    for (when, templates) in grouped(args.print.iter().map(|spec| Stage::split(spec, "video"))) {
+        for template in templates {
+            checks.push((format!("{when} print template"), template));
+        }
+    }
+    let print_files = args.print_to_file.as_chunks::<2>().0.iter();
+    for (when, pairs) in grouped(print_files.map(|[spec, file]| {
+        let (when, template) = Stage::split(spec, "video");
+        (when, (template, file.as_str()))
+    })) {
+        for (template, file) in pairs {
+            checks.push((format!("{when} print to file template"), template));
+            checks.push((format!("{when} print to file filename"), file));
+        }
+    }
+    checks.push((
+        "SponsorBlock chapter title".into(),
+        &args.sponsorblock_chapter_title,
+    ));
+    let mut progress: Vec<(String, &str)> = Vec::new();
+    for value in &args.progress_template {
+        let (keys, text) = match PROGRESS_KEYS.captures(value) {
+            Some(captures) => (
+                captures["keys"].to_lowercase(),
+                captures.name("val").unwrap().as_str(),
+            ),
+            None => ("download".into(), value.as_str()),
+        };
+        for key in keys.split(',') {
+            match progress.iter_mut().find(|(name, _)| name == key) {
+                Some(entry) => entry.1 = text,
+                None => progress.push((key.to_owned(), text)),
+            }
+        }
+    }
+    for (key, template) in progress {
+        let kind = match key.strip_suffix("-title") {
+            Some(kind) => format!("{kind} console title"),
+            None => format!("{key} progress"),
+        };
+        checks.push((format!("{kind} template"), template));
+    }
+    for (what, template) in checks {
+        crate::output::validate_template(template)
+            .map_err(|error| usage(format!("invalid {what} \"{template}\": {error}")))?;
+    }
+    Ok(())
 }
 
 fn usage(message: impl std::fmt::Display) -> UsageError {

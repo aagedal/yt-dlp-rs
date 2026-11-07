@@ -297,12 +297,14 @@ fn sanitize_before_precision_keeps_metadata_and_defaults_inside_literal_director
 
 #[test]
 fn unsupported_malformed_and_excessive_formats_fail_after_probe_without_download_or_archive() {
-    for template in [
-        "%(id)z",
-        "%(id+)s",
-        "%(id",
-        "%(height)1000000000d",
-        "%(height).9999999f",
+    // Like upstream `validate_outtmpl`, `%` syntax errors are usage errors
+    // before any request; the rest fail once the media is probed.
+    for (template, probes) in [
+        ("%(id)z", 0),
+        ("%(id+)s", 1),
+        ("%(id", 0),
+        ("%(height)1000000000d", 1),
+        ("%(height).9999999f", 1),
     ] {
         let server = Server::new();
         let directory = tempfile::tempdir().unwrap();
@@ -318,7 +320,7 @@ fn unsupported_malformed_and_excessive_formats_fail_after_probe_without_download
             directory.path(),
         );
         assert!(!output.status.success(), "{template}");
-        assert_eq!(server.count("/media.mp4"), 1);
+        assert_eq!(server.count("/media.mp4"), probes, "{template}");
         assert!(!archive.exists());
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
