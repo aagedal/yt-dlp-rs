@@ -2606,13 +2606,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             _ => error.into(),
         }
     })?;
-    if args.playlist_items.is_some()
-        && (args.playlist_start != 1 || args.playlist_end.is_some_and(|end| end != -1 && end != 0))
-    {
-        warning!(
-            "WARNING: Ignoring --playlist-start and --playlist-end because --playlist-items was given"
-        );
-    }
     let subtitle_languages = (!args.sub_langs.is_empty()).then(|| args.sub_langs.join(","));
     let subtitle_options = SubtitleOptions::new(subtitle_languages.as_deref(), &args.sub_format)?;
     if let (Some(cookies), Some(archive)) = (&args.cookies, &args.download_archive) {

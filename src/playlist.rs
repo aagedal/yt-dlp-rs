@@ -23,6 +23,8 @@ pub struct PlaylistSelection {
     random: bool,
     lazy: bool,
     selection_index: bool,
+    /// Items were given with a playlist start or end, which they override.
+    ignored_bounds: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -87,7 +89,21 @@ impl PlaylistSelection {
             random: false,
             lazy: false,
             selection_index: false,
+            // `get_requested_items`: an end of -1 means the whole list, and
+            // 0 is falsy.
+            ignored_bounds: items.is_some()
+                && (start != 1 || end.is_some_and(|end| end != -1 && end != 0)),
         })
+    }
+
+    /// Upstream `get_requested_items`' warning, once, when a playlist's
+    /// items are requested.
+    fn warn_ignored_bounds(&self) {
+        if self.ignored_bounds {
+            crate::screen::warning_once(
+                "Ignoring playliststart and playlistend because playlistitems was given",
+            );
+        }
     }
 
     /// `--compat-options playlist-index`: an entry's `playlist_index` is the
@@ -291,6 +307,7 @@ impl PlaylistSelection {
         let ExtractResult::Playlist(playlist) = result else {
             return None;
         };
+        self.warn_ignored_bounds();
         let count = playlist.entries.len();
         // The requested items in reading order (before reversing/shuffling).
         let reading = Self {
@@ -401,6 +418,7 @@ pub struct LazySelection {
 impl PlaylistSelection {
     /// A [`LazySelection`] of `playlist`'s entries (which may be pending).
     pub(crate) fn lazy_selection(&self, playlist: &crate::PlaylistInfo) -> LazySelection {
+        self.warn_ignored_bounds();
         // `get_full_count()` before iterating: a list's length, unknown for
         // a generator or paged list (`LazyList`/`PagedList`) not read yet.
         let generator = playlist

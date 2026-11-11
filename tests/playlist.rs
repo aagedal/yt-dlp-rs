@@ -175,10 +175,14 @@ fn request_order_ranges_negative_indices_dedup_reverse_and_default_metadata_reac
         flags.extend(args);
         let output = server.cli("/playlist.html", &flags);
         let stdout = success(&output);
+        // Upstream `get_requested_items`' wording.
         assert_eq!(
             String::from_utf8_lossy(&output.stderr)
-                .contains("WARNING: Ignoring --playlist-start and --playlist-end"),
-            warning
+                .lines()
+                .filter(|line| *line
+                    == "WARNING: Ignoring playliststart and playlistend because playlistitems was given")
+                .count(),
+            usize::from(warning)
         );
         assert_metadata(&entries(&stdout), &indices);
         server.assert_probed_once();
@@ -188,7 +192,20 @@ fn request_order_ranges_negative_indices_dedup_reverse_and_default_metadata_reac
 #[test]
 fn playlist_flags_do_not_filter_or_annotate_a_single_direct_video() {
     let server = Server::new();
-    let stdout = success(&server.cli("/one.mp4", &["-j", "-I", "99", "--playlist-reverse"]));
+    let output = server.cli(
+        "/one.mp4",
+        &[
+            "-j",
+            "-I",
+            "99",
+            "--playlist-reverse",
+            "--playlist-start",
+            "2",
+        ],
+    );
+    // Only a playlist's requested items warn that they override the start.
+    assert!(!String::from_utf8_lossy(&output.stderr).contains("Ignoring"));
+    let stdout = success(&output);
     let info = entries(&stdout).remove(0);
     assert_eq!(info["id"], "one");
     for key in [
