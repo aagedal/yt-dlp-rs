@@ -153,7 +153,7 @@ fn loaded_info_json_keeps_upstream_key_order() {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/info_order/loaded");
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
     let version = regex::Regex::new(r#", "_version": \{[^}]*\}"#).unwrap();
-    for name in ["direct", "dash"] {
+    for name in ["direct", "dash", "rates"] {
         for (flag, suffix) in [("-j", "dump-json"), ("-J", "dump-single-json")] {
             let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
                 .args(["--ignore-config", "--load-info-json"])

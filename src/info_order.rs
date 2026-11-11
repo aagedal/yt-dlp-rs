@@ -150,6 +150,28 @@ impl Replay {
                 {
                     reorder_tracks(languages, value);
                 }
+                // A loaded int this port stores as a float (`tbr`) and the
+                // chapters' key order are kept, as upstream keeps the dict.
+                match (self.out.get_mut(key), value) {
+                    (Some(ours @ Value::Number(_)), Value::Number(loaded))
+                        if loaded.is_i64() && ours.as_f64() == loaded.as_f64() =>
+                    {
+                        *ours = value.clone();
+                    }
+                    (Some(Value::Array(ours)), Value::Array(loaded)) if key == "chapters" => {
+                        for (ours, loaded) in ours.iter_mut().zip(loaded) {
+                            if let (Value::Object(ours), Value::Object(loaded)) = (ours, loaded) {
+                                let mut ordered: Map<String, Value> = loaded
+                                    .keys()
+                                    .filter_map(|key| Some((key.clone(), ours.shift_remove(key)?)))
+                                    .collect();
+                                ordered.append(ours);
+                                *ours = ordered;
+                            }
+                        }
+                    }
+                    _ => {}
+                }
             } else if !self.out.contains_key(key) {
                 self.out.insert(key.clone(), value.clone());
             }

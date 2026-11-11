@@ -26,4 +26,7 @@ same files and headers to the native CLI and compares its lines exactly.
 `loaded/` holds info JSON written by the pinned upstream (`--skip-download
 --write-info-json --user-agent UA`, host replaced by `media.invalid`,
 `epoch` fixed) and upstream's `--load-info-json` `-j`/`-J` lines for it
-(`epoch` and `_version` removed).
+(`epoch` and `_version` removed). `rates.info.json` is hand-written in that
+shape, with int `tbr`s (as many site extractors give) and chapters whose keys
+are `start_time`, `end_time`, `title`; its lines come from the pinned upstream
+the same way.
