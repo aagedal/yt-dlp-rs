@@ -749,6 +749,8 @@ fn fetch_with_retries(
 trait Sink: Write {
     /// Keeps the first `len` bytes and writes after them.
     fn truncate(&mut self, len: u64) -> std::io::Result<()>;
+    /// The length the response announces for the bytes about to be written.
+    fn expect(&mut self, _len: u64) {}
 }
 
 impl Sink for fs::File {
@@ -761,6 +763,16 @@ impl Sink for fs::File {
 /// Memory the spools of one concurrent download allocate together.
 const SPOOL_MEMORY: usize = 32 << 20;
 
+/// The memory the spools of one concurrent download share.
+#[derive(Default)]
+struct SpoolMemory {
+    /// What every spool reserved, at most [`SPOOL_MEMORY`].
+    held: AtomicUsize,
+    /// Released buffers for the next fragments (at most a quarter of the
+    /// budget), so equal-sized fragments do not fragment the heap.
+    spare: std::sync::Mutex<Vec<Vec<u8>>>,
+}
+
 /// A concurrent worker's fragment until the assembling thread appends it:
 /// in memory while the download's spools hold less than [`SPOOL_MEMORY`],
 /// then in a private file, so most bytes are written to disk only once.
@@ -768,21 +780,20 @@ struct Spool<'a> {
     memory: Vec<u8>,
     file: Option<tempfile::NamedTempFile>,
     len: u64,
-    /// This spool's share of `held`.
+    /// This spool's share of `budget.held`.
     reserved: usize,
-    /// The memory every spool of the download reserved.
-    held: &'a AtomicUsize,
+    budget: &'a SpoolMemory,
     parent: &'a Path,
 }
 
 impl<'a> Spool<'a> {
-    fn new(held: &'a AtomicUsize, parent: &'a Path) -> Self {
+    fn new(budget: &'a SpoolMemory, parent: &'a Path) -> Self {
         Spool {
             memory: Vec::new(),
             file: None,
             len: 0,
             reserved: 0,
-            held,
+            budget,
             parent,
         }
     }
@@ -795,9 +806,17 @@ impl<'a> Spool<'a> {
     }
 
     fn release(&mut self) {
-        self.held.fetch_sub(self.reserved, Ordering::Relaxed);
+        self.budget.held.fetch_sub(self.reserved, Ordering::Relaxed);
         self.reserved = 0;
-        self.memory = Vec::new();
+        let mut memory = std::mem::take(&mut self.memory);
+        if memory.capacity() > 0
+            && let Ok(mut spare) = self.budget.spare.lock()
+            && spare.iter().map(Vec::capacity).sum::<usize>() + memory.capacity()
+                <= SPOOL_MEMORY / 4
+        {
+            memory.clear();
+            spare.push(memory);
+        }
     }
 }
 
@@ -813,7 +832,7 @@ impl Write for Spool<'_> {
                 } else {
                     0
                 });
-            let held = self.held.fetch_add(more, Ordering::Relaxed);
+            let held = self.budget.held.fetch_add(more, Ordering::Relaxed);
             if held + more <= SPOOL_MEMORY {
                 self.reserved += more;
                 self.memory.reserve_exact(self.reserved - self.memory.len());
@@ -821,7 +840,7 @@ impl Write for Spool<'_> {
                 self.len += bytes.len() as u64;
                 return Ok(bytes.len());
             }
-            self.held.fetch_sub(more, Ordering::Relaxed);
+            self.budget.held.fetch_sub(more, Ordering::Relaxed);
             let mut file = tempfile::Builder::new()
                 .prefix(&crate::scratch::prefix(".yt-dlp-rs-fragment-", self.parent))
                 .tempfile_in(self.parent)?;
@@ -848,11 +867,118 @@ impl Sink for Spool<'_> {
         self.len = len;
         Ok(())
     }
+
+    /// Reserves the announced length at once, so the budget counts the
+    /// fragment's size instead of its doubling growth.
+    fn expect(&mut self, len: u64) {
+        let Some(more) = usize::try_from(len)
+            .ok()
+            .filter(|len| *len <= SPOOL_MEMORY && self.file.is_none())
+            .and_then(|len| (self.memory.len() + len).checked_sub(self.reserved))
+            .filter(|more| *more > 0)
+        else {
+            return;
+        };
+        if self.budget.held.fetch_add(more, Ordering::Relaxed) + more <= SPOOL_MEMORY {
+            self.reserved += more;
+            if self.memory.capacity() == 0
+                && let Ok(mut spare) = self.budget.spare.lock()
+                && let Some(index) = spare
+                    .iter()
+                    .position(|buffer| buffer.capacity() >= self.reserved)
+            {
+                self.memory = spare.swap_remove(index);
+            }
+            self.memory.reserve_exact(self.reserved - self.memory.len());
+        } else {
+            self.budget.held.fetch_sub(more, Ordering::Relaxed);
+        }
+    }
 }
 
 impl Drop for Spool<'_> {
     fn drop(&mut self) {
         self.release();
+    }
+}
+
+/// Holds concurrent workers back while the assembling thread, not the
+/// network, is behind: once the next fragment to append has arrived, a
+/// fragment starts only while the fragments queued for appending and
+/// those in flight still fit in [`SPOOL_MEMORY`] (at the largest size seen
+/// so far). Running further ahead would only spill to disk, writing every
+/// byte twice. While the next fragment is still in flight (a slow server
+/// or a retry), the others keep going like upstream's, spilling if needed.
+struct Window {
+    state: std::sync::Mutex<WindowState>,
+    moved: std::sync::Condvar,
+}
+
+struct WindowState {
+    /// The next fragment to append.
+    cursor: usize,
+    /// Downloaded fragments not appended yet, and their bytes.
+    arrived: std::collections::HashSet<usize>,
+    queued: u64,
+    /// Fragments being downloaded.
+    fetching: u64,
+    /// The largest fragment so far, capped so that one of that size per
+    /// worker always fits.
+    largest: u64,
+    cap: u64,
+}
+
+impl Window {
+    fn new(cursor: usize, concurrency: usize) -> Self {
+        Window {
+            state: std::sync::Mutex::new(WindowState {
+                cursor,
+                arrived: Default::default(),
+                queued: 0,
+                fetching: 0,
+                largest: 0,
+                cap: SPOOL_MEMORY as u64 / (concurrency as u64 + 1),
+            }),
+            moved: std::sync::Condvar::new(),
+        }
+    }
+
+    /// Waits until fragment `index` may start, and counts it as in flight.
+    fn start(&self, index: usize, cancelled: &std::sync::atomic::AtomicBool) {
+        let mut state = self.state.lock().unwrap();
+        while index != state.cursor
+            && !cancelled.load(Ordering::Relaxed)
+            && state.arrived.contains(&state.cursor)
+            && state.queued + (state.fetching + 1) * state.largest > SPOOL_MEMORY as u64
+        {
+            state = self
+                .moved
+                .wait_timeout(state, crate::http::interruptible::POLL)
+                .unwrap()
+                .0;
+        }
+        state.fetching += 1;
+    }
+
+    /// Fragment `index` ended: downloaded with `len` bytes, or not.
+    fn arrived(&self, index: usize, len: Option<u64>) {
+        let mut state = self.state.lock().unwrap();
+        state.fetching -= 1;
+        if let Some(len) = len {
+            state.arrived.insert(index);
+            state.queued += len;
+            state.largest = state.largest.max(len.min(state.cap));
+        }
+    }
+
+    /// Fragment `index`, with `len` bytes, was appended (or skipped).
+    fn appended(&self, index: usize, len: u64) {
+        let mut state = self.state.lock().unwrap();
+        state.arrived.remove(&index);
+        state.queued -= len;
+        state.cursor = index + 1;
+        drop(state);
+        self.moved.notify_all();
     }
 }
 
@@ -887,8 +1013,10 @@ fn download_concurrent(
     appended: &mut dyn FnMut(usize) -> Result<()>,
 ) -> Result<(u64, Option<i64>)> {
     use std::sync::{Arc, atomic::AtomicBool, mpsc};
-    let held = AtomicUsize::new(0);
-    let held = &held;
+    let budget = SpoolMemory::default();
+    let budget = &budget;
+    let window = Window::new(start, concurrency);
+    let window = &window;
     let next = Arc::new(AtomicUsize::new(start));
     let cancelled = Arc::new(AtomicBool::new(false));
     let (sender, receiver) = mpsc::channel::<Event>();
@@ -911,9 +1039,10 @@ fn download_concurrent(
                     };
                 loop {
                     let index = next.fetch_add(1, Ordering::Relaxed);
-                    if index >= count || cancelled.load(Ordering::Relaxed) {
+                    if index >= count {
                         return;
                     }
+                    window.start(index, &cancelled);
                     let progress = sender.clone();
                     let flag = cancelled.clone();
                     let mut forward = move |event: DownloadProgress| {
@@ -938,7 +1067,7 @@ fn download_concurrent(
                         live: crate::live_snapshot(info),
                     };
                     let result = (|| {
-                        let mut file = Spool::new(held, parent);
+                        let mut file = Spool::new(budget, parent);
                         let mut stored = 0;
                         let outcome = fetch_with_retries(
                             client,
@@ -969,6 +1098,13 @@ fn download_concurrent(
                         Ok(outcome.map(|modified| (file, modified)))
                     })();
                     let failed = result.is_err();
+                    window.arrived(
+                        index,
+                        match &result {
+                            Ok(file) => Some(file.as_ref().map_or(0, |(file, _)| file.len)),
+                            Err(_) => None,
+                        },
+                    );
                     let _ = sender.send(Event::Done { index, result });
                     if failed {
                         return;
@@ -979,13 +1115,14 @@ fn download_concurrent(
         drop(sender);
         // Any early return (a failed append) stops the workers too, instead
         // of leaving them to fetch every remaining fragment.
-        struct StopWorkers<'a>(&'a AtomicBool);
+        struct StopWorkers<'a>(&'a AtomicBool, &'a Window);
         impl Drop for StopWorkers<'_> {
             fn drop(&mut self) {
                 self.0.store(true, Ordering::Relaxed);
+                self.1.moved.notify_all();
             }
         }
-        let _stop = StopWorkers(&cancelled);
+        let _stop = StopWorkers(&cancelled, window);
         // Assemble in order while reporting the in-flight total.
         let mut finished: HashMap<usize, Option<(Spool<'_>, Option<String>)>> = HashMap::new();
         let mut in_flight: HashMap<usize, u64> = HashMap::new();
@@ -1012,6 +1149,7 @@ fn download_concurrent(
                     }
                     Err(error) => {
                         cancelled.store(true, Ordering::Relaxed);
+                        window.moved.notify_all();
                         if outcome.is_ok() {
                             outcome = Err(error);
                         }
@@ -1019,6 +1157,7 @@ fn download_concurrent(
                 },
             }
             while let Some(file) = finished.remove(&cursor) {
+                let len = file.as_ref().map_or(0, |(file, _)| file.len);
                 if let Some((file, modified)) = file {
                     match &file.file {
                         Some(spilled) => {
@@ -1033,6 +1172,7 @@ fn download_concurrent(
                     appended(cursor)?;
                     latest = crate::filetime::filetime(modified.as_deref()).or(latest);
                 }
+                window.appended(cursor, len);
                 cursor += 1;
             }
             if outcome.is_ok() {
@@ -1042,6 +1182,7 @@ fn download_concurrent(
                 let total = written + pending + in_flight.values().sum::<u64>();
                 if reporter.report(DownloadPhase::Downloading, total).is_err() {
                     cancelled.store(true, Ordering::Relaxed);
+                    window.moved.notify_all();
                     outcome = Err(Error::DownloadCancelled);
                 }
             }
@@ -1099,6 +1240,9 @@ fn fetch(
     // MhtmlFD's storyboard fragments are images.
     let images = info.protocol.as_deref() == Some("mhtml");
     let expected = validate(&response, fragment, false, images)?;
+    if let Some(expected) = expected {
+        file.expect(expected);
+    }
     let modified = crate::filetime::header(&response);
     reporter.report(DownloadPhase::Downloading, *stored)?;
     if let Some(decryptor) = decryption {
@@ -1467,42 +1611,128 @@ mod tests {
     #[test]
     fn spool_keeps_fragments_in_memory_within_the_budget() {
         let dir = tempfile::tempdir().unwrap();
-        let held = AtomicUsize::new(0);
-        let mut spool = Spool::new(&held, dir.path());
+        let budget = SpoolMemory::default();
+        let mut spool = Spool::new(&budget, dir.path());
         spool.write_all(b"abc").unwrap();
         spool.write_all(b"defgh").unwrap();
         assert!(spool.file.is_none());
         assert_eq!(spool.len, 8);
-        assert_eq!(held.load(Ordering::Relaxed), spool.reserved);
+        assert_eq!(budget.held.load(Ordering::Relaxed), spool.reserved);
         assert!(spool.memory.capacity() >= spool.reserved);
         // A failed attempt starts the fragment over.
         spool.truncate(0).unwrap();
         spool.write_all(b"xyz").unwrap();
         assert_eq!(contents(&spool), b"xyz");
         drop(spool);
-        assert_eq!(held.load(Ordering::Relaxed), 0);
+        assert_eq!(budget.held.load(Ordering::Relaxed), 0);
+    }
+
+    #[test]
+    fn spool_reserves_an_announced_length_once() {
+        let dir = tempfile::tempdir().unwrap();
+        let budget = SpoolMemory::default();
+        let mut spool = Spool::new(&budget, dir.path());
+        spool.expect(1000);
+        assert_eq!(budget.held.load(Ordering::Relaxed), 1000);
+        for _ in 0..10 {
+            spool.write_all(&[7; 100]).unwrap();
+        }
+        // Writing the announced bytes neither grows nor reallocates.
+        assert_eq!(budget.held.load(Ordering::Relaxed), 1000);
+        assert_eq!(spool.memory.capacity(), 1000);
+        // A retry announces the same length again.
+        spool.truncate(0).unwrap();
+        spool.expect(1000);
+        assert_eq!(budget.held.load(Ordering::Relaxed), 1000);
+        // Lengths beyond the budget are left to the writes.
+        let mut large = Spool::new(&budget, dir.path());
+        large.expect(SPOOL_MEMORY as u64 + 1);
+        assert_eq!(large.reserved, 0);
+        drop((spool, large));
+        assert_eq!(budget.held.load(Ordering::Relaxed), 0);
+        // The released buffer serves the next fragment of its size.
+        assert_eq!(budget.spare.lock().unwrap().len(), 1);
+        let mut next = Spool::new(&budget, dir.path());
+        next.expect(1000);
+        assert_eq!(next.memory.capacity(), 1000);
+        assert!(budget.spare.lock().unwrap().is_empty());
+        drop(next);
+        assert_eq!(budget.held.load(Ordering::Relaxed), 0);
+    }
+
+    /// Whether `window.start(index)` returns (generously timed for loaded
+    /// machines; callers check for waiting with their own short wait).
+    fn starts(window: &std::sync::Arc<Window>, index: usize) -> bool {
+        let (sender, receiver) = std::sync::mpsc::channel();
+        let window = window.clone();
+        std::thread::spawn(move || {
+            window.start(index, &std::sync::atomic::AtomicBool::new(false));
+            let _ = sender.send(());
+        });
+        receiver.recv_timeout(Duration::from_secs(10)).is_ok()
+    }
+
+    #[test]
+    fn window_runs_ahead_of_a_fragment_still_in_flight() {
+        let window = std::sync::Arc::new(Window::new(0, 4));
+        let size = 1 << 20;
+        assert!(starts(&window, 0));
+        // Fragment 0 is slow: far more than the budget may queue behind it.
+        for index in 1..100 {
+            assert!(starts(&window, index), "fragment {index}");
+            window.arrived(index, Some(size));
+        }
+    }
+
+    #[test]
+    fn window_waits_for_appending_once_the_next_fragment_arrived() {
+        let window = std::sync::Arc::new(Window::new(0, 4));
+        let size = 1 << 20;
+        let mut index = 0;
+        // Fill the budget behind an arrived fragment 0.
+        while (index as u64 + 1) * size <= SPOOL_MEMORY as u64 {
+            assert!(starts(&window, index), "fragment {index}");
+            window.arrived(index, Some(size));
+            index += 1;
+        }
+        let waiting = {
+            let (sender, receiver) = std::sync::mpsc::channel();
+            let window = window.clone();
+            std::thread::spawn(move || {
+                window.start(index, &std::sync::atomic::AtomicBool::new(false));
+                let _ = sender.send(());
+            });
+            receiver
+        };
+        assert!(waiting.recv_timeout(Duration::from_millis(300)).is_err());
+        // Appending makes room.
+        window.appended(0, size);
+        window.appended(1, size);
+        assert!(waiting.recv_timeout(Duration::from_secs(5)).is_ok());
+        // The next fragment to append always starts.
+        assert!(starts(&window, 2));
     }
 
     #[test]
     fn spool_moves_to_a_file_when_the_download_reaches_the_budget() {
         let dir = tempfile::tempdir().unwrap();
-        let held = AtomicUsize::new(0);
-        let mut first = Spool::new(&held, dir.path());
+        let budget = SpoolMemory::default();
+        let mut first = Spool::new(&budget, dir.path());
         first.write_all(&vec![1; SPOOL_MEMORY - 4]).unwrap();
-        let mut second = Spool::new(&held, dir.path());
+        let mut second = Spool::new(&budget, dir.path());
         second.write_all(b"ab").unwrap();
         assert!(second.file.is_none());
         second.write_all(b"cdefgh").unwrap();
         assert!(second.file.is_some());
         // Its memory went back to the budget when it moved.
-        assert_eq!(held.load(Ordering::Relaxed), first.reserved);
+        assert_eq!(budget.held.load(Ordering::Relaxed), first.reserved);
         assert_eq!(second.len, 8);
         assert_eq!(contents(&second), b"abcdefgh");
         second.truncate(0).unwrap();
         second.write_all(b"z").unwrap();
         assert_eq!(contents(&second), b"z");
         drop(first);
-        assert_eq!(held.load(Ordering::Relaxed), 0);
+        assert_eq!(budget.held.load(Ordering::Relaxed), 0);
         let file = second.file.as_ref().unwrap().path().to_owned();
         drop(second);
         assert!(!file.exists());

@@ -91,6 +91,12 @@ pub(crate) struct Blocks {
     pending: Option<std::io::Error>,
 }
 
+thread_local! {
+    /// The thread's last [`Blocks`] buffer: a download of many fragments
+    /// would otherwise regrow one per fragment, fragmenting the heap.
+    static SPARE_BUFFER: std::cell::Cell<Vec<u8>> = const { std::cell::Cell::new(Vec::new()) };
+}
+
 impl Blocks {
     pub(crate) fn new() -> Self {
         use std::sync::atomic::Ordering::Relaxed;
@@ -98,7 +104,9 @@ impl Blocks {
             size: BUFFER_SIZE.load(Relaxed).max(1),
             resize: RESIZE_BUFFER.load(Relaxed),
             before: std::time::Instant::now(),
-            buffer: Vec::new(),
+            buffer: SPARE_BUFFER
+                .try_with(std::cell::Cell::take)
+                .unwrap_or_default(),
             pending: None,
         }
     }
@@ -138,6 +146,13 @@ impl Blocks {
             self.size = best_block_size(now.duration_since(self.before).as_secs_f64(), length);
         }
         self.before = now;
+    }
+}
+
+impl Drop for Blocks {
+    fn drop(&mut self) {
+        let buffer = std::mem::take(&mut self.buffer);
+        let _ = SPARE_BUFFER.try_with(|spare| spare.set(buffer));
     }
 }
 

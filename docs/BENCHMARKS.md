@@ -128,10 +128,23 @@ file as before. On 25 MiB, `-N 4/8` is now faster than `-N 1`. On 400 MiB
 the localhost server outruns the single writer, the backlog fills the
 budget and later fragments spill, so `-N 4/8` take 1.5× as long as `-N 1`
 (0.68 s before; budgets of 0, 16, 64 and 128 MiB gave 0.67, 0.52, 0.39
-and 0.28 s at `-N 4`, with peak RSS rising from 83 to 202 MiB). Memory was
-chosen over this case: on a real network, fragments arrive slower than a
-disk writes them, so the spools stay small. The extra RSS over `-N 1` is
-the budget plus per-worker buffers and stacks.
+and 0.28 s at `-N 4`, with peak RSS rising from 83 to 202 MiB).
+
+Since 2026-11-11 the workers stop running ahead of the writer instead
+(`Window` in `src/fragment.rs`): once the next fragment to append has
+arrived, so the backlog is the disk's and not a slow server's, a fragment
+starts only while the queued and in-flight fragments fit in the budget.
+While the next fragment is still in flight (a slow response, a retry), the
+others keep going and spill as before, like upstream's workers. Spools
+reserve a response's announced length once, and released buffers are
+reused, instead of fragmenting the heap with a new 1 MiB buffer each.
+Measured on a loaded M5 Pro (another build and an antivirus scanner
+running, so absolute times are not comparable with the tables above), 400
+× 1 MiB from a local server: `-N 4/8` went from about 350 spilled
+fragments at once to 0–7, system time from 0.86 s to 0.31 s (the same as
+`-N 1`), wall time from 3.1–6.8 s to 1.6–1.9 s (`-N 1`: 2.1–4.1 s), and
+peak RSS from 82–111 MiB to 72–80 MiB. The 50 ms latency cases did not
+change.
 
 ### Default `-N`
 
@@ -139,8 +152,7 @@ The port keeps upstream's default of `-N 1` (`concurrent_fragment_downloads`
 1). The measurements favor `-N 4` only when every request has real
 latency. The default is a compatibility surface: some sites rate-limit or
 throttle parallel fragment requests, and upstream's choice is what users
-and scripts expect. Where the network outruns the disk, the port's
-`-N > 1` can still be slower than `-N 1` (see above). The gain is
+and scripts expect. The gain is
 available on request: Media Converter can pass `-N 4` for HLS/DASH
 downloads, as yt-dlp users do. Revisit if canary runs with `-N 4` show
 no throttling.
