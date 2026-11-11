@@ -1250,9 +1250,20 @@ fn prepare_media(
         .expect("default output template is non-empty"))
 }
 
-/// Upstream warns when an absolute media template makes `--paths` irrelevant.
-fn path_is_absolute_template(templates: &OutputTemplates) -> bool {
-    std::path::Path::new(&crate::batch::expand_path_text(templates.get(None))).is_absolute()
+/// Upstream `prepare_filename(info, warn=True)`: `--paths` does not apply to
+/// stdout or an absolute media template (each warned once).
+fn warn_ignored_paths(templates: &OutputTemplates, options: &TemplateOptions) {
+    if options.paths.is_empty() {
+        return;
+    }
+    let template = templates.get(None);
+    if template == "-" {
+        crate::screen::warning_once("--paths is ignored when an outputting to stdout");
+    } else if std::path::Path::new(&crate::batch::expand_path_text(template)).is_absolute() {
+        crate::screen::warning_once(
+            "--paths is ignored since an absolute path is given in output template",
+        );
+    }
 }
 
 /// Whether a regular file exists; other existing entries (including dangling
@@ -4560,9 +4571,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         {
                             defer(error);
                         }
-                        // `_forceprint`: `filename` is the prepared media filename.
+                        // `_forceprint`: `filename` is the prepared media filename
+                        // (`prepare_filename(info_dict, warn=True)`).
                         let print_filename = prepare_media(&templates, &info, &template_options)
                             .map(|path| path.to_string_lossy().into_owned());
+                        warn_ignored_paths(&templates, &template_options);
                         let stage_print =
                             |stage: Stage, info: &crate::VideoInfo, paths: StagePaths<'_>| {
                                 render_stage(
@@ -4671,13 +4684,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 return Ok(());
                             }
                             let path = prepare_media(&templates, &info, &template_options)?;
-                            if !template_options.paths.is_empty()
-                                && path_is_absolute_template(&templates)
-                            {
-                                warning!(
-                                    "WARNING: --paths is ignored since an absolute path is given in output template"
-                                );
-                            }
                             // Upstream `prepare_filename(info, 'temp')`: downloads and
                             // processors work on the temporary name, then
                             // `MoveFiles` publishes beside `final_path`.
