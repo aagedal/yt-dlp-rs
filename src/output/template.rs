@@ -1556,7 +1556,7 @@ pub(super) fn expand(
 /// Each keyed substitution's conversion character and `|default`, in
 /// template order, for `--exec` safety validation. Other `%` sequences are
 /// literal, as in command rendering.
-pub(super) fn exec_fields(template: &str) -> Vec<(Option<char>, Option<&str>)> {
+pub(super) fn exec_fields(template: &str) -> Vec<(char, Option<&str>)> {
     let mut fields = Vec::new();
     let mut rest = template;
     while let Some(index) = rest.find('%') {
@@ -1568,9 +1568,24 @@ pub(super) fn exec_fields(template: &str) -> Vec<(Option<char>, Option<&str>)> {
         let Some((key, spec)) = rest.strip_prefix('(').and_then(|s| s.split_once(')')) else {
             continue;
         };
-        let spec = spec.trim_start_matches(|c: char| "-0123456789.*# +".contains(c));
-        let spec = spec.strip_prefix(['h', 'l', 'L']).unwrap_or(spec);
-        let conversion = spec.chars().next();
+        // `STR_FORMAT_RE_TMPL`: flags, width, precision and a length
+        // modifier before a conversion type; without a type the text is
+        // literal (and never formatted when nothing else is).
+        let spec = spec.trim_start_matches(['#', '0', '-', '+', ' ']);
+        let spec = spec.trim_start_matches(|c: char| c.is_ascii_digit());
+        let spec = match spec.strip_prefix('.') {
+            Some(digits) if digits.starts_with(|c: char| c.is_ascii_digit()) => {
+                digits.trim_start_matches(|c: char| c.is_ascii_digit())
+            }
+            _ => spec,
+        };
+        let spec = match spec.strip_prefix(['h', 'l', 'L']) {
+            Some(tail) if tail.starts_with(|c| CONVERSIONS.contains(c)) => tail,
+            _ => spec,
+        };
+        let Some(conversion) = spec.chars().next().filter(|c| CONVERSIONS.contains(*c)) else {
+            continue;
+        };
         // The default after trying every alternate of a missing value.
         let mut default = None;
         let mut alternate = key;
@@ -1582,7 +1597,7 @@ pub(super) fn exec_fields(template: &str) -> Vec<(Option<char>, Option<&str>)> {
             alternate = &parsed.remaining[1..];
         }
         fields.push((conversion, default));
-        rest = &spec[conversion.map_or(0, char::len_utf8)..];
+        rest = &spec[conversion.len_utf8()..];
     }
     fields
 }

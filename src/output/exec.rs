@@ -204,7 +204,7 @@ impl ExecCommand {
             template::exec_fields(template)
         };
         for (conversion, default) in checked {
-            if !conversion.is_some_and(|c| "difq".contains(c)) {
+            if !"difq".contains(conversion) {
                 return Err(Error::Exec(format!(
                     "Unsafe conversion(s) in exec command: {repr}\nConversions such as %()s are too dangerous to be used in --exec command templates; use %()q instead. {ADVISORY}"
                 )));
@@ -378,6 +378,36 @@ mod tests {
                 .contains("Unsafe placeholder for exec command: 'N A'")
         );
         assert!(ExecCommands::parse(&[(None, "echo 100% {}")], &options).is_ok());
+    }
+
+    #[test]
+    fn keys_without_a_conversion_type_stay_literal() {
+        // `STR_FORMAT_RE_TMPL` needs a conversion type: pinned upstream runs
+        // `echo %(id)z` as written (with the path appended) and rejects a
+        // bare `l` (list) conversion even before another letter.
+        let options = TemplateOptions::default();
+        let info: VideoInfo = serde_json::from_value(serde_json::json!({
+            "id": "abc", "title": "t", "ext": "mp4", "url": "https://e.invalid/v.mp4",
+            "webpage_url": "https://e.invalid/v", "extractor": "x", "extractor_key": "X",
+        }))
+        .unwrap();
+        for template in ["echo %(id)z", "echo %(id)", "echo %(id)5.z", "echo %(id)#"] {
+            let commands = ExecCommands::parse(&[(None, template)], &options).unwrap();
+            let command = commands.stage(Stage::AfterMove).next().unwrap();
+            assert_eq!(
+                command
+                    .render(&info, Some("a b.mp4"), None, &options)
+                    .unwrap(),
+                format!("{template} {}", shell_quote_command("a b.mp4"))
+            );
+        }
+        for template in ["echo %(id)lz", "echo %(id)5.2s"] {
+            let error = ExecCommands::parse(&[(None, template)], &options).unwrap_err();
+            assert!(
+                error.to_string().contains("Unsafe conversion(s)"),
+                "{template}"
+            );
+        }
     }
 
     #[test]
