@@ -617,6 +617,52 @@ fn playlist_progress_lines_follow_upstream_process_playlist() {
     );
 }
 
+/// `__process_playlist` checks an entry with every field incomplete before
+/// its `Downloading item` line; `process_video_result` then checks it with
+/// only the format fields incomplete (and no `ext`/`url` before selection).
+/// Checked with pinned upstream.
+#[test]
+fn entries_are_filtered_before_and_after_their_item_line() {
+    let server = Server::new();
+    let lines = |path: &str, filter: &str| {
+        let output = server.cli(path, &["-s", "-I", "2:3", "--match-filter", filter]);
+        success(&output)
+            .lines()
+            .filter(|line| line.starts_with("[download] ") || line.starts_with("[info] "))
+            .map(str::to_owned)
+            .collect::<Vec<_>>()
+    };
+    let title = "Playlist selection";
+    assert_eq!(
+        lines("/playlist.html", "like_count>5")[1..],
+        [
+            "[download] Downloading item 1 of 2".to_owned(),
+            format!("[download] {title} (2) does not pass filter (like_count>5), skipping .."),
+            "[download] Downloading item 2 of 2".to_owned(),
+            format!("[download] {title} (3) does not pass filter (like_count>5), skipping .."),
+            format!("[download] Finished downloading playlist: {title}"),
+        ]
+    );
+    // `playlist_index` is known when the entry is checked.
+    assert_eq!(
+        lines("/playlist.html", "playlist_index!=2")[1..],
+        [
+            format!("[download] {title} (2) does not pass filter (playlist_index!=2), skipping .."),
+            "[download] Downloading item 2 of 2".to_owned(),
+            "[info] playlist-3: Downloading 1 format(s): 0".to_owned(),
+            format!("[download] Finished downloading playlist: {title}"),
+        ]
+    );
+    // A direct link's `ext` comes from its selected format.
+    assert_eq!(
+        lines("/one.mp4", "ext=webm"),
+        [
+            "[info] one: Downloading 1 format(s): mp4",
+            "[download] one does not pass filter (ext=webm), skipping ..",
+        ]
+    );
+}
+
 /// Upstream `get_requested_items` ends the requested items at an entry that
 /// would break, checked with `incomplete=True`: fields the raw entry lacks
 /// (`playlist_index`, `playlist_count`, ...) pass there, so selection does

@@ -824,7 +824,9 @@ impl MatchFilters {
     /// Evaluate a playlist entry before it is processed (upstream
     /// `_match_entry(entry, incomplete=True)`): every missing field passes.
     pub(crate) fn check_entry(&self, info: &VideoInfo) -> Result<MatchOutcome> {
-        self.check_with(info, true, &|_| true)
+        let mut entry = info.clone();
+        entry.mark_unselected();
+        self.check_with(&entry, true, &|_| true)
     }
 
     fn check_with(
@@ -838,6 +840,13 @@ impl MatchFilters {
             .as_object_mut()
             .expect("video info serializes to an object");
         crate::info_order::strip_markers(dict);
+        // Keys only the selected format sets (`VideoInfo::mark_unselected`).
+        dict.shift_remove(crate::info::UNSELECTED);
+        for key in ["ext", "url"] {
+            if info.unselected(key) {
+                dict.shift_remove(key);
+            }
+        }
         let dict = &*dict;
         let reject = |reason| {
             if self.selection.break_on_reject {

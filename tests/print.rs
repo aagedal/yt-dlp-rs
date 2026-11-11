@@ -576,6 +576,51 @@ fn legacy_id_autonumber_and_deprecated_options_follow_upstream() {
     ));
 }
 
+/// A loaded dict keeps its own `ext`/`url` before format selection (for
+/// `pre_process` prints and match filters); checked with pinned upstream.
+#[test]
+fn loaded_ext_and_url_exist_before_format_selection() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    let run = |info: serde_json::Value, args: &[&str]| {
+        std::fs::write(&path, info.to_string()).unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "-s"])
+            .args(args)
+            .arg("--load-info-json")
+            .arg(&path)
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+        String::from_utf8(output.stdout).unwrap()
+    };
+    let mut info = serde_json::json!({
+        "id": "clip", "title": "Clip", "ext": "webm", "url": "http://127.0.0.1:1/c.webm",
+        "extractor": "generic", "extractor_key": "Generic", "webpage_url": "http://127.0.0.1:1/p",
+        "formats": [{"format_id": "a", "url": "http://127.0.0.1:1/a.mp4", "ext": "mp4", "protocol": "http"}],
+    });
+    // `after_filter` prints only for a dict passing the filter before
+    // selection; the selected format's `mp4` is rejected after it.
+    let print = [
+        "-O",
+        "pre_process:%(ext)s %(url)s",
+        "-O",
+        "after_filter:%(id)s",
+        "-O",
+        "%(id)s",
+        "--match-filter",
+        "ext=webm",
+    ];
+    assert_eq!(
+        run(info.clone(), &print),
+        "webm http://127.0.0.1:1/c.webm\nclip\n"
+    );
+    let object = info.as_object_mut().unwrap();
+    object.shift_remove("ext");
+    object.shift_remove("url");
+    assert_eq!(run(info, &print), "NA NA\nclip\n");
+}
+
 /// `prepare_filename(info, warn=True)` runs for every processed format,
 /// also when simulating: `--paths` is reported ignored once for stdout or
 /// an absolute media template (checked with pinned upstream).

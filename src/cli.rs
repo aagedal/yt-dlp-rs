@@ -4326,6 +4326,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     return Ok(());
                 }
+                // Then its filters, with only the format fields incomplete
+                // (a playlist entry was checked with every field incomplete).
+                if !match_filters.is_empty() {
+                    let mut view = info.clone();
+                    view.mark_unselected();
+                    match match_filters.check(&view, true)? {
+                        MatchOutcome::Pass | MatchOutcome::Ask => {}
+                        MatchOutcome::Reject(reason) => {
+                            screen!("[download] {reason}");
+                            return Ok(());
+                        }
+                        MatchOutcome::Break(reason) => {
+                            screen!("[download] {reason}");
+                            entry_cancel = Some(Cancel::Rejected);
+                            return Ok(());
+                        }
+                    }
+                }
                 downloader.post_extract(&mut info)?;
                 early_stage(Stage::AfterFilter, &mut info, "after_filter")?;
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
@@ -9425,33 +9443,24 @@ fn prefilter(
     if filters.is_empty() {
         return Ok(Some(result));
     }
-    let mut keep = |info: &crate::VideoInfo,
-                    skipped: Option<&mut std::collections::VecDeque<(usize, String)>>|
-     -> crate::Result<Option<bool>> {
-        Ok(match filters.check(info, true)? {
-            MatchOutcome::Pass | MatchOutcome::Ask => Some(true),
-            MatchOutcome::Reject(reason) => {
-                report_skip(info, format!("[download] {reason}"), skipped);
-                Some(false)
-            }
-            MatchOutcome::Break(reason) => {
-                report_skip(info, format!("[download] {reason}"), skipped);
-                *pending = Some(Cancel::Rejected);
-                None
-            }
-        })
-    };
     match result {
-        ExtractResult::Video(info) => {
-            Ok((keep(&info, None)? == Some(true)).then_some(ExtractResult::Video(info)))
-        }
+        // A video is checked in the entry loop, after `pre_process`.
+        ExtractResult::Video(info) => Ok(Some(ExtractResult::Video(info))),
+        // `__process_playlist` checks each entry with every field incomplete
+        // (the entry loop checks it again as a video).
         ExtractResult::Playlist(mut playlist) => {
             let mut kept = Vec::new();
             for info in playlist.entries {
-                match keep(&info, Some(skipped))? {
-                    Some(true) => kept.push(info),
-                    Some(false) => {}
-                    None => break,
+                match filters.check_entry(&info)? {
+                    MatchOutcome::Pass | MatchOutcome::Ask => kept.push(info),
+                    MatchOutcome::Reject(reason) => {
+                        report_skip(&info, format!("[download] {reason}"), Some(skipped));
+                    }
+                    MatchOutcome::Break(reason) => {
+                        report_skip(&info, format!("[download] {reason}"), Some(skipped));
+                        *pending = Some(Cancel::Rejected);
+                        break;
+                    }
                 }
             }
             playlist.entries = kept;

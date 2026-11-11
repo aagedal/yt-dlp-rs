@@ -322,6 +322,11 @@ pub(crate) fn loaded_shape(original: &Map<String, Value>) -> Value {
     )]))
 }
 
+/// The original of a [`loaded_shape`] marker.
+pub(crate) fn loaded_original(marker: &Value) -> Option<&Map<String, Value>> {
+    marker.get(LOADED)?.as_object()
+}
+
 /// A marker's shape name and, for loaded dicts, the original.
 fn shape_of(marker: Option<Value>) -> Option<(String, Option<Map<String, Value>>)> {
     match marker? {
