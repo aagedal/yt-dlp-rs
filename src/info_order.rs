@@ -2986,7 +2986,9 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.take(key);
     }
     replay.assign("release_year");
-    for key in ["playlist_count", "requested_entries", "epoch"] {
+    // `__process_playlist` sets `requested_entries` before a missing
+    // `playlist_count`.
+    for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }
     // Upstream's `-J` also prints the playlist's (empty) files to move.

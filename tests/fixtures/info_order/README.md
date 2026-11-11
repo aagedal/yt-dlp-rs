@@ -13,7 +13,8 @@ The cases cover GenericIE's typed direct link (`clip.mp4`), its untyped
 "URL could be a direct video link" result (`clip.qqq`), a single HTML5 embed
 (`one.html`), one with a poster, subtitle tracks and Open Graph metadata
 (`rich.html`), an HTML5 playlist with a `<source>` (`three.html`), one with
-untyped `<source>`s (`sources.html`), an HLS
+untyped `<source>`s (`sources.html`, selected with its `args`, `-I 3:1:-1`,
+so `-J` keeps `requested_entries`), an HLS
 master with subtitle renditions, a typed and an untyped (`#EXTM3U` body,
 `text/plain`) media playlist, DASH manifests with segmented and direct text
 tracks, multi-period and partly protected MPDs, and dynamic (live) MPDs.
