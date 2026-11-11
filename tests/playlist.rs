@@ -617,6 +617,37 @@ fn playlist_progress_lines_follow_upstream_process_playlist() {
     );
 }
 
+/// Upstream `get_requested_items` ends the requested items at an entry that
+/// would break, checked with `incomplete=True`: fields the raw entry lacks
+/// (`playlist_index`, `playlist_count`, ...) pass there, so selection does
+/// not stop; the processed entry (with its playlist fields) breaks later.
+/// Checked with pinned upstream.
+#[test]
+fn breaking_filters_on_missing_entry_fields_do_not_end_selection() {
+    let server = Server::new();
+    for (filter, printed, code) in [
+        ("playlist_index", "2\n3\n4\n", 0),
+        ("playlist_count>1", "2\n3\n4\n", 0),
+        ("playlist_index<3", "2\n", 101),
+        ("height<1080", "2\n", 101),
+    ] {
+        let output = server.cli(
+            "/playlist.html",
+            &[
+                "-s",
+                "-I",
+                "2:",
+                "--break-match-filters",
+                filter,
+                "-O",
+                "%(playlist_index)s",
+            ],
+        );
+        assert_eq!(String::from_utf8_lossy(&output.stdout), printed, "{filter}");
+        assert_eq!(output.status.code(), Some(code), "{filter}");
+    }
+}
+
 #[test]
 fn playlist_random_lazy_and_reverse_follow_upstream_conflicts() {
     let server = Server::new();

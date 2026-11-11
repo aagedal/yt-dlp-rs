@@ -3609,7 +3609,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             {
                                 return args.break_on_existing;
                             }
-                            matches!(match_filters.check(info, true), Ok(MatchOutcome::Break(_)))
+                            // `_match_entry(entry, incomplete=True, silent=True)`:
+                            // missing fields (even the playlist's) pass.
+                            matches!(match_filters.check_entry(info), Ok(MatchOutcome::Break(_)))
                         };
                         let stops =
                             (args.break_on_existing && archive.is_some()) || match_filters.breaks();

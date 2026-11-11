@@ -816,13 +816,29 @@ impl MatchFilters {
     /// Evaluate a video. Before format selection, pass `before_selection` so
     /// format fields are incomplete (missing ones pass).
     pub fn check(&self, info: &VideoInfo, before_selection: bool) -> Result<MatchOutcome> {
+        self.check_with(info, before_selection, &|key| {
+            before_selection && FORMAT_FIELDS.contains(&key)
+        })
+    }
+
+    /// Evaluate a playlist entry before it is processed (upstream
+    /// `_match_entry(entry, incomplete=True)`): every missing field passes.
+    pub(crate) fn check_entry(&self, info: &VideoInfo) -> Result<MatchOutcome> {
+        self.check_with(info, true, &|_| true)
+    }
+
+    fn check_with(
+        &self,
+        info: &VideoInfo,
+        before_selection: bool,
+        incomplete: &dyn Fn(&str) -> bool,
+    ) -> Result<MatchOutcome> {
         let mut value = serde_json::to_value(info).map_err(|error| invalid(error.to_string()))?;
         let dict = value
             .as_object_mut()
             .expect("video info serializes to an object");
         crate::info_order::strip_markers(dict);
         let dict = &*dict;
-        let incomplete = |key: &str| before_selection && FORMAT_FIELDS.contains(&key);
         let reject = |reason| {
             if self.selection.break_on_reject {
                 MatchOutcome::Break(reason)
@@ -833,10 +849,10 @@ impl MatchFilters {
         if let Some(reason) = self.selection.rejection(info)? {
             return Ok(reject(reason));
         }
-        if let Some(reason) = Self::rejection(&self.breaking, dict, &incomplete)? {
+        if let Some(reason) = Self::rejection(&self.breaking, dict, incomplete)? {
             return Ok(MatchOutcome::Break(reason));
         }
-        Ok(match Self::rejection(&self.filters, dict, &incomplete)? {
+        Ok(match Self::rejection(&self.filters, dict, incomplete)? {
             Some(reason) => reject(reason),
             None if self.interactive && !before_selection => MatchOutcome::Ask,
             None => MatchOutcome::Pass,
