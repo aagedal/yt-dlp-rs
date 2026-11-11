@@ -2302,7 +2302,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             args.audio_format
         ))
     })?;
-    if let Some(quality) = crate::batch::py_strip(&args.audio_quality)
+    // After `opts.audioquality.strip('k').strip('K')`.
+    let stripped = args.audio_quality.trim_matches('k').trim_matches('K');
+    if let Some(quality) = crate::batch::py_strip(stripped)
         .parse::<f64>()
         .ok()
         .filter(|quality| quality.is_finite() && quality.trunc() < 0.0)
