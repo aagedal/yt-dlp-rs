@@ -116,6 +116,18 @@ struct Html5Source {
     element: bool,
 }
 
+impl Html5Source {
+    /// The key-order shape of a `<source>` element's format: without a
+    /// `type`, `parse_content_type` adds no leading codecs or `ext`.
+    fn shape(&self) -> &'static str {
+        if self.type_ext.is_some() {
+            "html5-source"
+        } else {
+            "html5-source-untyped"
+        }
+    }
+}
+
 /// Upstream `parse_content_type`'s `codecs` group:
 /// `[^/]+/[^;]+(?:;\s*codecs="?([^"]+))?`.
 fn content_type_codecs(content_type: &str) -> Option<&str> {
@@ -574,7 +586,7 @@ pub(crate) fn parse_html5_media_entries(
                     "format_id".into(),
                     source.label.clone().unwrap_or_default().into(),
                 );
-                "html5-source"
+                source.shape()
             } else {
                 map.insert("format_id".into(), "".into());
                 "html5-src"
@@ -1033,7 +1045,7 @@ impl Extractor for GenericHttp {
                 });
                 if let Some(format) = formats.last_mut() {
                     let shape = if source.element {
-                        "html5-source"
+                        source.shape()
                     } else {
                         "html5-src"
                     };

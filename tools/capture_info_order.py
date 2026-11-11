@@ -40,7 +40,7 @@ CONTENT_TYPES = {
 CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
          'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd', 'og.html', 'twitter.html',
          'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html', 'oghls.html', 'ogdash.html', 'jwhls.html', 'vjshls.html', 'vjsmix.html', 'feed.xml', 'twohls.html', 'periods.mpd', 'periods-unmerged.mpd', 'periods-direct.mpd', 'drm.mpd', 'dynamic.mpd',
-         'dynamic-timeline.mpd']
+         'dynamic-timeline.mpd', 'sources.html']
 
 
 def content_type(name):

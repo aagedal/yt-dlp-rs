@@ -764,6 +764,16 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("vcodec", Assign),
             ("ext", Take),
         ],
+        // The same without a usable `type` (`parse_content_type` gives `{}`).
+        "html5-source-untyped" => &[
+            ("width", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("format_id", Assign),
+            ("url", Take),
+            ("vcodec", Assign),
+            ("ext", Take),
+        ],
         // `_extract_m3u8_formats` for a media playlist.
         "hls-media" => &[
             ("format_id", Take),
