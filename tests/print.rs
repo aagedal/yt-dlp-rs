@@ -576,6 +576,47 @@ fn legacy_id_autonumber_and_deprecated_options_follow_upstream() {
     ));
 }
 
+/// `FormatSorter._get_field_setting` (case-sensitive) reports unknown `-S`
+/// fields and deprecated aliases once each; checked with pinned upstream.
+#[test]
+fn format_sort_deprecations_follow_upstream() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "extractor": "generic", "extractor_key": "Generic",
+            "webpage_url": "http://127.0.0.1:1/p",
+            "formats": [{"format_id": "a", "url": "http://127.0.0.1:1/a.mp4", "ext": "mp4", "protocol": "http"}],
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "-s",
+            "-S",
+            "bogus,Resolution:720,video_codec",
+        ])
+        .args(["-S", "resolution,bogus", "--load-info-json"])
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let deprecated = "Deprecated Feature:";
+    let later = "deprecated and may be removed in a future version";
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr),
+        format!(
+            "{deprecated} Format sorting alias resolution is {later}. Please use res instead\n\
+             {deprecated} Using arbitrary fields (bogus) for format sorting is {later}\n\
+             {deprecated} Using arbitrary fields (Resolution) for format sorting is {later}\n\
+             {deprecated} Format sorting alias video_codec is {later}. Please use vcodec instead\n"
+        )
+    );
+}
+
 /// A loaded dict keeps its own `ext`/`url` before format selection (for
 /// `pre_process` prints and match filters); checked with pinned upstream.
 #[test]
