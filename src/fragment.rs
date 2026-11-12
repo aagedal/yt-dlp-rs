@@ -91,6 +91,15 @@ fn body_failure(error: Error) -> Failure {
         error,
     }
 }
+/// FragmentFD's uncaught `OSError` for its state or part file, which
+/// `process_info` reports.
+fn unable_to_download(error: &std::io::Error, path: &Path) -> Error {
+    Error::Reported(format!(
+        "Unable to download video: {}",
+        crate::download::os_error(error, path)
+    ))
+}
+
 /// HttpFD's error for a response without a body: reported, never retried.
 const NO_DATA_BLOCKS: &str = "Did not get any data blocks";
 fn unsupported(message: &str) -> Error {
@@ -257,7 +266,7 @@ fn download_with(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
-    fs::create_dir_all(parent)?;
+    crate::download::create_parent(parent)?;
     // Upstream `_prepare_frag_download`: `FILE.part` (or the destination
     // with --no-part) and `FILE.ytdl` resume state; the library default
     // assembles a private temporary file instead.
@@ -315,7 +324,8 @@ fn download_with(
         fs::write(
             &ytdl_path,
             format!("{{\"downloader\": {{\"current_fragment\": {{\"index\": {index}}}{extra}}}}}"),
-        )?;
+        )
+        .map_err(|error| unable_to_download(&error, &ytdl_path))?;
         Ok(())
     };
     let mut start = 0_usize;
@@ -371,7 +381,8 @@ fn download_with(
             .write(true)
             .read(true)
             .truncate(resume_len == 0)
-            .open(&part_path)?;
+            .open(&part_path)
+            .map_err(|error| unable_to_download(&error, &part_path))?;
         file.seek(SeekFrom::Start(resume_len))?;
         named = Some((file, resume_len));
     } else {

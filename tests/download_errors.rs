@@ -563,3 +563,75 @@ fn a_killed_fragment_download_resumes_without_its_partial_fragment() {
         [&b"first-"[..], SECOND, b"third"].concat()
     );
 }
+
+/// Upstream's filesystem errors name the path: HttpFD's `unable to open for
+/// writing`, FragmentFD's `Unable to download video` (its `.ytdl` comes
+/// first) and `_ensure_dir_exists`' `Unable to create directory`.
+#[cfg(unix)]
+#[test]
+fn filesystem_errors_name_the_path_like_upstream() {
+    use std::os::unix::fs::PermissionsExt;
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let (root, read_only, file) = (
+        directory.path(),
+        directory.path().join("ro"),
+        directory.path().join("afile"),
+    );
+    std::fs::create_dir(&read_only).unwrap();
+    std::fs::set_permissions(&read_only, std::fs::Permissions::from_mode(0o555)).unwrap();
+    std::fs::write(&file, "").unwrap();
+    // Permissions do not stop root.
+    let enforced = std::fs::write(read_only.join("probe"), "").is_err();
+    let mut cases = vec![(
+        "afile/x.%(ext)s",
+        "/v.mp4",
+        format!(
+            "Unable to create directory: [Errno 17] File exists: '{}'",
+            file.display()
+        ),
+    )];
+    if enforced {
+        cases.extend([
+            (
+                "ro/x.%(ext)s",
+                "/v.mp4",
+                format!(
+                    "unable to open for writing: [Errno 13] Permission denied: '{}'",
+                    read_only.join("x.mp4.part").display()
+                ),
+            ),
+            (
+                "ro/x.%(ext)s",
+                "/gap.m3u8",
+                format!(
+                    "Unable to download video: [Errno 13] Permission denied: '{}'",
+                    read_only.join("x.mp4.ytdl").display()
+                ),
+            ),
+            (
+                "ro/new/deeper/x.%(ext)s",
+                "/v.mp4",
+                format!(
+                    "Unable to create directory: [Errno 13] Permission denied: '{}'",
+                    read_only.join("new").display()
+                ),
+            ),
+        ]);
+    }
+    for (template, path, message) in cases {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o"])
+            .arg(root.join(template))
+            .arg(format!("{origin}{path}"))
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(1));
+        assert!(
+            text(&output.stderr).ends_with(&format!("ERROR: {message}\n")),
+            "{}",
+            text(&output.stderr)
+        );
+    }
+    std::fs::set_permissions(&read_only, std::fs::Permissions::from_mode(0o755)).unwrap();
+}

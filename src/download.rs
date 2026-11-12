@@ -255,6 +255,47 @@ pub struct DownloadOptions {
 }
 
 /// Refuse an existing destination unless `options.overwrite`.
+/// Python's `OSError` text for `path`: `[Errno N] TEXT: 'PATH'`
+/// (`[WinError N]` on Windows).
+pub(crate) fn os_error(error: &std::io::Error, path: &Path) -> String {
+    let text = error.to_string();
+    match error.raw_os_error() {
+        Some(code) => {
+            let text = text
+                .strip_suffix(&format!(" (os error {code})"))
+                .unwrap_or(&text);
+            let kind = if cfg!(windows) { "WinError" } else { "Errno" };
+            format!(
+                "[{kind} {code}] {}: '{}'",
+                text.trim_end_matches('.'),
+                path.display()
+            )
+        }
+        None => format!("{text}: '{}'", path.display()),
+    }
+}
+
+/// `YoutubeDL._ensure_dir_exists` for the output's directory.
+pub(crate) fn create_parent(parent: &Path) -> Result<()> {
+    fs::create_dir_all(parent).map_err(|error| {
+        // `makedirs` names the directory it failed to make: an existing
+        // non-directory output directory, else the topmost missing one.
+        let failed = if parent.exists() {
+            parent
+        } else {
+            parent
+                .ancestors()
+                .take_while(|ancestor| !ancestor.exists())
+                .last()
+                .unwrap_or(parent)
+        };
+        Error::Reported(format!(
+            "Unable to create directory: {}",
+            os_error(&error, failed)
+        ))
+    })
+}
+
 pub(crate) fn check_destination(destination: &Path, options: &DownloadOptions) -> Result<()> {
     if destination.exists() && !options.overwrite {
         return Err(Error::OutputExists(destination.into()));
@@ -640,7 +681,7 @@ pub(crate) fn download_file(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
-    fs::create_dir_all(parent)?;
+    create_parent(parent)?;
     let mut temporary = media_tempfile(".yt-dlp-rs-", ".part", parent)?;
     let mut reporter = Reporter {
         callback,
@@ -1075,7 +1116,7 @@ fn download_resource(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
-    fs::create_dir_all(parent)?;
+    create_parent(parent)?;
     let mut actual = 0;
     let mut temporary = match resource.part_files {
         PartFiles::Private => Target::Private(media_tempfile(".yt-dlp-rs-", ".part", parent)?),
@@ -1097,11 +1138,18 @@ fn download_resource(
             {
                 actual = metadata.len();
             }
+            // HttpFD's `sanitize_open` failure.
             let mut file = fs::OpenOptions::new()
                 .create(true)
                 .write(true)
                 .truncate(actual == 0)
-                .open(&path)?;
+                .open(&path)
+                .map_err(|error| {
+                    Error::Reported(format!(
+                        "unable to open for writing: {}",
+                        os_error(&error, &path)
+                    ))
+                })?;
             file.seek(SeekFrom::End(0))?;
             Target::Part { file, path }
         }

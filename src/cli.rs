@@ -4739,7 +4739,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     if let Some(parent) =
                                         name.parent().filter(|p| !p.as_os_str().is_empty())
                                     {
-                                        std::fs::create_dir_all(parent)?;
+                                        crate::download::create_parent(parent)?;
                                     }
                                 }
                             }
@@ -7923,8 +7923,7 @@ impl MoveFiles {
                 }
             }
             if let Some(parent) = new.parent().filter(|p| !p.as_os_str().is_empty()) {
-                std::fs::create_dir_all(parent)
-                    .map_err(|error| format!("Unable to create directory: {error}"))?;
+                crate::download::create_parent(parent).map_err(|error| error.to_string())?;
             }
             screen!(
                 "[MoveFiles] Moving file \"{}\" to \"{}\"",
@@ -9112,7 +9111,7 @@ fn write_thumbnails(
             .parent()
             .filter(|p| !p.as_os_str().is_empty())
         {
-            std::fs::create_dir_all(parent)?;
+            crate::download::create_parent(parent)?;
         }
         // Upstream `existing_file((final, written))`.
         let mut existing = Vec::new();
