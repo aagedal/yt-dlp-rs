@@ -1491,19 +1491,22 @@ fn extract_clients(
     }
     if formats.is_empty() {
         let reason = unplayable_reason(id, &acquired.player_responses, &acquired.webpage, wait);
-        if wait {
-            // `raise_no_formats(expected=True)` warns while waiting for videos
-            // (only `report_drm` passes the video ID).
-            if let Some(reason) = &reason {
-                let text = reason.to_string();
-                let prefix = format!("[youtube] {id}: ");
-                match text.strip_prefix(&prefix) {
-                    Some(message) if message != "This video is DRM protected" => {
-                        crate::screen::warning(&format!("[youtube] {message}"));
-                    }
-                    _ => crate::screen::warning(&text),
+        // `raise_no_formats(expected=True)` warns while waiting for videos
+        // or ignoring no-formats errors (only `report_drm` passes the video
+        // ID); the video is then extracted without formats.
+        if (wait || crate::no_formats::ignored())
+            && let Some(reason) = &reason
+        {
+            let text = reason.to_string();
+            let prefix = format!("[youtube] {id}: ");
+            match text.strip_prefix(&prefix) {
+                Some(message) if message != "This video is DRM protected" => {
+                    crate::screen::warning(&format!("[youtube] {message}"));
                 }
+                _ => crate::screen::warning(&text),
             }
+        }
+        if wait {
             let release_timestamp = acquired.player_responses.iter().find_map(|response| {
                 response
                     .pointer("/microformat/playerMicroformatRenderer/liveBroadcastDetails/startTimestamp")
@@ -1515,7 +1518,9 @@ fn extract_clients(
                 upcoming: live_status == Some("is_upcoming"),
             });
         }
-        return Err(reason.unwrap_or_else(|| no_formats(id)));
+        if !crate::no_formats::ignored() {
+            return Err(reason.unwrap_or_else(|| no_formats(id)));
+        }
     }
     // `get_first(video_details, 'keywords', list) or [og:video:tag...]`.
     let mut keywords: Vec<String> = all_details
@@ -1597,8 +1602,16 @@ fn extract_clients(
         }
     }
     let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-    let first_format = &formats[0];
-    let mut info = direct::build_at(first_format.url.clone(), &page, first_format.ext.clone());
+    let mut info = match formats.first() {
+        Some(first) => direct::build_at(first.url.clone(), &page, first.ext.clone()),
+        // `--ignore-no-formats-error`: the video without formats.
+        None => {
+            let mut info = direct::build_at(page.clone(), &page, String::new());
+            info.extra
+                .insert(crate::info::NO_FORMATS.into(), Value::Bool(true));
+            info
+        }
+    };
     info.direct = None;
     info.id = id.into();
     info.title = title;

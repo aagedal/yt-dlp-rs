@@ -91,6 +91,15 @@ fn body_failure(error: Error) -> Failure {
         error,
     }
 }
+/// FragmentFD's uncaught `OSError` for its state or part file, which
+/// `process_info` reports.
+fn unable_to_download(error: &std::io::Error, path: &Path) -> Error {
+    Error::Reported(format!(
+        "Unable to download video: {}",
+        crate::download::os_error(error, path)
+    ))
+}
+
 /// HttpFD's error for a response without a body: reported, never retried.
 const NO_DATA_BLOCKS: &str = "Did not get any data blocks";
 fn unsupported(message: &str) -> Error {
@@ -257,7 +266,7 @@ fn download_with(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
-    fs::create_dir_all(parent)?;
+    crate::download::create_parent(parent)?;
     // Upstream `_prepare_frag_download`: `FILE.part` (or the destination
     // with --no-part) and `FILE.ytdl` resume state; the library default
     // assembles a private temporary file instead.
@@ -315,7 +324,8 @@ fn download_with(
         fs::write(
             &ytdl_path,
             format!("{{\"downloader\": {{\"current_fragment\": {{\"index\": {index}}}{extra}}}}}"),
-        )?;
+        )
+        .map_err(|error| unable_to_download(&error, &ytdl_path))?;
         Ok(())
     };
     let mut start = 0_usize;
@@ -371,7 +381,8 @@ fn download_with(
             .write(true)
             .read(true)
             .truncate(resume_len == 0)
-            .open(&part_path)?;
+            .open(&part_path)
+            .map_err(|error| unable_to_download(&error, &part_path))?;
         file.seek(SeekFrom::Start(resume_len))?;
         named = Some((file, resume_len));
     } else {
@@ -418,9 +429,9 @@ fn download_with(
         || part_path.clone(),
         |temporary| temporary.path().to_path_buf(),
     );
-    // The output's length after the last whole fragment, which a library
-    // `Interrupt::stop` publishes.
-    let committed = std::cell::Cell::new(None::<u64>);
+    // The output's length after the last whole fragment (a resumed part
+    // file's to begin with), which a library `Interrupt::stop` publishes.
+    let committed = std::cell::Cell::new((resumed_bytes > 0).then_some(resumed_bytes));
     let mut appended = |_: usize| -> Result<()> {
         completed += 1;
         committed.set(
@@ -589,36 +600,44 @@ fn download_with(
     })();
     if let Err(error) = assembled {
         let length = committed.get().unwrap_or(0);
-        return Err(crate::download::stop_publish(
-            error,
-            length,
-            destination,
-            || {
-                let output: &mut fs::File = match (&mut private, &mut named) {
-                    (Some(temporary), _) => temporary.as_file_mut(),
-                    (_, Some((file, _))) => file,
-                    _ => unreachable!("one output file is open"),
-                };
-                output.set_len(length)?;
-                output.sync_all()?;
-                match private.take() {
-                    Some(temporary) => {
-                        crate::download::persist(temporary, destination, options.overwrite)
-                    }
-                    None => {
-                        drop(named.take());
-                        let _ = fs::remove_file(&ytdl_path);
-                        if part_path != destination {
-                            if !options.overwrite && fs::symlink_metadata(destination).is_ok() {
-                                return Err(Error::OutputExists(destination.into()));
-                            }
-                            fs::rename(&part_path, destination)?;
-                        }
-                        Ok(())
-                    }
+        let error = crate::download::stop_publish(error, length, destination, || {
+            let output: &mut fs::File = match (&mut private, &mut named) {
+                (Some(temporary), _) => temporary.as_file_mut(),
+                (_, Some((file, _))) => file,
+                _ => unreachable!("one output file is open"),
+            };
+            output.set_len(length)?;
+            output.sync_all()?;
+            match private.take() {
+                Some(temporary) => {
+                    crate::download::persist(temporary, destination, options.overwrite)
                 }
-            },
-        ));
+                None => {
+                    drop(named.take());
+                    let _ = fs::remove_file(&ytdl_path);
+                    if part_path != destination {
+                        if !options.overwrite && fs::symlink_metadata(destination).is_ok() {
+                            return Err(Error::OutputExists(destination.into()));
+                        }
+                        fs::rename(&part_path, destination)?;
+                    }
+                    Ok(())
+                }
+            }
+        });
+        // A stop (`--keep-partial-on-stop`) before any data arrived leaves
+        // nothing, not an empty part file and its state.
+        if matches!(error, Error::DownloadCancelled)
+            && crate::control::stopping()
+            && length == 0
+            && named.take().is_some()
+        {
+            let _ = fs::remove_file(&ytdl_path);
+            if fs::metadata(&part_path).is_ok_and(|metadata| metadata.len() == 0) {
+                let _ = fs::remove_file(&part_path);
+            }
+        }
+        return Err(error);
     }
     reporter.report(DownloadPhase::Publishing, stored)?;
     match private {
@@ -1354,11 +1373,14 @@ fn fetch(
     let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
     let mut blocks = crate::download::Blocks::new();
     let mut pending: Option<Vec<u8>> = Some(Vec::new());
+    // Bytes off the wire, some of them held in `pending` before writing.
+    let (url, mut read) = (response.url().clone(), 0_u64);
     loop {
         let block = blocks
             .read(&mut response, None)
-            .map_err(|error| body_failure(crate::http::read_error(error)))?;
+            .map_err(|error| body_failure(crate::http::body_error(error, &url, read, expected)))?;
         let count = block.len();
+        read += count as u64;
         limiter.consume(count);
         let data = match &mut pending {
             Some(buffered) => {
@@ -1588,7 +1610,10 @@ fn fetch_key(
             Ok(0) => break,
             Ok(count) => count,
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(crate::http::read_error(error))),
+            Err(error) => {
+                let error = crate::http::body_error(error, url, received as u64, expected);
+                return Err(body_failure(error));
+            }
         };
         received += count;
     }
@@ -1614,13 +1639,17 @@ fn decrypt_response(
     let mut sniffed = false;
     let mut buffer = [0; 32 * 1024];
     let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
+    let url = response.url().clone();
     loop {
         reporter.report(DownloadPhase::Downloading, *stored)?;
         let count = match response.read(&mut buffer) {
             Ok(0) => break,
             Ok(count) => count,
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(crate::http::read_error(error))),
+            Err(error) => {
+                let error = crate::http::body_error(error, &url, cipher_bytes, expected);
+                return Err(body_failure(error));
+            }
         };
         limiter.consume(count);
         cipher_bytes = cipher_bytes

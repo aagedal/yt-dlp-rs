@@ -16,6 +16,9 @@ const GAP: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2
 /// The same with an empty second segment.
 const EMPTY: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nempty.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
+/// The same with a second segment cut short.
+const SHORT: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nshort.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
 /// A media playlist whose first segment is missing.
 const HEADLESS: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
@@ -39,6 +42,13 @@ fn serve() -> String {
                 "/headless.m3u8" => ("200 OK", HEADLESS.as_bytes()),
                 "/s0.ts" | "/s2.ts" => ("200 OK", b"segment"),
                 "/empty.ts" => ("200 OK", b""),
+                "/short.m3u8" => ("200 OK", SHORT.as_bytes()),
+                "/short.ts" => {
+                    let _ = stream.write_all(
+                        b"HTTP/1.1 200 OK\r\nContent-Length: 100\r\nConnection: close\r\n\r\npartial",
+                    );
+                    continue;
+                }
                 path if path.starts_with("/busy") => ("503 Service Unavailable", b"busy"),
                 _ => ("404 File not found", b"missing"),
             };
@@ -326,6 +336,39 @@ fn empty_fragments_are_reported_then_skipped() {
     }
 }
 
+/// A fragment whose body ends early is a transport error, retried, then
+/// skipped like an unavailable one (not a filesystem error that ends the
+/// download).
+#[test]
+fn a_truncated_fragment_is_retried_then_skipped() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let playlist = format!("{origin}/short.m3u8");
+    let output = fragments(
+        directory.path(),
+        &[
+            "--fragment-retries",
+            "1",
+            "--retry-sleep",
+            "fragment:0",
+            &playlist,
+        ],
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    let stdout = text(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[download] Got error: 7 bytes read, 93 more expected. Retrying fragment 2 (1/1)...\n"
+        ),
+        "{stdout}"
+    );
+    assert!(stdout.contains("[download] fragment not found; Skipping fragment 2 ...\n"));
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4")).unwrap(),
+        b"segmentsegment"
+    );
+}
+
 /// HlsFD may skip the first fragment too (only DashSegmentsFD never does).
 #[test]
 fn a_missing_first_hls_fragment_is_skipped() {
@@ -519,4 +562,76 @@ fn a_killed_fragment_download_resumes_without_its_partial_fragment() {
         std::fs::read(directory.path().join("o.ts")).unwrap(),
         [&b"first-"[..], SECOND, b"third"].concat()
     );
+}
+
+/// Upstream's filesystem errors name the path: HttpFD's `unable to open for
+/// writing`, FragmentFD's `Unable to download video` (its `.ytdl` comes
+/// first) and `_ensure_dir_exists`' `Unable to create directory`.
+#[cfg(unix)]
+#[test]
+fn filesystem_errors_name_the_path_like_upstream() {
+    use std::os::unix::fs::PermissionsExt;
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let (root, read_only, file) = (
+        directory.path(),
+        directory.path().join("ro"),
+        directory.path().join("afile"),
+    );
+    std::fs::create_dir(&read_only).unwrap();
+    std::fs::set_permissions(&read_only, std::fs::Permissions::from_mode(0o555)).unwrap();
+    std::fs::write(&file, "").unwrap();
+    // Permissions do not stop root.
+    let enforced = std::fs::write(read_only.join("probe"), "").is_err();
+    let mut cases = vec![(
+        "afile/x.%(ext)s",
+        "/v.mp4",
+        format!(
+            "Unable to create directory: [Errno 17] File exists: '{}'",
+            file.display()
+        ),
+    )];
+    if enforced {
+        cases.extend([
+            (
+                "ro/x.%(ext)s",
+                "/v.mp4",
+                format!(
+                    "unable to open for writing: [Errno 13] Permission denied: '{}'",
+                    read_only.join("x.mp4.part").display()
+                ),
+            ),
+            (
+                "ro/x.%(ext)s",
+                "/gap.m3u8",
+                format!(
+                    "Unable to download video: [Errno 13] Permission denied: '{}'",
+                    read_only.join("x.mp4.ytdl").display()
+                ),
+            ),
+            (
+                "ro/new/deeper/x.%(ext)s",
+                "/v.mp4",
+                format!(
+                    "Unable to create directory: [Errno 13] Permission denied: '{}'",
+                    read_only.join("new").display()
+                ),
+            ),
+        ]);
+    }
+    for (template, path, message) in cases {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o"])
+            .arg(root.join(template))
+            .arg(format!("{origin}{path}"))
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(1));
+        assert!(
+            text(&output.stderr).ends_with(&format!("ERROR: {message}\n")),
+            "{}",
+            text(&output.stderr)
+        );
+    }
+    std::fs::set_permissions(&read_only, std::fs::Permissions::from_mode(0o755)).unwrap();
 }

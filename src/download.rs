@@ -255,6 +255,47 @@ pub struct DownloadOptions {
 }
 
 /// Refuse an existing destination unless `options.overwrite`.
+/// Python's `OSError` text for `path`: `[Errno N] TEXT: 'PATH'`
+/// (`[WinError N]` on Windows).
+pub(crate) fn os_error(error: &std::io::Error, path: &Path) -> String {
+    let text = error.to_string();
+    match error.raw_os_error() {
+        Some(code) => {
+            let text = text
+                .strip_suffix(&format!(" (os error {code})"))
+                .unwrap_or(&text);
+            let kind = if cfg!(windows) { "WinError" } else { "Errno" };
+            format!(
+                "[{kind} {code}] {}: '{}'",
+                text.trim_end_matches('.'),
+                path.display()
+            )
+        }
+        None => format!("{text}: '{}'", path.display()),
+    }
+}
+
+/// `YoutubeDL._ensure_dir_exists` for the output's directory.
+pub(crate) fn create_parent(parent: &Path) -> Result<()> {
+    fs::create_dir_all(parent).map_err(|error| {
+        // `makedirs` names the directory it failed to make: an existing
+        // non-directory output directory, else the topmost missing one.
+        let failed = if parent.exists() {
+            parent
+        } else {
+            parent
+                .ancestors()
+                .take_while(|ancestor| !ancestor.exists())
+                .last()
+                .unwrap_or(parent)
+        };
+        Error::Reported(format!(
+            "Unable to create directory: {}",
+            os_error(&error, failed)
+        ))
+    })
+}
+
 pub(crate) fn check_destination(destination: &Path, options: &DownloadOptions) -> Result<()> {
     if destination.exists() && !options.overwrite {
         return Err(Error::OutputExists(destination.into()));
@@ -477,11 +518,12 @@ impl AttemptFailure {
         }
     }
 
-    /// A body read's failure: retried, unless an interrupt ended it.
-    fn read(error: std::io::Error) -> Self {
-        match crate::http::read_error(error) {
-            Error::Io(error) => Self::retry(Error::Io(error)),
-            error => error.into(),
+    /// A body read's failure, `read` bytes into a response of `length`:
+    /// retried, unless an interrupt ended it.
+    fn read(error: std::io::Error, url: &url::Url, read: u64, length: Option<u64>) -> Self {
+        match crate::http::body_error(error, url, read, length) {
+            Error::DownloadCancelled => Error::DownloadCancelled.into(),
+            error => Self::retry(error),
         }
     }
 
@@ -639,7 +681,7 @@ pub(crate) fn download_file(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
-    fs::create_dir_all(parent)?;
+    create_parent(parent)?;
     let mut temporary = media_tempfile(".yt-dlp-rs-", ".part", parent)?;
     let mut reporter = Reporter {
         callback,
@@ -1013,11 +1055,31 @@ impl Target {
     /// written, the partial file is published at `destination` and
     /// `Error::DownloadStopped` returned; otherwise `error` (a private
     /// temporary file is removed when dropped).
-    fn stopped(mut self, error: Error, written: u64, destination: &Path, overwrite: bool) -> Error {
-        stop_publish(error, written, destination, || {
+    /// A part file this transfer created (`fresh`) that is still empty is
+    /// removed: upstream opens it only once data arrives.
+    fn stopped(
+        mut self,
+        error: Error,
+        written: u64,
+        destination: &Path,
+        overwrite: bool,
+        fresh: bool,
+    ) -> Error {
+        let created = match &self {
+            Target::Part { path, .. } if fresh => Some(path.clone()),
+            _ => None,
+        };
+        let error = stop_publish(error, written, destination, || {
             self.file().flush()?;
             self.publish(destination, overwrite)
-        })
+        });
+        if matches!(error, Error::DownloadCancelled)
+            && let Some(path) = created
+            && fs::metadata(&path).is_ok_and(|metadata| metadata.len() == 0)
+        {
+            let _ = fs::remove_file(path);
+        }
+        error
     }
 }
 
@@ -1054,7 +1116,7 @@ fn download_resource(
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
-    fs::create_dir_all(parent)?;
+    create_parent(parent)?;
     let mut actual = 0;
     let mut temporary = match resource.part_files {
         PartFiles::Private => Target::Private(media_tempfile(".yt-dlp-rs-", ".part", parent)?),
@@ -1076,11 +1138,18 @@ fn download_resource(
             {
                 actual = metadata.len();
             }
+            // HttpFD's `sanitize_open` failure.
             let mut file = fs::OpenOptions::new()
                 .create(true)
                 .write(true)
                 .truncate(actual == 0)
-                .open(&path)?;
+                .open(&path)
+                .map_err(|error| {
+                    Error::Reported(format!(
+                        "unable to open for writing: {}",
+                        os_error(&error, &path)
+                    ))
+                })?;
             file.seek(SeekFrom::End(0))?;
             Target::Part { file, path }
         }
@@ -1098,7 +1167,7 @@ fn download_resource(
     for attempt in 0..=options.retries {
         reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
         if let Err(error) = reporter.report(DownloadPhase::Requesting, actual) {
-            return Err(temporary.stopped(error, actual, destination, options.overwrite));
+            return Err(temporary.stopped(error, actual, destination, options.overwrite, !resumed));
         }
         match download_attempt(
             client,
@@ -1136,7 +1205,13 @@ fn download_resource(
                     |delay| delay.max(failure.retry_after),
                 );
                 if let Err(error) = reporter.wait(delay, actual) {
-                    return Err(temporary.stopped(error, actual, destination, options.overwrite));
+                    return Err(temporary.stopped(
+                        error,
+                        actual,
+                        destination,
+                        options.overwrite,
+                        !resumed,
+                    ));
                 }
             }
             Err(failure) if matches!(failure.error, Error::DownloadCancelled) => {
@@ -1145,6 +1220,7 @@ fn download_resource(
                     actual,
                     destination,
                     options.overwrite,
+                    !resumed,
                 ));
             }
             Err(failure) => {
@@ -1290,6 +1366,7 @@ fn chunked_attempt(
         let mut limiter = RateLimit::new(resource.rate_limit);
         let mut throttle = Throttle::new(resource.throttled_rate);
         let mut blocks = Blocks::new();
+        let url = response.url().clone();
         loop {
             let limit = data_len.map(|length| length.saturating_sub(*actual));
             if limit == Some(0) {
@@ -1298,7 +1375,10 @@ fn chunked_attempt(
             let block = match blocks.read(&mut response, limit) {
                 Ok([]) => break,
                 Ok(block) => block,
-                Err(error) => return Err(AttemptFailure::read(error)),
+                Err(error) => {
+                    let length = data_len.map(|length| length.saturating_sub(start));
+                    return Err(AttemptFailure::read(error, &url, *actual - start, length));
+                }
             };
             let count = block.len();
             temporary.write_all(block)?;
@@ -1385,6 +1465,7 @@ pub(crate) fn fetch_span(
                 .filter(|(start, range_end, _)| *start == position && *range_end == end)
                 .ok_or(Error::InvalidRangeResponse)?;
             total = range.2;
+            let (url, first) = (response.url().clone(), position);
             loop {
                 let limit = end + 1 - position;
                 if limit == 0 {
@@ -1398,7 +1479,10 @@ pub(crate) fn fetch_span(
                         }));
                     }
                     Ok(block) => block,
-                    Err(error) => return Err(AttemptFailure::read(error)),
+                    Err(error) => {
+                        let length = Some(end + 1 - first);
+                        return Err(AttemptFailure::read(error, &url, position - first, length));
+                    }
                 };
                 let count = block.len();
                 output.write_all(block)?;
@@ -1565,12 +1649,16 @@ fn download_attempt(
     let mut throttle = Throttle::new(resource.throttled_rate);
     let mut blocks = Blocks::new();
     let mut received = false;
+    let (url, start) = (response.url().clone(), *actual);
     loop {
         // Separate network reads from filesystem writes: only the former retry.
         let block = match blocks.read(&mut response, None) {
             Ok([]) => break,
             Ok(block) => block,
-            Err(error) => return Err(AttemptFailure::read(error)),
+            Err(error) => {
+                let length = expected.map(|total| total.saturating_sub(start));
+                return Err(AttemptFailure::read(error, &url, *actual - start, length));
+            }
         };
         let count = block.len();
         let next = actual

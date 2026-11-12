@@ -15,10 +15,12 @@ use std::{
     time::{Duration, Instant},
 };
 
-/// How a path is answered: all at once, or in 188-byte packets every 50 ms.
+/// How a path is answered: all at once, in 188-byte packets every 50 ms,
+/// or with its headers only, then nothing.
 enum Body {
     Whole(Vec<u8>),
     Trickle(Vec<u8>),
+    Stall(usize),
 }
 
 /// A local server for `routes`, recording requested paths.
@@ -55,6 +57,15 @@ fn server(
                 let (body, trickle) = match routes(&path) {
                     Some(Body::Whole(body)) => (body, false),
                     Some(Body::Trickle(body)) => (body, true),
+                    Some(Body::Stall(length)) => {
+                        let _ = write!(
+                            stream,
+                            "HTTP/1.1 200 OK\r\nContent-Type: {kind}\r\nContent-Length: {length}\r\nConnection: close\r\n\r\n"
+                        );
+                        let _ = stream.flush();
+                        thread::sleep(Duration::from_secs(30));
+                        return;
+                    }
                     None => {
                         let _ = stream.write_all(
                             b"HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
@@ -175,6 +186,74 @@ fn a_stopped_hls_download_keeps_its_whole_fragments_at_the_final_name() {
         std::fs::read(&file).unwrap(),
         [packets(0, 4), packets(1, 4)].concat()
     );
+    assert_eq!(names(work.path()), ["o.mp4"]);
+}
+
+/// A stop before a whole fragment or any byte arrived keeps nothing: no
+/// file, no `.part` or `.ytdl` state, and the run ends as an interrupt.
+#[test]
+fn a_stop_before_any_data_leaves_nothing() {
+    let (port, requests) = server(|path| {
+        match path {
+        "/index.m3u8" => Some(Body::Whole(
+            "#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns1.ts\n#EXT-X-ENDLIST\n"
+                .into(),
+        )),
+        "/s0.ts" => Some(Body::Trickle(packets(0, 400))),
+        "/v.mp4" => Some(Body::Stall(1000)),
+        _ => None,
+    }
+    });
+    for (url, first) in [("index.m3u8", "/s0.ts"), ("v.mp4", "/v.mp4")] {
+        let work = tempfile::tempdir().unwrap();
+        let url = format!("http://127.0.0.1:{port}/{url}");
+        let (success, stdout, stderr) = stop_when(work.path(), &[&url], &requests, |paths| {
+            paths.iter().any(|path| path == first)
+        });
+        assert!(!success);
+        assert!(
+            stderr.ends_with("\nERROR: Interrupted by user\n"),
+            "{stderr}"
+        );
+        assert_eq!(stderr.matches("ERROR").count(), 1, "{stderr}");
+        assert_eq!(stdout, "");
+        assert_eq!(names(work.path()), Vec::<String>::new());
+    }
+}
+
+/// A stop right after a resume keeps the fragments of the earlier run.
+#[test]
+fn a_stop_after_resuming_keeps_the_earlier_fragments() {
+    let (port, requests) = server(|path| {
+        match path {
+        "/index.m3u8" => Some(Body::Whole(
+            "#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns1.ts\n#EXT-X-ENDLIST\n"
+                .into(),
+        )),
+        "/s1.ts" => Some(Body::Trickle(packets(1, 400))),
+        _ => None,
+    }
+    });
+    let work = tempfile::tempdir().unwrap();
+    std::fs::write(work.path().join("o.mp4.part"), packets(0, 4)).unwrap();
+    std::fs::write(
+        work.path().join("o.mp4.ytdl"),
+        r#"{"downloader": {"current_fragment": {"index": 1}, "extra_state": {}}}"#,
+    )
+    .unwrap();
+    let url = format!("http://127.0.0.1:{port}/index.m3u8");
+    let (success, stdout, stderr) = stop_when(work.path(), &[&url], &requests, |paths| {
+        paths.iter().any(|path| path == "/s1.ts")
+    });
+    assert!(!success);
+    assert!(stderr.contains("ERROR: Interrupted by user"), "{stderr}");
+    let file = work.path().join("o.mp4");
+    assert_eq!(
+        std::fs::canonicalize(stdout.trim_end()).unwrap(),
+        std::fs::canonicalize(&file).unwrap(),
+        "{stderr}"
+    );
+    assert_eq!(std::fs::read(&file).unwrap(), packets(0, 4));
     assert_eq!(names(work.path()), ["o.mp4"]);
 }
 
