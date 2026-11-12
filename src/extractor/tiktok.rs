@@ -1738,9 +1738,6 @@ fn item_id(item: &Value) -> String {
     str_or_none(item.get("id")).unwrap_or_default()
 }
 
-/// Upstream's default `extractor_retries`.
-const EXTRACTOR_RETRIES: u32 = 3;
-
 impl TikTokUser {
     /// `_build_web_query(sec_uid, cursor)`.
     fn query(sec_uid: &str, cursor: i64, device_id: &str) -> Vec<(&'static str, String)> {
@@ -1919,11 +1916,12 @@ impl TikTokUser {
             device_id = Self::random_device_id();
             let error = format!("{message}. Taking measures to avoid an infinite loop");
             retry += 1;
-            if retry > EXTRACTOR_RETRIES {
+            if retry > crate::extractor::extractor_retries() {
                 return Err(Error::Reported(error));
             }
             crate::screen::warning(&format!(
-                "[{USER_NAME}] {error}. Retrying ({retry}/{EXTRACTOR_RETRIES})..."
+                "[{USER_NAME}] {error}. Retrying ({retry}/{})...",
+                crate::retry::Retries(crate::extractor::extractor_retries())
             ));
         };
         for item in items(&response) {

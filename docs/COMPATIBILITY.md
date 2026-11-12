@@ -174,7 +174,7 @@ print stages, exit codes, signals) is specified in
 | `--break-on-existing`, `--no-break-on-existing` | Stop at the first archived video (earlier playlist entries are still processed), print upstream's cancellation message and exit 101 |
 | `--break-per-input`, `--no-break-per-input` | `--max-downloads`/`--break-on-existing` only end the current input and reset the count |
 | `--force-write-archive`, `--force-write-download-archive`, `--force-download-archive` | Record archive entries for successfully simulated or skip-download videos too |
-| `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
+| `--extractor-retries RETRIES` | Upstream `extractor_retries` (default 3, or `infinite`; `parse_retries`' usage errors): the count of the ported extractors' `RetryManager`s (YouTube's webpage, InnerTube and tab requests, live-from-start feeds and TikTok user pages) and SponsorBlock's API requests. Extractions are not re-run, as upstream never does (the library's `ExtractionOptions::retries` still offers that) |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | `--all-formats` | Upstream's hidden `-f all`, sharing `--format`'s destination: the last of the two given wins |
 | All other flags | Every upstream option is accepted except the hidden debug option `--load-pages`; options documented here as unsupported are explicit errors or warnings |
@@ -5702,10 +5702,11 @@ existing baseline and does not advance it.
 
 ## Extraction retries
 
-`--extractor-retries N` opts into up to N additional whole-extraction attempts
-(default 0, maximum 255). The library exposes the same policy through
-`extract_result_with_options(url, format, options)` with `ExtractionOptions::retries`.
-Existing extraction methods retain zero retries. Call `into_video()` on the
+Library callers can opt into whole-extraction attempts through
+`extract_result_with_options(url, format, options)` with `ExtractionOptions::retries`
+(default 0, maximum 255), a port extension: the CLI's `--extractor-retries` is
+upstream's count for extractors' own retries (see the CLI table) and never re-runs
+an extraction. Existing extraction methods retain zero retries. Call `into_video()` on the
 result when a single video is required; playlists still fail at that boundary.
 
 A failed generic page request reports upstream's `ERROR: [generic] ID: Unable to
@@ -5727,17 +5728,16 @@ remains a permanent failure so local filesystem errors cannot cause retries.
 Format selection, unsupported content/schemes, invalid URLs, HTML size and encoding
 limits, unsolicited 206 responses, and permanent HTTP statuses fail without
 another attempt. After exhaustion return the final error. No partial playlist
-metadata or downloads are emitted. The CLI continues to later input URLs and
-returns a failing exit status if any input fails. The policy also applies under
-`--simulate` and `--dump-json`; `--retries` controls downloads independently.
+metadata or downloads are emitted. `--retries` controls downloads independently.
 Standalone `Extractor` calls do not retry automatically.
 
 This is a native transport policy extension of the existing supported subset,
-not a port of upstream's extractor-specific retry semantics or defaults. It does
-not advance the pinned baseline or claim general `--extractor-retries` parity.
+not a port of upstream's extractor-specific retry semantics or defaults, and it
+does not advance the pinned baseline.
 `tests/retries.rs` covers status recovery/exhaustion, interrupted HTML, full
-playlist restart after source-probe failures, referrers, CLI modes and budget
-isolation, permanent error boundaries, and custom extractor filesystem errors.
+playlist restart after source-probe failures, referrers, budget isolation (the
+CLI's retry options never re-run an extraction), permanent error boundaries, and
+custom extractor filesystem errors.
 The Retry-After extension is a native policy on this existing retry slice;
 it does not advance the upstream baseline. Pure unit tests cover parsing and
 delay bounds without sleeping; local HTTP tests cover recovery delays, exhausted

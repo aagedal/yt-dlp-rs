@@ -420,20 +420,9 @@ fn direct_results_list_their_content_type_format_id() {
 }
 
 #[test]
-fn transient_listing_retries_complete_extraction_before_printing_once() {
-    let server = Server::new();
-    let stdout = success(&server.cli("/retry.html", &["-F", "--extractor-retries", "1"]));
-    assert_header(&stdout);
-    assert_eq!(
-        stdout
-            .lines()
-            .filter(|line| line.split_whitespace().next() == Some("ID"))
-            .count(),
-        1
-    );
-    assert_eq!(server.count("/retry.html"), 2);
-    assert_eq!(server.count("/low.mp4"), 1);
-    assert_eq!(server.count("/high.mp4"), 1);
+/// The library's whole-extraction retries (`ExtractionOptions::retries`;
+/// the CLI's `--extractor-retries` is upstream's in-extractor count).
+fn transient_listing_retries_complete_extraction_in_the_library() {
     let library_server = Server::new();
     let info = YoutubeDl::new()
         .unwrap()

@@ -3183,7 +3183,10 @@ impl YoutubeDl {
                     if attempt > retries {
                         return Err(Error::Postprocess(error));
                     }
-                    screen::warning(&format!("{error}. Retrying ({attempt}/{retries})..."));
+                    screen::warning(&format!(
+                        "{error}. Retrying ({attempt}/{})...",
+                        crate::retry::Retries(retries)
+                    ));
                 }
             }
         };

@@ -391,19 +391,13 @@ fn proxy_routes_hls_rotating_keys_initialization_and_dash_selected_fragments() {
 }
 
 #[test]
-fn redirects_and_whole_extraction_retries_continue_using_the_explicit_proxy() {
+fn redirects_continue_using_the_explicit_proxy() {
     let proxy = Proxy::new();
     let directory = tempfile::tempdir().unwrap();
     success(&through(
         &proxy,
         "http://destination.invalid/redirect",
         &["-j"],
-        directory.path(),
-    ));
-    success(&through(
-        &proxy,
-        "http://destination.invalid/retry.mp4",
-        &["-j", "--extractor-retries", "1"],
         directory.path(),
     ));
     let requests = proxy.requests();
@@ -415,8 +409,6 @@ fn redirects_and_whole_extraction_retries_continue_using_the_explicit_proxy() {
         [
             "http://destination.invalid/redirect",
             "http://other.invalid/media.mp4",
-            "http://destination.invalid/retry.mp4",
-            "http://destination.invalid/retry.mp4"
         ]
     );
     assert_eq!(requests[1].value("host"), Some("other.invalid"));

@@ -168,6 +168,19 @@ pub struct RetrySleep {
     pub fragment: Option<SleepExpression>,
 }
 
+/// A retry count as `RetryManager` shows it (`inf` for `infinite`).
+pub(crate) struct Retries(pub(crate) u32);
+
+impl std::fmt::Display for Retries {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.0 == u32::MAX {
+            formatter.write_str("inf")
+        } else {
+            write!(formatter, "{}", self.0)
+        }
+    }
+}
+
 /// `RetryManager.report_retry` for a retry: the `Got error` line, then the
 /// configured sleep (announced like upstream) or the native backoff.
 pub(crate) fn announce_retry(
@@ -177,11 +190,7 @@ pub(crate) fn announce_retry(
     fragment: Option<u32>,
     sleep: Option<SleepExpression>,
 ) -> Option<Duration> {
-    let retries_text = if retries == u32::MAX {
-        "inf".to_owned()
-    } else {
-        retries.to_string()
-    };
+    let retries_text = Retries(retries);
     let suffix = fragment.map_or_else(String::new, |index| format!(" fragment {index}"));
     crate::screen::screen(&format!(
         "[download] Got error: {}. Retrying{suffix} ({}/{retries_text})...",
