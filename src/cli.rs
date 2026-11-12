@@ -1717,6 +1717,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         );
     }
     let mut args = Args::from_arg_matches(&matches)?;
+    // `--all-formats` stores `-f all` in `format`'s destination: the last
+    // of the two given wins.
+    let last = |id| matches.indices_of(id).and_then(Iterator::max);
+    if args.all_formats && last("all_formats") > last("format") {
+        args.format = Some("all".into());
+    }
     crate::screen::set_verbose(args.verbose);
     crate::screen::set_page_dumps(
         args.dump_pages,
@@ -2047,6 +2053,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 crate::COMPAT_EMBED_METADATA.store(true, Ordering::Relaxed);
                 true
             }
+            "no-live-chat" => {
+                crate::COMPAT_NO_LIVE_CHAT.store(true, Ordering::Relaxed);
+                true
+            }
             "allow-unsafe-ext" => {
                 ALLOW_UNSAFE_EXT.store(true, Ordering::Relaxed);
                 validation_warning(
@@ -2058,13 +2068,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             // Read by YoutubeTabIE (`set_youtube_tab_compat`).
             "no-youtube-channel-redirect" | "no-youtube-unavailable-videos" => true,
-            // Features this port does not have (live chat, certifi, ...) or
-            // that pinned upstream never reads, so nothing changes. This
+            // Features this port does not have (certifi, AtomicParsley, ...)
+            // or that pinned upstream never reads, so nothing changes. This
             // port's playlist entries are always complete videos, which
             // `playlist-match-filter` does not affect.
             "no-certifi"
             | "prefer-legacy-http-handler"
-            | "no-live-chat"
             | "no-external-downloader-progress"
             | "embed-thumbnail-atomicparsley"
             | "no-youtube-prefer-utc-upload-date"
@@ -2838,6 +2847,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .with_hls_use_mpegts(if args.hls_use_mpegts {
             Some(true)
         } else if args.no_hls_use_mpegts {
+            Some(false)
+        } else {
+            None
+        })
+        .with_hls_prefer_native(if args.hls_prefer_native {
+            Some(true)
+        } else if args.hls_prefer_ffmpeg {
             Some(false)
         } else {
             None

@@ -12,8 +12,10 @@ Twitch, Bluesky, SoundCloud, Bandcamp) are checked daily against the live
 site; the rest are checked against pinned upstream output on saved
 responses and are best effort (see [supported sites](docs/COMPATIBILITY.md#supported-sites)).
 That is tested behavior, not a general promise of yt-dlp compatibility:
-options this port does not implement are rejected with an error rather
-than ignored.
+options this port does not implement are rejected with an error, or
+accepted with a `WARNING: … is not supported natively and is ignored`
+(such as `--plugin-dirs` or unported `--extractor-args`); the few accepted
+without any effect are listed in the [CLI inventory](docs/COMPATIBILITY.md#cli).
 
 ## Install
 
@@ -163,8 +165,8 @@ players of supported sites.
   reads them without echo), and `--growing-file` with `--live-from-start`
   (it needs named pipes). Stopping a run there uses Ctrl+Break
   instead of SIGTERM (see [CLI contract](docs/CLI_CONTRACT.md#windows)).
-- Upstream options this port has not implemented: they are errors, never
-  silently ignored.
+- Upstream options this port has not implemented: they are errors, or
+  warnings that say the option is ignored.
 
 ## Development
 
