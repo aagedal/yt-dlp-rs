@@ -13,8 +13,15 @@ mod support;
 /// A media playlist whose second segment is missing.
 const GAP: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
-/// Serves `/v.mp4` and the `/gap.m3u8` playlist; `/busy*` answers 503 and anything else 404 with a
-/// non-canonical reason phrase like Python's `http.server`.
+/// The same with an empty second segment.
+const EMPTY: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nempty.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
+/// A media playlist whose first segment is missing.
+const HEADLESS: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
+/// Serves `/v.mp4` and the `/gap.m3u8`, `/empty.m3u8` and `/headless.m3u8` playlists; `/busy*`
+/// answers 503 and anything else 404 with a non-canonical reason phrase like Python's
+/// `http.server`.
 fn serve() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let origin = format!("http://{}", listener.local_addr().unwrap());
@@ -28,7 +35,10 @@ fn serve() -> String {
             let (status, body): (&str, &[u8]) = match path.as_str() {
                 "/v.mp4" => ("200 OK", b"media"),
                 "/gap.m3u8" => ("200 OK", GAP.as_bytes()),
+                "/empty.m3u8" => ("200 OK", EMPTY.as_bytes()),
+                "/headless.m3u8" => ("200 OK", HEADLESS.as_bytes()),
                 "/s0.ts" | "/s2.ts" => ("200 OK", b"segment"),
+                "/empty.ts" => ("200 OK", b""),
                 path if path.starts_with("/busy") => ("503 Service Unavailable", b"busy"),
                 _ => ("404 File not found", b"missing"),
             };
@@ -275,6 +285,62 @@ fn unavailable_fragments_are_skipped_or_end_the_download() {
             );
         }
     }
+}
+
+/// HttpFD's `Did not get any data blocks` for an empty fragment: reported
+/// (the run exits 1), then skipped or fatal like an unavailable one.
+#[test]
+fn empty_fragments_are_reported_then_skipped() {
+    let origin = serve();
+    for (abort, jobs) in [(false, "1"), (true, "1"), (false, "2"), (true, "2")] {
+        let directory = tempfile::tempdir().unwrap();
+        let playlist = format!("{origin}/empty.m3u8");
+        let mut args = vec!["-N", jobs, &playlist];
+        if abort {
+            args.push("--abort-on-unavailable-fragments");
+        }
+        let output = fragments(directory.path(), &args);
+        let (stdout, stderr) = (text(&output.stdout), text(&output.stderr));
+        assert_eq!(output.status.code(), Some(1), "{stderr}");
+        assert!(!stdout.contains("Retrying"), "{stdout}");
+        if abort {
+            assert!(
+                stderr.ends_with(
+                    "\n\nERROR: Did not get any data blocks\n\
+                     ERROR: fragment 2 not found, unable to continue\n"
+                ),
+                "{stderr}"
+            );
+            assert!(!directory.path().join("o.mp4").exists());
+        } else {
+            assert!(
+                stderr.ends_with("\n\nERROR: Did not get any data blocks\n"),
+                "{stderr}"
+            );
+            assert!(stdout.contains("[download] fragment not found; Skipping fragment 2 ...\n"));
+            assert_eq!(
+                std::fs::read(directory.path().join("o.mp4")).unwrap(),
+                b"segmentsegment"
+            );
+        }
+    }
+}
+
+/// HlsFD may skip the first fragment too (only DashSegmentsFD never does).
+#[test]
+fn a_missing_first_hls_fragment_is_skipped() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let playlist = format!("{origin}/headless.m3u8");
+    let output = fragments(directory.path(), &["--fragment-retries", "0", &playlist]);
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(
+        text(&output.stdout).contains("[download] fragment not found; Skipping fragment 1 ...\n")
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4")).unwrap(),
+        b"segmentsegment"
+    );
 }
 
 /// Upstream `FragmentFD` resume: an aborted download keeps `FILE.part` and

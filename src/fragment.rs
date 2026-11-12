@@ -91,6 +91,8 @@ fn body_failure(error: Error) -> Failure {
         error,
     }
 }
+/// HttpFD's error for a response without a body: reported, never retried.
+const NO_DATA_BLOCKS: &str = "Did not get any data blocks";
 fn unsupported(message: &str) -> Error {
     Error::UnsupportedManifest(message.into())
 }
@@ -693,6 +695,14 @@ fn fetch_with_retries(
         // reported to observers, before waiting, retrying or skipping.
         file.truncate(prefix)?;
         *stored = prefix;
+        // HttpFD reports it (`to_stderr('\n')`, then `report_error`, so the
+        // run exits 1) and FragmentFD goes on without the fragment.
+        let no_data =
+            matches!(&failure.error, Error::Reported(message) if message == NO_DATA_BLOCKS);
+        if no_data {
+            crate::screen::stderr("\n");
+            crate::report_trouble(NO_DATA_BLOCKS);
+        }
         // Upstream retries every HTTP status error for fragments when
         // unavailable fragments may be skipped.
         let retry = failure.retry.or_else(|| {
@@ -718,9 +728,18 @@ fn fetch_with_retries(
             reporter.wait(delay, *stored)?;
             continue;
         }
-        // Upstream `skip_unavailable_fragments`, never for the first one.
+        // Upstream `skip_unavailable_fragments`: HlsFD and IsmFD skip any
+        // fragment, DashSegmentsFD never the first; IsmFD fails on a
+        // fragment without data.
+        let protocol = info.protocol.as_deref().unwrap_or_default();
+        let ism = protocol == "ism";
+        let skippable = if no_data && ism {
+            false
+        } else {
+            index > 0 || ism || protocol.starts_with("m3u8")
+        };
         if options.skip_unavailable_fragments == Some(true)
-            && index > 0
+            && skippable
             && !matches!(failure.error, Error::DownloadCancelled | Error::Io(_))
         {
             crate::screen::screen(&format!(
@@ -737,6 +756,11 @@ fn fetch_with_retries(
                     options.fragment_retries,
                 )),
             }
+        } else if no_data {
+            Error::Reported(format!(
+                "fragment {} not found, unable to continue",
+                index + 1
+            ))
         } else {
             failure.error
         });
@@ -1311,7 +1335,7 @@ fn fetch(
         }));
     }
     if received == 0 {
-        return Err(unsupported("empty media fragment").into());
+        return Err(Error::Reported(NO_DATA_BLOCKS.into()).into());
     }
     Ok(modified)
 }
@@ -1552,6 +1576,9 @@ fn decrypt_response(
             &mut plain_bytes,
             reporter,
         )?;
+    }
+    if cipher_bytes == 0 {
+        return Err(Error::Reported(NO_DATA_BLOCKS.into()).into());
     }
     if let Some(expected) = expected
         && cipher_bytes != expected

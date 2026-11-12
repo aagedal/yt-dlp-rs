@@ -347,7 +347,7 @@ static TROUBLE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::n
 
 /// Upstream `trouble` with `ignoreerrors`: an `ERROR:` line on stderr that
 /// does not stop the work.
-fn report_trouble(message: &str) {
+pub(crate) fn report_trouble(message: &str) {
     screen::stderr(&format!("ERROR: {message}"));
     TROUBLE.store(true, std::sync::atomic::Ordering::Relaxed);
 }

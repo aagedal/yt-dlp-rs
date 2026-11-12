@@ -226,6 +226,7 @@ impl Server {
                         5,
                     ),
                     "/truncated.mp4" => ("200 OK", "video/mp4", "short", "", 100),
+                    "/empty.mp4" => ("200 OK", "video/mp4", "", "", 0),
                     "/partial.mp4" => (
                         "206 Partial Content",
                         "video/mp4",
@@ -563,6 +564,34 @@ fn truncated_transfers_do_not_publish_or_leave_temporary_files() {
     let output = directory.path().join("video.mp4");
     assert!(dl.download(&info, &output).is_err());
     assert!(!output.exists());
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+/// Upstream HttpFD: `Did not get any data blocks`, not an empty file.
+#[test]
+fn empty_media_responses_are_errors_without_files() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let info = dl.extract_info(&server.url("/empty.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    assert!(matches!(
+        dl.download(&info, directory.path().join("video.mp4")),
+        Err(Error::Reported(message)) if message == "Did not get any data blocks"
+    ));
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ignore-config", "-o"])
+        .arg(directory.path().join("video.mp4"))
+        .arg(server.url("/empty.mp4"))
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .ends_with("\n\nERROR: Did not get any data blocks\n"),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
 }
 
