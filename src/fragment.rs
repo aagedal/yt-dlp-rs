@@ -479,21 +479,29 @@ fn download_with(
             stored += written;
             filetime = latest;
         } else {
+            let budget = SpoolMemory::default();
             for (index, fragment) in info.fragments.iter().enumerate().skip(start) {
                 reporter.index = index as u32 + 1;
                 let prefix = stored;
-                if let Some(modified) = fetch_with_retries(
+                let mut staged = Staged {
+                    output: &mut *output,
+                    base: prefix,
+                    spool: Spool::new(&budget, parent),
+                };
+                let fetched = fetch_with_retries(
                     client,
                     info,
                     index,
                     fragment,
                     &options,
                     &mut keys,
-                    output,
+                    &mut staged,
                     prefix,
                     &mut stored,
                     &mut reporter,
-                )? {
+                )?;
+                if let Some(modified) = fetched {
+                    staged.append()?;
                     // HttpFD's `finished` status for the fragment.
                     reporter.fragment = Some(crate::FragmentBytes {
                         index: index as u32,
@@ -926,6 +934,68 @@ impl Drop for Spool<'_> {
     }
 }
 
+impl Spool<'_> {
+    /// Appends the fragment to `output` whole.
+    fn append_to(&self, output: &mut fs::File) -> Result<()> {
+        append_whole(output, |output| match &self.file {
+            Some(spilled) => std::io::copy(&mut spilled.reopen()?, output).map(drop),
+            None => output.write_all(&self.memory),
+        })
+    }
+}
+
+/// Appends with `write`, or (when it fails, e.g. on a full disk) truncates
+/// `output` back, so a resumed download never builds on part of a fragment.
+fn append_whole(
+    output: &mut fs::File,
+    write: impl FnOnce(&mut fs::File) -> std::io::Result<()>,
+) -> Result<()> {
+    let before = output.stream_position()?;
+    write(output).map_err(|error| {
+        // The write's error matters; restoring the length is best effort.
+        let _ = output
+            .set_len(before)
+            .and_then(|()| output.seek(SeekFrom::Start(before)).map(drop));
+        error.into()
+    })
+}
+
+/// A sequential fragment until it is whole: kept in a [`Spool`], then
+/// appended to `output`, so a killed download leaves only whole fragments
+/// in the part file (upstream's `-FragN.part` files, mostly in memory).
+struct Staged<'a, 'b> {
+    output: &'b mut fs::File,
+    /// The output's length, where the fragment starts.
+    base: u64,
+    spool: Spool<'a>,
+}
+
+impl Staged<'_, '_> {
+    fn append(self) -> Result<()> {
+        self.spool.append_to(self.output)
+    }
+}
+
+impl Write for Staged<'_, '_> {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        self.spool.write(bytes)
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
+impl Sink for Staged<'_, '_> {
+    fn truncate(&mut self, len: u64) -> std::io::Result<()> {
+        self.spool.truncate(len.saturating_sub(self.base))
+    }
+
+    fn expect(&mut self, len: u64) {
+        self.spool.expect(len);
+    }
+}
+
 /// Holds concurrent workers back while the assembling thread, not the
 /// network, is behind: once the next fragment to append has arrived, a
 /// fragment starts only while the fragments queued for appending and
@@ -1189,15 +1259,8 @@ fn download_concurrent(
             while let Some(file) = finished.remove(&cursor) {
                 let len = file.as_ref().map_or(0, |(file, _)| file.len);
                 if let Some((file, modified)) = file {
-                    match &file.file {
-                        Some(spilled) => {
-                            written += std::io::copy(&mut spilled.reopen()?, output)?;
-                        }
-                        None => {
-                            output.write_all(&file.memory)?;
-                            written += file.len;
-                        }
-                    }
+                    file.append_to(output)?;
+                    written += file.len;
                     keep_fragment(cursor, &mut file.reader()?)?;
                     appended(cursor)?;
                     latest = crate::filetime::filetime(modified.as_deref()).or(latest);
@@ -1635,6 +1698,25 @@ fn write_plain(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A failed append (a full disk) leaves the output as it was, so a
+    /// resumed download continues after whole fragments only.
+    #[test]
+    fn a_failed_append_truncates_the_output_back() {
+        let mut output = tempfile::tempfile().unwrap();
+        output.write_all(b"whole").unwrap();
+        let result = append_whole(&mut output, |output| {
+            output.write_all(b"part")?;
+            Err(std::io::Error::other("No space left on device"))
+        });
+        assert!(result.is_err());
+        assert_eq!(output.metadata().unwrap().len(), 5);
+        output.write_all(b"!").unwrap();
+        let mut bytes = Vec::new();
+        output.seek(SeekFrom::Start(0)).unwrap();
+        output.read_to_end(&mut bytes).unwrap();
+        assert_eq!(bytes, b"whole!");
+    }
 
     fn contents(spool: &Spool<'_>) -> Vec<u8> {
         let mut bytes = Vec::new();
