@@ -3364,6 +3364,19 @@ impl YoutubeDl {
     /// Upstream `post_extract`: what the extractor left for after the match
     /// filters (YouTube's comments with `getcomments`).
     pub(crate) fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
+        // Upstream's `_get_comments` of these extractors is not ported: say
+        // so rather than leaving the comments silently missing.
+        let unported = match info.extractor_key.as_str() {
+            "Soundcloud" | "BiliBili" | "BiliBiliBangumi" | "GameJolt" => true,
+            "Rokfin" => info.webpage_url.path().starts_with("/post/"),
+            _ => false,
+        };
+        if unported && extractor::get_comments() {
+            screen::warning(&format!(
+                "[{}] {}: Comments are not supported natively and are not extracted",
+                info.extractor, info.id
+            ));
+        }
         extractor::youtube_comments(&self.client, info)?;
         extractor::pialive_comments(&self.client, info)?;
         extractor::instagram_comments(&self.client, info)
