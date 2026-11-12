@@ -451,11 +451,72 @@ pub(crate) enum CheckFormats {
     Never,
 }
 
+/// HlsFD's refetch of a format's media playlist (its `url`).
+fn media_playlist(client: &Client, info: &VideoInfo) -> Result<hls::Playlist> {
+    let referer = (!info.is_direct()).then_some(&info.webpage_url);
+    let response = crate::extractor::direct::probe(client, &info.url, referer)?;
+    Ok(crate::extractor::hls::read_playlist(response)?.1)
+}
+
+/// The HLS discontinuity section HlsFD keeps (`format_index`).
+fn format_index(info: &VideoInfo) -> Option<u32> {
+    info.extra
+        .get("format_index")
+        .and_then(serde_json::Value::as_u64)
+        .and_then(|index| u32::try_from(index).ok())
+}
+
+/// The first fragment HlsFD's test download fetches for a format loaded
+/// without its fragments (from info JSON).
+fn first_hls_fragment(client: &Client, info: &VideoInfo) -> Result<Vec<Fragment>> {
+    let hls::Playlist::Media {
+        fragments,
+        discontinuity,
+        native,
+        ..
+    } = media_playlist(client, info)?
+    else {
+        return Err(Error::UnsupportedManifest(
+            "the refetched HLS manifest is not a media playlist".into(),
+        ));
+    };
+    match native {
+        hls::Native::Supported => {}
+        hls::Native::Drm => {
+            return Err(Error::Reported("This format is DRM protected".into()));
+        }
+        // HlsFD would test it with FFmpegFD, which format checks do not run.
+        _ => {
+            return Err(Error::UnsupportedManifest(
+                "the HLS format needs FFmpeg, which format checks do not run".into(),
+            ));
+        }
+    }
+    let mut fragments = hls::section(fragments, &discontinuity, format_index(info));
+    fragments.truncate(1);
+    Ok(fragments)
+}
+
 /// Upstream `dl(temp, format, test=True)`: a quiet `_TEST_FILE_SIZE` HTTP
 /// download, or the first fragment of a fragmented format.
 fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool {
     let mut single = info.with_selected_format(format);
     single.fragments.truncate(1);
+    if single.fragments.is_empty()
+        && single
+            .protocol
+            .as_deref()
+            .is_some_and(|protocol| protocol.starts_with("m3u8"))
+        && !is_live(&single)
+    {
+        match first_hls_fragment(client, &single) {
+            Ok(fragments) => single.fragments = fragments,
+            Err(error) => {
+                screen::stderr(&format!("ERROR: {error}"));
+                return false;
+            }
+        }
+    }
     let Ok(directory) = tempfile::tempdir() else {
         return false;
     };
@@ -2770,15 +2831,12 @@ impl YoutubeDl {
             return Ok(None);
         }
         screen::screen("[hlsnative] Downloading m3u8 manifest");
-        let referer = (!info.is_direct()).then_some(&info.webpage_url);
-        let response = crate::extractor::direct::probe(&self.client, &info.url, referer)?;
-        let (_, playlist) = crate::extractor::hls::read_playlist(response)?;
         let hls::Playlist::Media {
             fragments,
             discontinuity,
             native,
             ..
-        } = playlist
+        } = media_playlist(&self.client, info)?
         else {
             return Err(Error::UnsupportedManifest(
                 "the refetched HLS manifest is not a media playlist".into(),
@@ -2802,12 +2860,7 @@ impl YoutubeDl {
             delegated.fragments = Vec::new();
             return Ok(Some(delegated));
         }
-        // HlsFD keeps only the format's discontinuity section.
-        let index = info
-            .extra
-            .get("format_index")
-            .and_then(serde_json::Value::as_u64)
-            .and_then(|index| u32::try_from(index).ok());
+        let index = format_index(info);
         let mut refreshed = info.clone();
         // HlsFD's `Total fragments` counts every media URI of the playlist.
         FRAGMENT_TOTAL
