@@ -700,7 +700,7 @@ another extractor.
 | SteamCommunity | 2 | 3 |  |
 | SteamCommunityBroadcast | 2 | 1 |  |
 | Streaks | 2 | 6 |  |
-| Streamable | 2 | 6 |  |
+| Streamable | 2 | 7 |  |
 | StreamCZ | 2 | 3 |  |
 | StreetVoice | 2 | 5 |  |
 | stv:player | 2 | 5 |  |

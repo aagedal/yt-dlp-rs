@@ -26,6 +26,11 @@ fn validation_messages_and_layout_follow_upstream() {
             vec!["--audio-quality", "-1"],
             r#"audio quality "-1" must be positive or 0"#,
         ),
+        // Validated after `.strip('k').strip('K')`.
+        (
+            vec!["--audio-quality", "k-2.5K"],
+            r#"audio quality "-2" must be positive or 0"#,
+        ),
         (
             vec!["--remux-video", "xyz"],
             r#"invalid remux video format "xyz" given"#,

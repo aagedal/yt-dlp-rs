@@ -12,7 +12,9 @@ time (`YYYY-MM-DD HH:MM`, `HH_MM` in file names) becomes `{DATE} {HH}:{MM}`.
 The cases cover GenericIE's typed direct link (`clip.mp4`), its untyped
 "URL could be a direct video link" result (`clip.qqq`), a single HTML5 embed
 (`one.html`), one with a poster, subtitle tracks and Open Graph metadata
-(`rich.html`), an HTML5 playlist with a `<source>` (`three.html`), an HLS
+(`rich.html`), an HTML5 playlist with a `<source>` (`three.html`), one with
+untyped `<source>`s (`sources.html`, selected with its `args`, `-I 3:1:-1`,
+so `-J` keeps `requested_entries`), an HLS
 master with subtitle renditions, a typed and an untyped (`#EXTM3U` body,
 `text/plain`) media playlist, DASH manifests with segmented and direct text
 tracks, multi-period and partly protected MPDs, and dynamic (live) MPDs.
@@ -24,4 +26,7 @@ same files and headers to the native CLI and compares its lines exactly.
 `loaded/` holds info JSON written by the pinned upstream (`--skip-download
 --write-info-json --user-agent UA`, host replaced by `media.invalid`,
 `epoch` fixed) and upstream's `--load-info-json` `-j`/`-J` lines for it
-(`epoch` and `_version` removed).
+(`epoch` and `_version` removed). `rates.info.json` is hand-written in that
+shape, with int `tbr`s (as many site extractors give) and chapters whose keys
+are `start_time`, `end_time`, `title`; its lines come from the pinned upstream
+the same way.

@@ -107,6 +107,13 @@ fn json_lines_match_saved_upstream_key_order_none_keys_and_downloads() {
         let name = case["name"].as_str().unwrap();
         let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
             .args(["--ignore-config", flag, "--user-agent", "fixture"])
+            .args(
+                case["args"]
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                    .map(|arg| arg.as_str().unwrap()),
+            )
             .arg(format!("{origin}/{name}"))
             .current_dir(directory.path())
             .output()
@@ -146,7 +153,7 @@ fn loaded_info_json_keeps_upstream_key_order() {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/info_order/loaded");
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
     let version = regex::Regex::new(r#", "_version": \{[^}]*\}"#).unwrap();
-    for name in ["direct", "dash"] {
+    for name in ["direct", "dash", "rates"] {
         for (flag, suffix) in [("-j", "dump-json"), ("-J", "dump-single-json")] {
             let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
                 .args(["--ignore-config", "--load-info-json"])

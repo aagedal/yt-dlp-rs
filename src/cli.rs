@@ -1250,9 +1250,20 @@ fn prepare_media(
         .expect("default output template is non-empty"))
 }
 
-/// Upstream warns when an absolute media template makes `--paths` irrelevant.
-fn path_is_absolute_template(templates: &OutputTemplates) -> bool {
-    std::path::Path::new(&crate::batch::expand_path_text(templates.get(None))).is_absolute()
+/// Upstream `prepare_filename(info, warn=True)`: `--paths` does not apply to
+/// stdout or an absolute media template (each warned once).
+fn warn_ignored_paths(templates: &OutputTemplates, options: &TemplateOptions) {
+    if options.paths.is_empty() {
+        return;
+    }
+    let template = templates.get(None);
+    if template == "-" {
+        crate::screen::warning_once("--paths is ignored when an outputting to stdout");
+    } else if std::path::Path::new(&crate::batch::expand_path_text(template)).is_absolute() {
+        crate::screen::warning_once(
+            "--paths is ignored since an absolute path is given in output template",
+        );
+    }
 }
 
 /// Whether a regular file exists; other existing entries (including dangling
@@ -2302,7 +2313,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             args.audio_format
         ))
     })?;
-    if let Some(quality) = crate::batch::py_strip(&args.audio_quality)
+    // After `opts.audioquality.strip('k').strip('K')`.
+    let stripped = args.audio_quality.trim_matches('k').trim_matches('K');
+    if let Some(quality) = crate::batch::py_strip(stripped)
         .parse::<f64>()
         .ok()
         .filter(|quality| quality.is_finite() && quality.trunc() < 0.0)
@@ -2606,13 +2619,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             _ => error.into(),
         }
     })?;
-    if args.playlist_items.is_some()
-        && (args.playlist_start != 1 || args.playlist_end.is_some_and(|end| end != -1 && end != 0))
-    {
-        warning!(
-            "WARNING: Ignoring --playlist-start and --playlist-end because --playlist-items was given"
-        );
-    }
     let subtitle_languages = (!args.sub_langs.is_empty()).then(|| args.sub_langs.join(","));
     let subtitle_options = SubtitleOptions::new(subtitle_languages.as_deref(), &args.sub_format)?;
     if let (Some(cookies), Some(archive)) = (&args.cookies, &args.download_archive) {
@@ -3603,7 +3609,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             {
                                 return args.break_on_existing;
                             }
-                            matches!(match_filters.check(info, true), Ok(MatchOutcome::Break(_)))
+                            // `_match_entry(entry, incomplete=True, silent=True)`:
+                            // missing fields (even the playlist's) pass.
+                            matches!(match_filters.check_entry(info), Ok(MatchOutcome::Break(_)))
                         };
                         let stops =
                             (args.break_on_existing && archive.is_some()) || match_filters.breaks();
@@ -4318,6 +4326,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     return Ok(());
                 }
+                // Then its filters, with only the format fields incomplete
+                // (a playlist entry was checked with every field incomplete).
+                if !match_filters.is_empty() {
+                    let mut view = info.clone();
+                    view.mark_unselected();
+                    match match_filters.check(&view, true)? {
+                        MatchOutcome::Pass | MatchOutcome::Ask => {}
+                        MatchOutcome::Reject(reason) => {
+                            screen!("[download] {reason}");
+                            return Ok(());
+                        }
+                        MatchOutcome::Break(reason) => {
+                            screen!("[download] {reason}");
+                            entry_cancel = Some(Cancel::Rejected);
+                            return Ok(());
+                        }
+                    }
+                }
                 downloader.post_extract(&mut info)?;
                 early_stage(Stage::AfterFilter, &mut info, "after_filter")?;
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
@@ -4565,9 +4591,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         {
                             defer(error);
                         }
-                        // `_forceprint`: `filename` is the prepared media filename.
+                        // `_forceprint`: `filename` is the prepared media filename
+                        // (`prepare_filename(info_dict, warn=True)`).
                         let print_filename = prepare_media(&templates, &info, &template_options)
                             .map(|path| path.to_string_lossy().into_owned());
+                        warn_ignored_paths(&templates, &template_options);
                         let stage_print =
                             |stage: Stage, info: &crate::VideoInfo, paths: StagePaths<'_>| {
                                 render_stage(
@@ -4676,13 +4704,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 return Ok(());
                             }
                             let path = prepare_media(&templates, &info, &template_options)?;
-                            if !template_options.paths.is_empty()
-                                && path_is_absolute_template(&templates)
-                            {
-                                warning!(
-                                    "WARNING: --paths is ignored since an absolute path is given in output template"
-                                );
-                            }
                             // Upstream `prepare_filename(info, 'temp')`: downloads and
                             // processors work on the temporary name, then
                             // `MoveFiles` publishes beside `final_path`.
@@ -9422,33 +9443,24 @@ fn prefilter(
     if filters.is_empty() {
         return Ok(Some(result));
     }
-    let mut keep = |info: &crate::VideoInfo,
-                    skipped: Option<&mut std::collections::VecDeque<(usize, String)>>|
-     -> crate::Result<Option<bool>> {
-        Ok(match filters.check(info, true)? {
-            MatchOutcome::Pass | MatchOutcome::Ask => Some(true),
-            MatchOutcome::Reject(reason) => {
-                report_skip(info, format!("[download] {reason}"), skipped);
-                Some(false)
-            }
-            MatchOutcome::Break(reason) => {
-                report_skip(info, format!("[download] {reason}"), skipped);
-                *pending = Some(Cancel::Rejected);
-                None
-            }
-        })
-    };
     match result {
-        ExtractResult::Video(info) => {
-            Ok((keep(&info, None)? == Some(true)).then_some(ExtractResult::Video(info)))
-        }
+        // A video is checked in the entry loop, after `pre_process`.
+        ExtractResult::Video(info) => Ok(Some(ExtractResult::Video(info))),
+        // `__process_playlist` checks each entry with every field incomplete
+        // (the entry loop checks it again as a video).
         ExtractResult::Playlist(mut playlist) => {
             let mut kept = Vec::new();
             for info in playlist.entries {
-                match keep(&info, Some(skipped))? {
-                    Some(true) => kept.push(info),
-                    Some(false) => {}
-                    None => break,
+                match filters.check_entry(&info)? {
+                    MatchOutcome::Pass | MatchOutcome::Ask => kept.push(info),
+                    MatchOutcome::Reject(reason) => {
+                        report_skip(&info, format!("[download] {reason}"), Some(skipped));
+                    }
+                    MatchOutcome::Break(reason) => {
+                        report_skip(&info, format!("[download] {reason}"), Some(skipped));
+                        *pending = Some(Cancel::Rejected);
+                        break;
+                    }
                 }
             }
             playlist.entries = kept;

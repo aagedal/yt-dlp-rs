@@ -442,9 +442,7 @@ fn process_format_stream(
                 .strip_prefix("codecs=\"")
                 .and_then(|codecs| codecs.split_once('"'))
                 .map(|(codecs, _)| codecs);
-            if let Some(parsed) = crate::codecs::parse_codecs(codecs, &mut |warning| {
-                crate::screen::warning(warning);
-            }) {
+            if let Some(parsed) = crate::codecs::parse(codecs) {
                 format.insert("vcodec".into(), parsed.vcodec.into());
                 format.insert("acodec".into(), parsed.acodec.into());
                 format.insert("dynamic_range".into(), parsed.dynamic_range.into());

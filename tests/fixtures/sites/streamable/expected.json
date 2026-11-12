@@ -69,6 +69,21 @@
    }
   },
   {
+   "url": "https://streamable.com/codec",
+   "args": [
+    "--print",
+    "%(vcodec)s|%(acodec)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "NA|aac"
+   ],
+   "stderr": [
+    "WARNING: Unknown codec newvcodec"
+   ],
+   "files": {}
+  },
+  {
    "url": "https://streamable.com/busy",
    "args": [
     "-j"

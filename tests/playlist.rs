@@ -175,10 +175,14 @@ fn request_order_ranges_negative_indices_dedup_reverse_and_default_metadata_reac
         flags.extend(args);
         let output = server.cli("/playlist.html", &flags);
         let stdout = success(&output);
+        // Upstream `get_requested_items`' wording.
         assert_eq!(
             String::from_utf8_lossy(&output.stderr)
-                .contains("WARNING: Ignoring --playlist-start and --playlist-end"),
-            warning
+                .lines()
+                .filter(|line| *line
+                    == "WARNING: Ignoring playliststart and playlistend because playlistitems was given")
+                .count(),
+            usize::from(warning)
         );
         assert_metadata(&entries(&stdout), &indices);
         server.assert_probed_once();
@@ -188,7 +192,20 @@ fn request_order_ranges_negative_indices_dedup_reverse_and_default_metadata_reac
 #[test]
 fn playlist_flags_do_not_filter_or_annotate_a_single_direct_video() {
     let server = Server::new();
-    let stdout = success(&server.cli("/one.mp4", &["-j", "-I", "99", "--playlist-reverse"]));
+    let output = server.cli(
+        "/one.mp4",
+        &[
+            "-j",
+            "-I",
+            "99",
+            "--playlist-reverse",
+            "--playlist-start",
+            "2",
+        ],
+    );
+    // Only a playlist's requested items warn that they override the start.
+    assert!(!String::from_utf8_lossy(&output.stderr).contains("Ignoring"));
+    let stdout = success(&output);
     let info = entries(&stdout).remove(0);
     assert_eq!(info["id"], "one");
     for key in [
@@ -598,6 +615,83 @@ fn playlist_progress_lines_follow_upstream_process_playlist() {
             format!("[download] Finished downloading playlist: {title}"),
         ]
     );
+}
+
+/// `__process_playlist` checks an entry with every field incomplete before
+/// its `Downloading item` line; `process_video_result` then checks it with
+/// only the format fields incomplete (and no `ext`/`url` before selection).
+/// Checked with pinned upstream.
+#[test]
+fn entries_are_filtered_before_and_after_their_item_line() {
+    let server = Server::new();
+    let lines = |path: &str, filter: &str| {
+        let output = server.cli(path, &["-s", "-I", "2:3", "--match-filter", filter]);
+        success(&output)
+            .lines()
+            .filter(|line| line.starts_with("[download] ") || line.starts_with("[info] "))
+            .map(str::to_owned)
+            .collect::<Vec<_>>()
+    };
+    let title = "Playlist selection";
+    assert_eq!(
+        lines("/playlist.html", "like_count>5")[1..],
+        [
+            "[download] Downloading item 1 of 2".to_owned(),
+            format!("[download] {title} (2) does not pass filter (like_count>5), skipping .."),
+            "[download] Downloading item 2 of 2".to_owned(),
+            format!("[download] {title} (3) does not pass filter (like_count>5), skipping .."),
+            format!("[download] Finished downloading playlist: {title}"),
+        ]
+    );
+    // `playlist_index` is known when the entry is checked.
+    assert_eq!(
+        lines("/playlist.html", "playlist_index!=2")[1..],
+        [
+            format!("[download] {title} (2) does not pass filter (playlist_index!=2), skipping .."),
+            "[download] Downloading item 2 of 2".to_owned(),
+            "[info] playlist-3: Downloading 1 format(s): 0".to_owned(),
+            format!("[download] Finished downloading playlist: {title}"),
+        ]
+    );
+    // A direct link's `ext` comes from its selected format.
+    assert_eq!(
+        lines("/one.mp4", "ext=webm"),
+        [
+            "[info] one: Downloading 1 format(s): mp4",
+            "[download] one does not pass filter (ext=webm), skipping ..",
+        ]
+    );
+}
+
+/// Upstream `get_requested_items` ends the requested items at an entry that
+/// would break, checked with `incomplete=True`: fields the raw entry lacks
+/// (`playlist_index`, `playlist_count`, ...) pass there, so selection does
+/// not stop; the processed entry (with its playlist fields) breaks later.
+/// Checked with pinned upstream.
+#[test]
+fn breaking_filters_on_missing_entry_fields_do_not_end_selection() {
+    let server = Server::new();
+    for (filter, printed, code) in [
+        ("playlist_index", "2\n3\n4\n", 0),
+        ("playlist_count>1", "2\n3\n4\n", 0),
+        ("playlist_index<3", "2\n", 101),
+        ("height<1080", "2\n", 101),
+    ] {
+        let output = server.cli(
+            "/playlist.html",
+            &[
+                "-s",
+                "-I",
+                "2:",
+                "--break-match-filters",
+                filter,
+                "-O",
+                "%(playlist_index)s",
+            ],
+        );
+        assert_eq!(String::from_utf8_lossy(&output.stdout), printed, "{filter}");
+        assert_eq!(output.status.code(), Some(code), "{filter}");
+    }
 }
 
 #[test]

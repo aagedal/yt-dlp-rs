@@ -8,6 +8,13 @@
    "body_file": "dnd1.json"
   },
   {
+   "url": "https://ajax.streamable.com/videos/codec",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "codec.json"
+  },
+  {
    "url": "https://ajax.streamable.com/videos/busy",
    "headers": {
     "Content-Type": "application/json"

@@ -150,6 +150,28 @@ impl Replay {
                 {
                     reorder_tracks(languages, value);
                 }
+                // A loaded int this port stores as a float (`tbr`) and the
+                // chapters' key order are kept, as upstream keeps the dict.
+                match (self.out.get_mut(key), value) {
+                    (Some(ours @ Value::Number(_)), Value::Number(loaded))
+                        if loaded.is_i64() && ours.as_f64() == loaded.as_f64() =>
+                    {
+                        *ours = value.clone();
+                    }
+                    (Some(Value::Array(ours)), Value::Array(loaded)) if key == "chapters" => {
+                        for (ours, loaded) in ours.iter_mut().zip(loaded) {
+                            if let (Value::Object(ours), Value::Object(loaded)) = (ours, loaded) {
+                                let mut ordered: Map<String, Value> = loaded
+                                    .keys()
+                                    .filter_map(|key| Some((key.clone(), ours.shift_remove(key)?)))
+                                    .collect();
+                                ordered.append(ours);
+                                *ours = ordered;
+                            }
+                        }
+                    }
+                    _ => {}
+                }
             } else if !self.out.contains_key(key) {
                 self.out.insert(key.clone(), value.clone());
             }
@@ -320,6 +342,11 @@ pub(crate) fn loaded_shape(original: &Map<String, Value>) -> Value {
         LOADED.to_owned(),
         Value::Object(original),
     )]))
+}
+
+/// The original of a [`loaded_shape`] marker.
+pub(crate) fn loaded_original(marker: &Value) -> Option<&Map<String, Value>> {
+    marker.get(LOADED)?.as_object()
 }
 
 /// A marker's shape name and, for loaded dicts, the original.
@@ -756,6 +783,16 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("acodec", Take),
             ("dynamic_range", Codecs),
             ("ext", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("format_id", Assign),
+            ("url", Take),
+            ("vcodec", Assign),
+            ("ext", Take),
+        ],
+        // The same without a usable `type` (`parse_content_type` gives `{}`).
+        "html5-source-untyped" => &[
             ("width", Assign),
             ("height", Assign),
             ("tbr", Assign),
@@ -2976,7 +3013,9 @@ fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.take(key);
     }
     replay.assign("release_year");
-    for key in ["playlist_count", "requested_entries", "epoch"] {
+    // `__process_playlist` sets `requested_entries` before a missing
+    // `playlist_count`.
+    for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }
     // Upstream's `-J` also prints the playlist's (empty) files to move.

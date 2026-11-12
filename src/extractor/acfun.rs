@@ -85,9 +85,7 @@ fn metadata(client: &Client, id: &str, video_info: &Value) -> Result<Metadata> {
             continue;
         };
         let codecs_text = video.get("codecs").and_then(Value::as_str).unwrap_or("");
-        let codecs = crate::codecs::parse_codecs(Some(codecs_text), &mut |message| {
-            crate::screen::warning(message)
-        });
+        let codecs = crate::codecs::parse(Some(codecs_text));
         let fps = float_value(video.get("frameRate"), 1.0);
         let width = super::streamable::int_or_none(video.get("width")).as_u64();
         let height = super::streamable::int_or_none(video.get("height")).as_u64();

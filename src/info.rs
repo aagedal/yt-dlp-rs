@@ -912,13 +912,14 @@ impl VideoInfo {
         self.extra.contains_key(FORMATS_IGNORED)
     }
 
-    /// Before format selection (`pre_process`/`after_filter` prints): the
-    /// `ext` and `url` keys the extractor's own dict did not set are
-    /// missing, as they come from the selected format.
+    /// Before format selection (`pre_process`/`after_filter` prints and the
+    /// match filters): the `ext` and `url` keys the extractor's own (or the
+    /// loaded) dict did not set are missing, as they come from the selected
+    /// format.
     pub(crate) fn mark_unselected(&mut self) {
-        let shape = self
-            .extra
-            .get(crate::info_order::INFO_SHAPE)
+        let marker = self.extra.get(crate::info_order::INFO_SHAPE);
+        let loaded = marker.and_then(crate::info_order::loaded_original);
+        let shape = marker
             .and_then(serde_json::Value::as_str)
             .unwrap_or_default();
         let own: Vec<&str> = shape
@@ -929,7 +930,9 @@ impl VideoInfo {
             .unwrap_or_default();
         let missing: Vec<serde_json::Value> = ["ext", "url"]
             .into_iter()
-            .filter(|key| !own.contains(key))
+            .filter(|key| {
+                !own.contains(key) && !loaded.is_some_and(|original| original.contains_key(*key))
+            })
             .map(serde_json::Value::from)
             .collect();
         self.extra.insert(UNSELECTED.into(), missing.into());

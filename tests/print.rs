@@ -576,6 +576,156 @@ fn legacy_id_autonumber_and_deprecated_options_follow_upstream() {
     ));
 }
 
+/// `FormatSorter._get_field_setting` (case-sensitive) reports unknown `-S`
+/// fields and deprecated aliases once each; checked with pinned upstream.
+#[test]
+fn format_sort_deprecations_follow_upstream() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "extractor": "generic", "extractor_key": "Generic",
+            "webpage_url": "http://127.0.0.1:1/p",
+            "formats": [{"format_id": "a", "url": "http://127.0.0.1:1/a.mp4", "ext": "mp4", "protocol": "http"}],
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "-s",
+            "-S",
+            "bogus,Resolution:720,video_codec",
+        ])
+        .args(["-S", "resolution,bogus", "--load-info-json"])
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let deprecated = "Deprecated Feature:";
+    let later = "deprecated and may be removed in a future version";
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr),
+        format!(
+            "{deprecated} Format sorting alias resolution is {later}. Please use res instead\n\
+             {deprecated} Using arbitrary fields (bogus) for format sorting is {later}\n\
+             {deprecated} Using arbitrary fields (Resolution) for format sorting is {later}\n\
+             {deprecated} Format sorting alias video_codec is {later}. Please use vcodec instead\n"
+        )
+    );
+}
+
+/// A loaded dict keeps its own `ext`/`url` before format selection (for
+/// `pre_process` prints and match filters); checked with pinned upstream.
+#[test]
+fn loaded_ext_and_url_exist_before_format_selection() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    let run = |info: serde_json::Value, args: &[&str]| {
+        std::fs::write(&path, info.to_string()).unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "-s"])
+            .args(args)
+            .arg("--load-info-json")
+            .arg(&path)
+            .output()
+            .unwrap();
+        assert!(output.status.success());
+        String::from_utf8(output.stdout).unwrap()
+    };
+    let mut info = serde_json::json!({
+        "id": "clip", "title": "Clip", "ext": "webm", "url": "http://127.0.0.1:1/c.webm",
+        "extractor": "generic", "extractor_key": "Generic", "webpage_url": "http://127.0.0.1:1/p",
+        "formats": [{"format_id": "a", "url": "http://127.0.0.1:1/a.mp4", "ext": "mp4", "protocol": "http"}],
+    });
+    // `after_filter` prints only for a dict passing the filter before
+    // selection; the selected format's `mp4` is rejected after it.
+    let print = [
+        "-O",
+        "pre_process:%(ext)s %(url)s",
+        "-O",
+        "after_filter:%(id)s",
+        "-O",
+        "%(id)s",
+        "--match-filter",
+        "ext=webm",
+    ];
+    assert_eq!(
+        run(info.clone(), &print),
+        "webm http://127.0.0.1:1/c.webm\nclip\n"
+    );
+    let object = info.as_object_mut().unwrap();
+    object.shift_remove("ext");
+    object.shift_remove("url");
+    assert_eq!(run(info, &print), "NA NA\nclip\n");
+}
+
+/// `prepare_filename(info, warn=True)` runs for every processed format,
+/// also when simulating: `--paths` is reported ignored once for stdout or
+/// an absolute media template (checked with pinned upstream).
+#[test]
+fn ignored_paths_are_warned_once_also_when_simulating() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "extractor": "generic",
+            "extractor_key": "Generic", "webpage_url": "http://127.0.0.1:1/page",
+            "formats": [
+                {"format_id": "a", "url": "http://127.0.0.1:1/a.mp4", "ext": "mp4", "protocol": "http"},
+                {"format_id": "b", "url": "http://127.0.0.1:1/b.mp4", "ext": "mp4", "protocol": "http"},
+            ],
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let absolute = directory.path().join("%(format_id)s.%(ext)s");
+    let absolute = absolute.to_str().unwrap();
+    for (output, paths, warning) in [
+        (
+            absolute,
+            "home:h",
+            Some("since an absolute path is given in output template"),
+        ),
+        (
+            absolute,
+            "temp:t",
+            Some("since an absolute path is given in output template"),
+        ),
+        ("-", "home:h", Some("when an outputting to stdout")),
+        ("%(id)s.%(ext)s", "home:h", None),
+        (absolute, "", None),
+    ] {
+        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+        command.args(["--ignore-config", "-s", "-f", "a,b", "-o", output]);
+        if !paths.is_empty() {
+            command.args(["-P", paths]);
+        }
+        let result = command
+            .arg("--load-info-json")
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        assert!(result.status.success(), "{output} {paths}");
+        // With `-o -`, screen lines go to stderr too.
+        let stderr = String::from_utf8_lossy(&result.stderr);
+        let warnings: Vec<_> = stderr
+            .lines()
+            .filter(|line| line.starts_with("WARNING:"))
+            .collect();
+        let expected = warning.map(|text| format!("WARNING: --paths is ignored {text}"));
+        assert_eq!(
+            warnings,
+            Vec::from_iter(expected.as_deref()),
+            "{output} {paths}"
+        );
+    }
+}
+
 #[test]
 fn parse_and_replace_metadata_follow_metadata_parser_pp() {
     let directory = tempfile::tempdir().unwrap();

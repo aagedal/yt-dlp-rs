@@ -40,7 +40,10 @@ CONTENT_TYPES = {
 CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
          'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd', 'og.html', 'twitter.html',
          'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html', 'oghls.html', 'ogdash.html', 'jwhls.html', 'vjshls.html', 'vjsmix.html', 'feed.xml', 'twohls.html', 'periods.mpd', 'periods-unmerged.mpd', 'periods-direct.mpd', 'drm.mpd', 'dynamic.mpd',
-         'dynamic-timeline.mpd']
+         'dynamic-timeline.mpd', 'sources.html']
+# Extra options for a case (saved as its `args`): a playlist selection keeps
+# `requested_entries`.
+ARGS = {'sources.html': ['-I', '3:1:-1']}
 
 
 def content_type(name):
@@ -84,10 +87,12 @@ def capture(upstream):
     try:
         for name in CASES:
             case = {'name': name}
+            if name in ARGS:
+                case['args'] = ARGS[name]
             for key, flag in (('lines', '-j'), ('single', '-J')):
                 result = subprocess.run(
                     [sys.executable, '-m', 'yt_dlp', '--ignore-config', flag, '--user-agent', 'fixture',
-                     f'{origin}/{name}'],
+                     *ARGS.get(name, []), f'{origin}/{name}'],
                     capture_output=True, text=True, timeout=60, check=True,
                     env=dict(os.environ, PYTHONPATH=str(upstream)))
                 case[key] = [normalize(line, origin) for line in result.stdout.splitlines()]

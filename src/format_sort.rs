@@ -417,6 +417,30 @@ fn settings() -> BTreeMap<&'static str, Setting> {
     map
 }
 
+/// The [`ALIASES`] upstream marks `deprecated`.
+const DEPRECATED_ALIASES: &[&str] = &[
+    "dimension",
+    "resolution",
+    "extension",
+    "bitrate",
+    "total_bitrate",
+    "video_bitrate",
+    "audio_bitrate",
+    "framerate",
+    "filesize_estimate",
+    "samplerate",
+    "video_ext",
+    "audio_ext",
+    "video_codec",
+    "audio_codec",
+    "video",
+    "has_video",
+    "audio",
+    "has_audio",
+    "extractor",
+    "extractor_preference",
+];
+
 /// Upstream alias fields (current and deprecated).
 const ALIASES: &[(&str, &str)] = &[
     ("format_id", "id"),
@@ -566,9 +590,25 @@ impl FormatSorter {
             let Some(field) = found.name("field").map(|m| m.as_str().to_owned()) else {
                 continue;
             };
+            // `_get_field_setting` (case-sensitive): an unknown field is
+            // deprecated, as are the deprecated aliases.
             let field = match sorter.setting(&field) {
-                Some(setting) if setting.kind == Type::Alias => setting.fields[0].to_owned(),
-                _ => field,
+                Some(setting) if setting.kind == Type::Alias => {
+                    let target = setting.fields[0].to_owned();
+                    if DEPRECATED_ALIASES.contains(&field.as_str()) {
+                        crate::screen::deprecated_feature(&format!(
+                            "Format sorting alias {field} is deprecated and may be removed in a future version. Please use {target} instead"
+                        ));
+                    }
+                    target
+                }
+                Some(_) => field,
+                None => {
+                    crate::screen::deprecated_feature(&format!(
+                        "Using arbitrary fields ({field}) for format sorting is deprecated and may be removed in a future version"
+                    ));
+                    field
+                }
             };
             let reverse = found.name("reverse").is_some();
             let closest = found.name("separator").is_some_and(|m| m.as_str() == "~");

@@ -77,9 +77,7 @@ fn float_or_none(value: Option<&Value>, scale: f64) -> Value {
 
 /// `parse_codecs(name).get(key)`.
 fn codec(name: Option<&Value>, video: bool) -> Value {
-    let codecs = crate::codecs::parse_codecs(name.and_then(Value::as_str), &mut |warning| {
-        crate::screen::warning(warning);
-    });
+    let codecs = crate::codecs::parse(name.and_then(Value::as_str));
     let value = codecs.map(|codecs| if video { codecs.vcodec } else { codecs.acodec });
     match value {
         Some(value) => value.into(),

@@ -128,10 +128,42 @@ file as before. On 25 MiB, `-N 4/8` is now faster than `-N 1`. On 400 MiB
 the localhost server outruns the single writer, the backlog fills the
 budget and later fragments spill, so `-N 4/8` take 1.5× as long as `-N 1`
 (0.68 s before; budgets of 0, 16, 64 and 128 MiB gave 0.67, 0.52, 0.39
-and 0.28 s at `-N 4`, with peak RSS rising from 83 to 202 MiB). Memory was
-chosen over this case: on a real network, fragments arrive slower than a
-disk writes them, so the spools stay small. The extra RSS over `-N 1` is
-the budget plus per-worker buffers and stacks.
+and 0.28 s at `-N 4`, with peak RSS rising from 83 to 202 MiB).
+
+Since 2026-11-11 the workers stop running ahead of the writer instead
+(`Window` in `src/fragment.rs`): once the next fragment to append has
+arrived, so the backlog is the disk's and not a slow server's, a fragment
+starts only while the queued and in-flight fragments fit in the budget.
+While the next fragment is still in flight (a slow response, a retry), the
+others keep going and spill as before, like upstream's workers. Spools
+reserve a response's announced length once, and released buffers are
+reused, instead of fragmenting the heap with a new 1 MiB buffer each.
+Measured on a loaded M5 Pro (another build and an antivirus scanner
+running, so absolute times are not comparable with the tables above), 400
+× 1 MiB from a local server: `-N 4/8` went from about 350 spilled
+fragments at once to 0–7, system time from 0.86 s to 0.31 s (the same as
+`-N 1`), wall time from 3.1–6.8 s to 1.6–1.9 s (`-N 1`: 2.1–4.1 s), and
+peak RSS from 82–111 MiB to 72–80 MiB. The 50 ms latency cases did not
+change.
+
+Rerun on 2026-11-12 with the machine idle (load about 5), `benchmark.py
+--segments 400 --segment-kib 1024 --latencies 0,50 --workers 1,4,8
+--runs 5`, medians, the release binary before (187d43f7) and after:
+
+| case | `-N 1` | `-N 4` | `-N 8` |
+| --- | --- | --- | --- |
+| hls, 0 ms, before | 0.47 s, 30 MiB | 1.63 s, 74 MiB | 1.67 s, 92 MiB |
+| hls, 0 ms, after | 0.43 s, 29 MiB | 0.28 s, 69 MiB | 0.30 s, 75 MiB |
+| dash, 0 ms, before | 0.37 s, 30 MiB | 1.46 s, 75 MiB | 1.50 s, 91 MiB |
+| dash, 0 ms, after | 0.44 s, 29 MiB | 0.27 s, 68 MiB | 0.28 s, 76 MiB |
+| hls, 50 ms, before | 22.7 s, 35 MiB | 5.69 s, 65 MiB | 2.97 s, 85 MiB |
+| hls, 50 ms, after | 22.8 s, 31 MiB | 5.69 s, 47 MiB | 2.95 s, 60 MiB |
+| dash, 50 ms, before | 22.5 s, 37 MiB | 5.59 s, 74 MiB | 2.85 s, 86 MiB |
+| dash, 50 ms, after | 22.7 s, 32 MiB | 5.62 s, 45 MiB | 2.89 s, 61 MiB |
+
+On localhost `-N 4/8` are now 5–6× faster than before and 1.5× faster than
+`-N 1`, instead of 3.5× slower. With latency the times are unchanged and
+peak RSS is 20–40% lower. `-N 1` differences are run-to-run noise.
 
 ### Default `-N`
 
@@ -139,8 +171,7 @@ The port keeps upstream's default of `-N 1` (`concurrent_fragment_downloads`
 1). The measurements favor `-N 4` only when every request has real
 latency. The default is a compatibility surface: some sites rate-limit or
 throttle parallel fragment requests, and upstream's choice is what users
-and scripts expect. Where the network outruns the disk, the port's
-`-N > 1` can still be slower than `-N 1` (see above). The gain is
+and scripts expect. The gain is
 available on request: Media Converter can pass `-N 4` for HLS/DASH
 downloads, as yt-dlp users do. Revisit if canary runs with `-N 4` show
 no throttling.
