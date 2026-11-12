@@ -24,12 +24,20 @@ fn main() {
     );
     let input = PathBuf::from(&args[args.iter().position(|arg| arg == "-i").unwrap() + 1]);
     assert!(input.is_absolute());
-    assert!(!fs::read(input).unwrap().is_empty());
+    assert!(!fs::read(&input).unwrap().is_empty());
     if probe {
         let codec = name.strip_prefix("probe-").unwrap();
         println!(
             "{{\"streams\":[{{\"codec_type\":\"video\",\"codec_name\":\"h264\"}},{{\"codec_type\":\"audio\",\"codec_name\":\"{codec}\"}}]}}"
         );
+    } else if args.last() == Some(&input.display().to_string()) {
+        // `ffmpeg -i INPUT` without an output: the stream list, exit 1.
+        eprintln!(
+            "Input #0, ogg, from '{}':\n  Stream #0:0: Audio: opus, 48000 Hz, stereo, fltp\n\
+             At least one output file must be specified",
+            input.display()
+        );
+        std::process::exit(1);
     } else {
         let output = PathBuf::from(args.last().unwrap());
         let inputs: Vec<_> = args.windows(2).filter(|pair| pair[0] == "-i").collect();

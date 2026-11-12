@@ -196,7 +196,7 @@ fn flush_validation_warnings() {
 #[command(
     version,
     args_override_self = true,
-    about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
+    about = "A native Rust port of yt-dlp"
 )]
 struct Args {
     urls: Vec<String>,
@@ -274,7 +274,7 @@ struct Args {
         allow_hyphen_values = true
     )]
     print: Vec<String>,
-    /// Append a video-stage print template to a file named by an output template (repeatable; does not imply simulation)
+    /// Append the template to FILE (an output template), [WHEN:] as for --print (repeatable; does not imply simulation)
     #[arg(
         long,
         num_args = 2,
@@ -558,7 +558,7 @@ struct Args {
     /// Disable cookie-file loading and saving (in-memory response cookies remain enabled)
     #[arg(long, overrides_with = "cookies")]
     no_cookies: bool,
-    /// The name of the browser to load cookies from (firefox natively), with an optional KEYRING, PROFILE name/path and Firefox CONTAINER ("none" for no container)
+    /// The browser to load cookies from (brave, chrome, chromium, edge, firefox, opera, safari, vivaldi, whale), with an optional KEYRING, PROFILE name/path and Firefox CONTAINER ("none" for no container)
     #[arg(
         long,
         value_name = "BROWSER[+KEYRING][:PROFILE][::CONTAINER]",
@@ -694,7 +694,7 @@ struct Args {
     /// Remove processing sources after success (default)
     #[arg(long, overrides_with = "keep_video")]
     no_keep_video: bool,
-    /// Explicit ffprobe executable for audio inspection (otherwise beside ffmpeg)
+    /// Location of the ffprobe binary (otherwise the one beside ffmpeg or on PATH)
     #[arg(long, value_name = "PATH")]
     ffprobe_location: Option<PathBuf>,
     /// Location of the ffmpeg binary; either the path to the binary or its
@@ -933,7 +933,7 @@ struct Args {
     /// Delete downloaded fragments after downloading is finished (default)
     #[arg(long, overrides_with = "keep_fragments")]
     no_keep_fragments: bool,
-    /// Downloader to use, optionally prefixed by protocols (http, ftp, m3u8, dash, rtmp): native or ffmpeg
+    /// Downloader to use, optionally prefixed by protocols (http, ftp, m3u8, dash, rtmp): native, aria2c, axel, curl, ffmpeg, httpie or wget
     #[arg(long, alias = "external-downloader", value_name = "[PROTO:]NAME")]
     downloader: Vec<String>,
     /// Arguments for the downloader (NAME:ARGS; ffmpeg, ffmpeg_i[N], ffmpeg_o[N])
@@ -949,7 +949,7 @@ struct Args {
     /// Template for progress outputs ([TYPES:]TEMPLATE; "download" (default), "postprocess", "-title" variants)
     #[arg(long, value_name = "[TYPES:]TEMPLATE")]
     progress_template: Vec<String>,
-    /// Size of the download buffer (accepted; reads use a fixed native buffer)
+    /// Size of the download buffer, e.g. 1024 or 16K (default is 1024)
     #[arg(long, value_name = "SIZE")]
     buffer_size: Option<String>,
     #[arg(long, hide = true, overrides_with = "no_resize_buffer")]
@@ -959,10 +959,10 @@ struct Args {
     /// Number of times to retry on a file access error (accepted; not retried natively)
     #[arg(long, value_name = "RETRIES", default_value = "3")]
     file_access_retries: String,
-    /// Minimum download rate below which throttling is assumed (accepted; not acted on)
+    /// Minimum download rate in bytes per second below which throttling is assumed and the download is retried, e.g. 100K
     #[arg(long, value_name = "RATE")]
     throttled_rate: Option<String>,
-    /// Wait for scheduled YouTube streams to become available, retrying after MIN[-MAX] seconds
+    /// Wait for scheduled streams to become available, retrying after MIN[-MAX] seconds
     #[arg(long, value_name = "MIN[-MAX]")]
     wait_for_video: Option<String>,
     #[arg(long, hide = true)]
@@ -1082,7 +1082,7 @@ struct Args {
     /// Display progress in the console titlebar
     #[arg(long)]
     console_title: bool,
-    /// Force the specified encoding (only UTF-8 is supported natively)
+    /// Force the specified encoding (utf-8, ascii, latin-1, cp1252, utf-16 or utf-32; others warn and write UTF-8)
     #[arg(long, value_name = "ENCODING")]
     encoding: Option<String>,
     #[arg(long, hide = true)]
@@ -1092,9 +1092,11 @@ struct Args {
     prefer_insecure: bool,
     #[arg(long, hide = true)]
     bidi_workaround: bool,
-    #[arg(long, hide = true, overrides_with = "no_ignore_no_formats_error")]
+    /// Ignore "No video formats" errors, to extract metadata of videos that cannot be downloaded
+    #[arg(long, overrides_with = "no_ignore_no_formats_error")]
     ignore_no_formats_error: bool,
-    #[arg(long, hide = true, overrides_with = "ignore_no_formats_error")]
+    /// Throw an error when no downloadable video formats are found (default)
+    #[arg(long, overrides_with = "ignore_no_formats_error")]
     no_ignore_no_formats_error: bool,
     #[arg(
         long,
@@ -3235,8 +3237,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     crate::pp_args::set(postprocessor_args);
     flush_validation_warnings();
     if args.verbose {
-        // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 62 extractors");
+        // `len(self._ies)`: the `--list-extractors` names.
+        eprintln!("[debug] Loaded {} extractors", SUITABLE.len());
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -4739,7 +4741,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     if let Some(parent) =
                                         name.parent().filter(|p| !p.as_os_str().is_empty())
                                     {
-                                        std::fs::create_dir_all(parent)?;
+                                        crate::download::create_parent(parent)?;
                                     }
                                 }
                             }
@@ -5622,6 +5624,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     Err(crate::Error::DownloadStopped { path }) => {
                                         keep_stopped!(path)
                                     }
+                                    // A stop before any data arrived kept
+                                    // nothing; the run ends as an interrupt.
+                                    Err(crate::Error::DownloadCancelled)
+                                        if args.keep_partial_on_stop =>
+                                    {
+                                        return Err(crate::Error::Reported(
+                                            "Interrupted by user".into(),
+                                        )
+                                        .into());
+                                    }
                                     result => result?,
                                 };
                                 for warning in result.warnings {
@@ -5687,6 +5699,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 ) {
                                     Err(crate::Error::DownloadStopped { path }) => {
                                         keep_stopped!(path)
+                                    }
+                                    // A stop before any data arrived kept
+                                    // nothing; the run ends as an interrupt.
+                                    Err(crate::Error::DownloadCancelled)
+                                        if args.keep_partial_on_stop =>
+                                    {
+                                        return Err(crate::Error::Reported(
+                                            "Interrupted by user".into(),
+                                        )
+                                        .into());
                                     }
                                     result => result?,
                                 };
@@ -7903,8 +7925,7 @@ impl MoveFiles {
                 }
             }
             if let Some(parent) = new.parent().filter(|p| !p.as_os_str().is_empty()) {
-                std::fs::create_dir_all(parent)
-                    .map_err(|error| format!("Unable to create directory: {error}"))?;
+                crate::download::create_parent(parent).map_err(|error| error.to_string())?;
             }
             screen!(
                 "[MoveFiles] Moving file \"{}\" to \"{}\"",
@@ -9089,7 +9110,7 @@ fn write_thumbnails(
             .parent()
             .filter(|p| !p.as_os_str().is_empty())
         {
-            std::fs::create_dir_all(parent)?;
+            crate::download::create_parent(parent)?;
         }
         // Upstream `existing_file((final, written))`.
         let mut existing = Vec::new();

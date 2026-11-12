@@ -102,7 +102,62 @@ pub(crate) fn send_prepared(
     }
 }
 
-/// A download body read's error: an interrupt is `DownloadCancelled`.
+/// A media body read's error, `read` bytes into a response of `length`:
+/// an interrupt is `DownloadCancelled`, anything else upstream's
+/// `TransportError` (retried like one) with the requests handler's text,
+/// `HTTP[S]ConnectionPool(host='H', port=P): Read timed out.` or
+/// `IncompleteRead`'s `N bytes read, M more expected`.
+pub(crate) fn body_error(
+    error: std::io::Error,
+    url: &url::Url,
+    read: u64,
+    length: Option<u64>,
+) -> Error {
+    if interruptible::is_interrupted(&error) {
+        return Error::DownloadCancelled;
+    }
+    let mut causes: Vec<&(dyn std::error::Error + 'static)> = Vec::new();
+    let mut cause = error
+        .get_ref()
+        .map(|inner| inner as &(dyn std::error::Error + 'static));
+    while let Some(current) = cause {
+        causes.push(current);
+        cause = current.source();
+    }
+    let timed_out = error.kind() == std::io::ErrorKind::TimedOut
+        || causes.iter().any(|cause| {
+            cause
+                .downcast_ref::<std::io::Error>()
+                .is_some_and(|io| io.kind() == std::io::ErrorKind::TimedOut)
+                || cause
+                    .downcast_ref::<reqwest::Error>()
+                    .is_some_and(reqwest::Error::is_timeout)
+        });
+    let text = if timed_out {
+        format!(
+            "{}ConnectionPool(host='{}', port={}): Read timed out.",
+            if url.scheme() == "https" {
+                "HTTPS"
+            } else {
+                "HTTP"
+            },
+            url.host_str().unwrap_or_default(),
+            url.port_or_known_default().unwrap_or(80)
+        )
+    } else if let Some(more) = length
+        .and_then(|length| length.checked_sub(read))
+        .filter(|more| *more > 0)
+    {
+        format!("{read} bytes read, {more} more expected")
+    } else {
+        causes
+            .last()
+            .map_or_else(|| error.to_string(), ToString::to_string)
+    };
+    Error::MediaTransport(text)
+}
+
+/// An extraction body read's error: an interrupt is `DownloadCancelled`.
 pub(crate) fn read_error(error: std::io::Error) -> Error {
     if interruptible::is_interrupted(&error) {
         Error::DownloadCancelled

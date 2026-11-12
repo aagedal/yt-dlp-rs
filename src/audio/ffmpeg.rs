@@ -126,6 +126,10 @@ fn probe_with_deadline(
         .find(|stream| stream.codec_type == "audio")
         .and_then(|stream| stream.codec_name)
         .ok_or_else(|| failure("input has no identified audio stream"))?;
+    valid_codec(codec)
+}
+
+fn valid_codec(codec: String) -> Result<String> {
     if codec.is_empty()
         || codec.len() > 128
         || matches!(codec.as_str(), "unknown" | "none")
@@ -137,6 +141,56 @@ fn probe_with_deadline(
         return Err(failure("invalid audio codec from probe"));
     }
     Ok(codec)
+}
+
+/// Upstream `get_audio_codec` without ffprobe: `ffmpeg -i INPUT` exits 1
+/// (no output file) and names the first audio stream's codec on stderr.
+pub(crate) fn probe_with_ffmpeg(
+    ffmpeg: &Path,
+    input: &Path,
+    input_ext: &str,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<String> {
+    static AUDIO: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(
+            r"Stream\s*#\d+:\d+(?:\[0x[0-9a-f]+\])?(?:\([a-z]{3}\))?:\s*Audio:\s*([0-9a-z]+)",
+        )
+        .unwrap()
+    });
+    let started = Instant::now();
+    let demuxer = demuxer(input_ext)?;
+    let (executable, input) = paths(ffmpeg, input)?;
+    let directory = input
+        .parent()
+        .ok_or_else(|| failure("audio input has no parent directory"))?;
+    version(
+        &executable,
+        directory,
+        b"ffmpeg version ",
+        started,
+        PROBE_DEADLINE,
+        callback,
+    )?;
+    let args: Vec<OsString> = ["-protocol_whitelist", "file", "-f", demuxer, "-i"]
+        .into_iter()
+        .map(Into::into)
+        .chain(std::iter::once(input.clone().into_os_string()))
+        .collect();
+    let (status, _, errors) = crate::merge::execute_capture(
+        &executable,
+        &args,
+        directory,
+        started,
+        PROBE_DEADLINE,
+        callback,
+    )?;
+    let errors = String::from_utf8_lossy(&errors);
+    let codec = AUDIO
+        .captures(&errors)
+        .filter(|_| status.code() == Some(1))
+        .map(|captures| captures[1].to_owned())
+        .ok_or_else(|| failure("WARNING: unable to obtain file audio codec with ffprobe"))?;
+    valid_codec(codec)
 }
 
 pub(crate) fn convert(

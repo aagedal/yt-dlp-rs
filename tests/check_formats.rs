@@ -103,3 +103,43 @@ fn all_formats_are_tested_best_first_before_selection() {
         "[info] Testing format 900\n[info] Unable to download format 900. Skipping...\n[info] Testing format 100\n[info] master: Downloading 1 format(s): 100\n"
     ), "{stdout}");
 }
+
+/// Formats loaded from info JSON have no fragments: HlsFD's test reads the
+/// first one from the media playlist.
+#[test]
+fn loaded_hls_formats_are_tested_from_their_playlists() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let format = |id: &str, name: &str, height: u32| {
+        serde_json::json!({"format_id": id, "url": format!("{origin}/{name}.m3u8"), "ext": "mp4",
+            "protocol": "m3u8_native", "height": height})
+    };
+    let info = serde_json::json!({"id": "master", "title": "Master", "extractor": "generic",
+        "extractor_key": "Generic", "webpage_url": format!("{origin}/master.m3u8"),
+        "formats": [format("100", "good", 240), format("900", "bad", 480)]});
+    let path = directory.path().join("info.json");
+    std::fs::write(&path, info.to_string()).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--check-formats",
+            "-O",
+            "format_id",
+            "--load-info-json",
+        ])
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "100\n");
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .ends_with("WARNING: Unable to download format 900. Skipping...\n"),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+}

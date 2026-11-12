@@ -246,11 +246,17 @@ fn checkpoint(
         recorded_ms: None,
     })
 }
-fn probe_path(downloader: &YoutubeDl) -> Result<PathBuf> {
+/// Upstream `FFmpegPostProcessor` without ffmpeg.
+pub(crate) const FFMPEG_NOT_FOUND: &str =
+    "ffmpeg not found. Please install or provide the path using --ffmpeg-location";
+
+/// `--ffprobe-location`, else ffprobe beside ffmpeg (upstream's
+/// `probe_executable`), when it exists.
+fn ffprobe_path(downloader: &YoutubeDl) -> Option<PathBuf> {
     if let Some(path) = &downloader.ffprobe {
-        return Ok(path.clone());
+        return Some(path.clone());
     }
-    let ffmpeg = downloader.ffmpeg.as_ref().ok_or_else(|| Error::Postprocess("audio inspection requires --ffprobe-location PATH or ffprobe beside explicit --ffmpeg-location".into()))?;
+    let ffmpeg = downloader.ffmpeg.as_ref()?;
     let name = if ffmpeg
         .extension()
         .is_some_and(|ext| ext.eq_ignore_ascii_case("exe"))
@@ -259,7 +265,16 @@ fn probe_path(downloader: &YoutubeDl) -> Result<PathBuf> {
     } else {
         "ffprobe"
     };
-    Ok(ffmpeg.with_file_name(name))
+    Some(ffmpeg.with_file_name(name)).filter(|path| path.is_file())
+}
+
+/// `get_metadata_object`, which needs ffprobe.
+fn require_ffprobe(ffprobe: Option<&Path>) -> Result<&Path> {
+    ffprobe.ok_or_else(|| {
+        Error::Postprocess(
+            "ffprobe not found. Please install or provide the path using --ffmpeg-location".into(),
+        )
+    })
 }
 
 pub(crate) fn download(
@@ -559,12 +574,25 @@ pub(crate) fn download(
                 }
                 let mut observe =
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-                let codec = crate::audio::ffmpeg::probe(
-                    &probe_path(downloader)?,
-                    &current.disk,
-                    &current.container,
-                    &mut observe,
-                )?;
+                // `get_audio_codec`: ffprobe, else `ffmpeg -i`.
+                let codec = match (ffprobe_path(downloader), &downloader.ffmpeg) {
+                    (Some(ffprobe), _) => crate::audio::ffmpeg::probe(
+                        &ffprobe,
+                        &current.disk,
+                        &current.container,
+                        &mut observe,
+                    ),
+                    (None, Some(ffmpeg)) => crate::audio::ffmpeg::probe_with_ffmpeg(
+                        ffmpeg,
+                        &current.disk,
+                        &current.container,
+                        &mut observe,
+                    ),
+                    (None, None) => Err(Error::Postprocess(
+                        "ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location"
+                            .into(),
+                    )),
+                }?;
                 let plan = processors
                     .audio
                     .as_ref()
@@ -611,11 +639,10 @@ pub(crate) fn download(
                         path.display()
                     ));
                     writable(&path)?;
-                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                        Error::Postprocess(
-                            "audio conversion requires an explicit --ffmpeg-location PATH".into(),
-                        )
-                    })?;
+                    let executable = downloader
+                        .ffmpeg
+                        .as_ref()
+                        .ok_or_else(|| Error::Postprocess(FFMPEG_NOT_FOUND.into()))?;
                     let output = workspace.path().join(format!("audio.{}", plan.extension));
                     let mut observe =
                         || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
@@ -693,12 +720,10 @@ pub(crate) fn download(
                         {
                             return Err(Error::DownloadCancelled);
                         }
-                        let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                            Error::Postprocess(
-                                "video processing requires an explicit --ffmpeg-location PATH"
-                                    .into(),
-                            )
-                        })?;
+                        let executable = downloader
+                            .ffmpeg
+                            .as_ref()
+                            .ok_or_else(|| Error::Postprocess(FFMPEG_NOT_FOUND.into()))?;
                         let output = workspace.path().join(format!("video.{}", plan.extension));
                         let mut observe =
                             || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
@@ -783,11 +808,10 @@ pub(crate) fn download(
                         fs::write(&private, bytes)?;
                         file.path = private;
                     }
-                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                        Error::Postprocess(
-                            "subtitle embedding requires an explicit --ffmpeg-location PATH".into(),
-                        )
-                    })?;
+                    let executable = downloader
+                        .ffmpeg
+                        .as_ref()
+                        .ok_or_else(|| Error::Postprocess(FFMPEG_NOT_FOUND.into()))?;
                     crate::screen::screen(&format!(
                         "[EmbedSubtitle] Embedding subtitles in \"{}\"",
                         current.path.display()
@@ -828,8 +852,14 @@ pub(crate) fn download(
                 };
                 let current = stages.last_mut().unwrap();
                 let say = |text: &str| crate::screen::screen(&format!("[ModifyChapters] {text}"));
-                let ffprobe = probe_path(downloader)?;
-                let probe = || mc::probe_duration(&ffprobe, &current.disk, &current.container);
+                let ffprobe = ffprobe_path(downloader);
+                let probe = || {
+                    mc::probe_duration(
+                        require_ffprobe(ffprobe.as_deref())?,
+                        &current.disk,
+                        &current.container,
+                    )
+                };
                 // `_fixup_chapters`: an open last chapter ends with the media.
                 let mut real = None;
                 if working
@@ -999,11 +1029,10 @@ pub(crate) fn download(
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
                     return Err(Error::DownloadCancelled);
                 }
-                let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                    Error::Postprocess(
-                        "chapter removal requires an explicit --ffmpeg-location PATH".into(),
-                    )
-                })?;
+                let executable = downloader
+                    .ffmpeg
+                    .as_ref()
+                    .ok_or_else(|| Error::Postprocess(FFMPEG_NOT_FOUND.into()))?;
                 let ext = current.ext.to_lowercase();
                 let mut input = current.disk.clone();
                 if modify.force_keyframes {
@@ -1138,11 +1167,10 @@ pub(crate) fn download(
                     {
                         return Err(Error::DownloadCancelled);
                     }
-                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                        Error::Postprocess(
-                            "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
-                        )
-                    })?;
+                    let executable = downloader
+                        .ffmpeg
+                        .as_ref()
+                        .ok_or_else(|| Error::Postprocess(FFMPEG_NOT_FOUND.into()))?;
                     // Upstream writes `NAME.meta` beside the media and deletes it.
                     let metadata_input = if chapters {
                         let path = workspace.path().join("chapters.meta");
@@ -1194,11 +1222,10 @@ pub(crate) fn download(
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
                     return Err(Error::DownloadCancelled);
                 }
-                let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                    Error::Postprocess(
-                        "thumbnail embedding requires an explicit --ffmpeg-location PATH".into(),
-                    )
-                })?;
+                let executable = downloader
+                    .ffmpeg
+                    .as_ref()
+                    .ok_or_else(|| Error::Postprocess(FFMPEG_NOT_FOUND.into()))?;
                 let output = workspace
                     .path()
                     .join(format!("thumbnail-embedded.{}", current.ext));
@@ -1216,7 +1243,7 @@ pub(crate) fn download(
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
                 crate::thumbnail_process::embed(
                     executable,
-                    &probe_path(downloader)?,
+                    ffprobe_path(downloader).as_deref(),
                     &current.disk,
                     &current.path,
                     &current.ext.to_lowercase(),

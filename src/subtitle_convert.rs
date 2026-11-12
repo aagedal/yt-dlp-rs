@@ -224,11 +224,10 @@ pub(crate) fn convert(
     };
     let process = (|| -> Result<ConvertedSubtitle> {
         if !(is_ttml && target == "srt") {
-            let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                Error::Postprocess(
-                    "subtitle conversion requires an explicit --ffmpeg-location PATH".into(),
-                )
-            })?;
+            let executable = downloader
+                .ffmpeg
+                .as_ref()
+                .ok_or_else(|| Error::Postprocess(crate::postprocess::FFMPEG_NOT_FOUND.into()))?;
             let mut observe = || progress(callback, metadata.len(), DownloadPhase::Postprocessing);
             ffmpeg::convert(
                 executable,
