@@ -238,6 +238,14 @@ pub(crate) fn download(
     let rate_limit = options
         .rate_limit
         .map(|limit| (limit / inputs.len() as u64).max(1));
+    // Workers' screen messages (debug lines, retries), written by this
+    // thread, which may hold the output streams.
+    let (message_sender, messages) = std::sync::mpsc::channel();
+    let relay = || {
+        messages
+            .try_iter()
+            .for_each(|message: crate::screen::OwnedMessage| message.emit())
+    };
     let results: Vec<Result<Option<f64>>> = std::thread::scope(|scope| {
         let handles: Vec<_> = inputs
             .iter()
@@ -251,8 +259,10 @@ pub(crate) fn download(
                 let shared = &shared;
                 let client = params.client;
                 let context = crate::control::current();
+                let messages = message_sender.clone();
                 scope.spawn(move || {
                     let _context = crate::control::resume(context);
+                    let _forward = crate::screen::forward_to(messages);
                     let result = fetch(
                         client,
                         input,
@@ -274,6 +284,7 @@ pub(crate) fn download(
             let total = (shared.planned_inputs.load(Ordering::Relaxed) == inputs.len() as u64)
                 .then(|| shared.planned.load(Ordering::Relaxed));
             let written = shared.written.load(Ordering::Relaxed);
+            relay();
             crate::screen::flush_traffic();
             if callback(progress(DownloadPhase::Downloading, written, total)).is_break() {
                 shared.cancelled.store(true, Ordering::Relaxed);
@@ -285,6 +296,7 @@ pub(crate) fn download(
             .map(|handle| handle.join().unwrap_or(Err(Error::DownloadCancelled)))
             .collect()
     });
+    relay();
     crate::screen::flush_traffic();
     // The first real error, rather than the cancellations it caused.
     let mut start_times = Vec::with_capacity(results.len());

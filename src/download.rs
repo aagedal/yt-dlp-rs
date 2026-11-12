@@ -1166,6 +1166,13 @@ fn download_resource(
     unreachable!("the final attempt returns success or an error")
 }
 
+/// Upstream HttpFD opens the output on an attempt's first block; an attempt
+/// without one is reported (after `to_stderr('\n')`) and not retried.
+fn no_data_blocks() -> AttemptFailure {
+    crate::screen::stderr("\n");
+    Error::Reported("Did not get any data blocks".into()).into()
+}
+
 /// Upstream `HttpFD.real_download` with a chunk size: each connection asks
 /// for `bytes=START-END`; a matching `206` continues with the next chunk
 /// (`NextFragment`, not a retry), anything else restarts as a whole download.
@@ -1183,6 +1190,8 @@ fn chunked_attempt(
     let mut resuming = std::mem::take(continued) && *actual > 0;
     // `ctx.content_len`: the whole resource length once known.
     let mut content_len: Option<u64> = None;
+    // `ctx.stream`: opened by the first block, kept across chunks.
+    let mut received = false;
     loop {
         let size = if chunk.test {
             chunk.size
@@ -1293,11 +1302,15 @@ fn chunked_attempt(
             };
             let count = block.len();
             temporary.write_all(block)?;
+            received = true;
             *actual += count as u64;
             limiter.consume(count);
             blocks.finished(count);
             reporter.report(DownloadPhase::Downloading, *actual)?;
             throttle.check(count)?;
+        }
+        if !received {
+            return Err(no_data_blocks());
         }
         if !chunk.test
             && let Some(length) = content_len
@@ -1551,6 +1564,7 @@ fn download_attempt(
     let mut limiter = RateLimit::new(resource.rate_limit);
     let mut throttle = Throttle::new(resource.throttled_rate);
     let mut blocks = Blocks::new();
+    let mut received = false;
     loop {
         // Separate network reads from filesystem writes: only the former retry.
         let block = match blocks.read(&mut response, None) {
@@ -1566,11 +1580,15 @@ fn download_attempt(
             return Err(Error::InvalidRangeResponse.into());
         }
         temporary.write_all(block)?;
+        received = true;
         *actual = next;
         limiter.consume(count);
         blocks.finished(count);
         reporter.report(DownloadPhase::Downloading, *actual)?;
         throttle.check(count)?;
+    }
+    if !received {
+        return Err(no_data_blocks());
     }
     if let Some(expected) = expected
         && *actual != expected

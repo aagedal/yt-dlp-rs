@@ -98,6 +98,24 @@ pub(crate) fn forward(forward: Option<Forward>) {
     FORWARD.with(|slot| *slot.borrow_mut() = forward);
 }
 
+/// Hand this thread's messages to `sender` until the guard drops: a worker
+/// of a thread that may hold the output streams, which emits them.
+pub(crate) fn forward_to(sender: std::sync::mpsc::Sender<OwnedMessage>) -> ForwardGuard {
+    forward(Some(Box::new(move |message| {
+        let _ = sender.send(message);
+    })));
+    ForwardGuard(())
+}
+
+/// Restores the sink (and drops the forward's sender) when dropped.
+pub(crate) struct ForwardGuard(());
+
+impl Drop for ForwardGuard {
+    fn drop(&mut self) {
+        forward(None);
+    }
+}
+
 fn deliver(message: Message<'_>) {
     let forwarded = FORWARD.with(|slot| match &*slot.borrow() {
         Some(forward) => {

@@ -113,6 +113,11 @@ pub use download::{
     DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles, PartFiles,
 };
 pub(crate) use embed_metadata::COMPAT_EMBED_METADATA;
+
+/// `--compat-options no-live-chat`: no `live_chat`, `comments` or `danmaku`
+/// subtitles.
+pub(crate) static COMPAT_NO_LIVE_CHAT: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, HttpError, Result};
 pub use extractor::YoutubeOptions;
@@ -242,6 +247,8 @@ pub struct YoutubeDl {
     multistreams: (bool, bool),
     /// `--live-from-start`.
     live_from_start: bool,
+    /// `--hls-prefer-native` (`Some(true)`) or `--hls-prefer-ffmpeg`.
+    hls_prefer_native: Option<bool>,
     /// After `Live DASH videos are not supported` (`--downloader native`),
     /// download the manifest snapshot like upstream's DashSegmentsFD.
     live_dash_snapshot: bool,
@@ -347,7 +354,7 @@ static TROUBLE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::n
 
 /// Upstream `trouble` with `ignoreerrors`: an `ERROR:` line on stderr that
 /// does not stop the work.
-fn report_trouble(message: &str) {
+pub(crate) fn report_trouble(message: &str) {
     screen::stderr(&format!("ERROR: {message}"));
     TROUBLE.store(true, std::sync::atomic::Ordering::Relaxed);
 }
@@ -1645,6 +1652,7 @@ impl YoutubeDl {
             merge_output_format: None,
             multistreams: (false, false),
             live_from_start: false,
+            hls_prefer_native: None,
             live_dash_snapshot: false,
             growing_file: false,
             keep_partial_on_stop: false,
@@ -3837,15 +3845,20 @@ impl YoutubeDl {
     }
 
     /// Whether a selected format has the `m3u8` protocol, which upstream
-    /// downloads with FFmpegFD unless `--downloader native` is given, or
+    /// downloads with FFmpegFD unless `--downloader native` or
+    /// `--hls-prefer-native` is given, an `m3u8_native` one with
+    /// `--hls-prefer-ffmpeg` (and no `--downloader` for it), or
     /// `rtmp_ffmpeg` (`PROTOCOL_MAP`'s FFmpegFD for any downloader).
     fn forced_ffmpeg_hls(&self, info: &VideoInfo) -> bool {
         let forced = |protocol: &str| {
+            let downloader = self.downloader_name(protocol);
             protocol == "rtmp_ffmpeg"
                 || (protocol == "m3u8"
-                    && !self
-                        .downloader_name(protocol)
-                        .is_some_and(|name| name.eq_ignore_ascii_case("native")))
+                    && self.hls_prefer_native != Some(true)
+                    && !downloader.is_some_and(|name| name.eq_ignore_ascii_case("native")))
+                || (protocol == "m3u8_native"
+                    && self.hls_prefer_native == Some(false)
+                    && downloader.is_none())
         };
         if info.requested_formats.is_empty() {
             info.protocol.as_deref().is_some_and(forced)
@@ -3992,6 +4005,13 @@ impl YoutubeDl {
     pub(crate) fn with_test(mut self, test: bool) -> Self {
         self.test = test;
         self.ffmpeg_settings.test = test;
+        self
+    }
+
+    /// `--hls-prefer-native` (`Some(true)`) or `--hls-prefer-ffmpeg`
+    /// (`Some(false)`): upstream's deprecated `hls_prefer_native`.
+    pub(crate) fn with_hls_prefer_native(mut self, prefer: Option<bool>) -> Self {
+        self.hls_prefer_native = prefer;
         self
     }
 
@@ -5426,9 +5446,22 @@ impl YoutubeDl {
         for extractor in extractors {
             geo::begin(extractor.key(), extractor.geo());
             let extract = || {
-                guard_extractor(extractor.key(), url.as_str(), || {
+                let mut extracted = guard_extractor(extractor.key(), url.as_str(), || {
                     extractor.extract_result(&self.client, url)
-                })
+                });
+                // `--compat-options no-live-chat`: `InfoExtractor.extract`
+                // drops these subtitles of the result it returns.
+                if COMPAT_NO_LIVE_CHAT.load(std::sync::atomic::Ordering::Relaxed)
+                    && let Ok(Some(ExtractResult::Video(video))) = &mut extracted
+                {
+                    video.subtitles.entries.retain(|(language, _)| {
+                        !matches!(
+                            language.as_deref(),
+                            Some("live_chat" | "comments" | "danmaku")
+                        )
+                    });
+                }
+                extracted
             };
             let mut extracted = extract();
             // `extract`: a geo restriction may retry with a fake IP.

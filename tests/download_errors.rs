@@ -8,11 +8,20 @@ use std::{
     thread,
 };
 
+mod support;
+
 /// A media playlist whose second segment is missing.
 const GAP: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
-/// Serves `/v.mp4` and the `/gap.m3u8` playlist; `/busy*` answers 503 and anything else 404 with a
-/// non-canonical reason phrase like Python's `http.server`.
+/// The same with an empty second segment.
+const EMPTY: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nempty.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
+/// A media playlist whose first segment is missing.
+const HEADLESS: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
+/// Serves `/v.mp4` and the `/gap.m3u8`, `/empty.m3u8` and `/headless.m3u8` playlists; `/busy*`
+/// answers 503 and anything else 404 with a non-canonical reason phrase like Python's
+/// `http.server`.
 fn serve() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let origin = format!("http://{}", listener.local_addr().unwrap());
@@ -26,7 +35,10 @@ fn serve() -> String {
             let (status, body): (&str, &[u8]) = match path.as_str() {
                 "/v.mp4" => ("200 OK", b"media"),
                 "/gap.m3u8" => ("200 OK", GAP.as_bytes()),
+                "/empty.m3u8" => ("200 OK", EMPTY.as_bytes()),
+                "/headless.m3u8" => ("200 OK", HEADLESS.as_bytes()),
                 "/s0.ts" | "/s2.ts" => ("200 OK", b"segment"),
+                "/empty.ts" => ("200 OK", b""),
                 path if path.starts_with("/busy") => ("503 Service Unavailable", b"busy"),
                 _ => ("404 File not found", b"missing"),
             };
@@ -68,6 +80,16 @@ fn run(directory: &Path, media: &str, subtitle: Option<&str>, args: &[&str]) -> 
 
 fn text(bytes: &[u8]) -> String {
     String::from_utf8_lossy(bytes).into_owned()
+}
+
+/// `--ignore-config --no-progress -o o.%(ext)s` with `args` in `directory`.
+fn fragments(directory: &Path, args: &[&str]) -> Output {
+    support::output_within_a_minute(
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o", "o.%(ext)s"])
+            .args(args)
+            .current_dir(directory),
+    )
 }
 
 #[test]
@@ -230,20 +252,20 @@ fn transport_errors_use_urllib_errno_text() {
     );
 }
 
+/// Also with `-N`: the workers' retry and skip lines once deadlocked
+/// against the thread holding stdout.
 #[test]
 fn unavailable_fragments_are_skipped_or_end_the_download() {
     let origin = serve();
-    for abort in [false, true] {
+    for (abort, jobs) in [(false, "1"), (true, "1"), (false, "2"), (true, "2")] {
         let directory = tempfile::tempdir().unwrap();
-        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
-        command
-            .args(["--ignore-config", "--no-progress", "-o", "o.%(ext)s"])
-            .args(["--fragment-retries", "1", "--retry-sleep", "fragment:0"])
-            .current_dir(directory.path());
+        let playlist = format!("{origin}/gap.m3u8");
+        let mut args = vec!["--fragment-retries", "1", "--retry-sleep", "fragment:0"];
+        args.extend(["-N", jobs, &playlist]);
         if abort {
-            command.arg("--abort-on-unavailable-fragments");
+            args.push("--abort-on-unavailable-fragments");
         }
-        let output = command.arg(format!("{origin}/gap.m3u8")).output().unwrap();
+        let output = fragments(directory.path(), &args);
         let stdout = text(&output.stdout);
         assert!(stdout.contains(
             "[download] Got error: HTTP Error 404: File not found. Retrying fragment 2 (1/1)...\n"
@@ -263,6 +285,62 @@ fn unavailable_fragments_are_skipped_or_end_the_download() {
             );
         }
     }
+}
+
+/// HttpFD's `Did not get any data blocks` for an empty fragment: reported
+/// (the run exits 1), then skipped or fatal like an unavailable one.
+#[test]
+fn empty_fragments_are_reported_then_skipped() {
+    let origin = serve();
+    for (abort, jobs) in [(false, "1"), (true, "1"), (false, "2"), (true, "2")] {
+        let directory = tempfile::tempdir().unwrap();
+        let playlist = format!("{origin}/empty.m3u8");
+        let mut args = vec!["-N", jobs, &playlist];
+        if abort {
+            args.push("--abort-on-unavailable-fragments");
+        }
+        let output = fragments(directory.path(), &args);
+        let (stdout, stderr) = (text(&output.stdout), text(&output.stderr));
+        assert_eq!(output.status.code(), Some(1), "{stderr}");
+        assert!(!stdout.contains("Retrying"), "{stdout}");
+        if abort {
+            assert!(
+                stderr.ends_with(
+                    "\n\nERROR: Did not get any data blocks\n\
+                     ERROR: fragment 2 not found, unable to continue\n"
+                ),
+                "{stderr}"
+            );
+            assert!(!directory.path().join("o.mp4").exists());
+        } else {
+            assert!(
+                stderr.ends_with("\n\nERROR: Did not get any data blocks\n"),
+                "{stderr}"
+            );
+            assert!(stdout.contains("[download] fragment not found; Skipping fragment 2 ...\n"));
+            assert_eq!(
+                std::fs::read(directory.path().join("o.mp4")).unwrap(),
+                b"segmentsegment"
+            );
+        }
+    }
+}
+
+/// HlsFD may skip the first fragment too (only DashSegmentsFD never does).
+#[test]
+fn a_missing_first_hls_fragment_is_skipped() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let playlist = format!("{origin}/headless.m3u8");
+    let output = fragments(directory.path(), &["--fragment-retries", "0", &playlist]);
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(
+        text(&output.stdout).contains("[download] fragment not found; Skipping fragment 1 ...\n")
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4")).unwrap(),
+        b"segmentsegment"
+    );
 }
 
 /// Upstream `FragmentFD` resume: an aborted download keeps `FILE.part` and
@@ -349,4 +427,96 @@ fn interrupted_fragment_downloads_resume_from_the_ytdl_state() {
     assert_eq!(first_requests.load(Ordering::Relaxed), fetched);
     assert!(!directory.path().join("o.mp4.ytdl").exists());
     assert!(!directory.path().join("o.mp4.part").exists());
+}
+
+/// A run killed in the middle of a fragment (SIGKILL, a crash) leaves only
+/// whole fragments in `FILE.part`, so `--continue` builds on them instead of
+/// appending the fragment again after its first bytes.
+#[test]
+fn a_killed_fragment_download_resumes_without_its_partial_fragment() {
+    use std::sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    };
+    const SECOND: &[u8] = &[b'2'; 64 << 10];
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let origin = format!("http://{}", listener.local_addr().unwrap());
+    let (stall, half_sent) = (
+        Arc::new(AtomicBool::new(true)),
+        Arc::new(AtomicBool::new(false)),
+    );
+    let (serve_stall, serve_half) = (stall.clone(), half_sent.clone());
+    thread::spawn(move || {
+        for stream in listener.incoming() {
+            let Ok(mut stream) = stream else { continue };
+            let (stall, half_sent) = (serve_stall.clone(), serve_half.clone());
+            thread::spawn(move || {
+                let mut request = [0; 4096];
+                let read = stream.read(&mut request).unwrap_or(0);
+                let request = String::from_utf8_lossy(&request[..read]);
+                let path = request.split_whitespace().nth(1).unwrap_or("/").to_owned();
+                let body: &[u8] = match path.as_str() {
+                    "/gap.m3u8" => GAP.as_bytes(),
+                    "/s0.ts" => b"first-",
+                    "/s1.ts" => SECOND,
+                    _ => b"third",
+                };
+                let _ = write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\nContent-Type: video/mp2t\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                    body.len()
+                );
+                if path == "/s1.ts" && stall.load(Ordering::Relaxed) {
+                    // Half the segment, then nothing until the client dies.
+                    let _ = stream.write_all(&body[..body.len() / 2]);
+                    let _ = stream.flush();
+                    half_sent.store(true, Ordering::Relaxed);
+                    thread::sleep(std::time::Duration::from_secs(60));
+                    return;
+                }
+                let _ = stream.write_all(body);
+            });
+        }
+    });
+    let directory = tempfile::tempdir().unwrap();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+    command
+        .args([
+            "--ignore-config",
+            "--no-progress",
+            "--fixup",
+            "never",
+            "-o",
+            "o.ts",
+        ])
+        .arg(format!("{origin}/gap.m3u8"))
+        .current_dir(directory.path());
+    let mut child = command
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn()
+        .unwrap();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(60);
+    while !half_sent.load(Ordering::Relaxed) {
+        assert!(
+            std::time::Instant::now() < deadline,
+            "the stall was not reached"
+        );
+        thread::sleep(std::time::Duration::from_millis(20));
+    }
+    // Time for the received half to reach the file, as it once did.
+    thread::sleep(std::time::Duration::from_millis(500));
+    child.kill().unwrap();
+    child.wait().unwrap();
+    assert_eq!(
+        std::fs::read(directory.path().join("o.ts.part")).unwrap(),
+        b"first-"
+    );
+    stall.store(false, Ordering::Relaxed);
+    let output = support::output_within_a_minute(&mut command);
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert_eq!(
+        std::fs::read(directory.path().join("o.ts")).unwrap(),
+        [&b"first-"[..], SECOND, b"third"].concat()
+    );
 }

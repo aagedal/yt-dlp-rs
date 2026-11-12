@@ -91,6 +91,8 @@ fn body_failure(error: Error) -> Failure {
         error,
     }
 }
+/// HttpFD's error for a response without a body: reported, never retried.
+const NO_DATA_BLOCKS: &str = "Did not get any data blocks";
 fn unsupported(message: &str) -> Error {
     Error::UnsupportedManifest(message.into())
 }
@@ -477,21 +479,29 @@ fn download_with(
             stored += written;
             filetime = latest;
         } else {
+            let budget = SpoolMemory::default();
             for (index, fragment) in info.fragments.iter().enumerate().skip(start) {
                 reporter.index = index as u32 + 1;
                 let prefix = stored;
-                if let Some(modified) = fetch_with_retries(
+                let mut staged = Staged {
+                    output: &mut *output,
+                    base: prefix,
+                    spool: Spool::new(&budget, parent),
+                };
+                let fetched = fetch_with_retries(
                     client,
                     info,
                     index,
                     fragment,
                     &options,
                     &mut keys,
-                    output,
+                    &mut staged,
                     prefix,
                     &mut stored,
                     &mut reporter,
-                )? {
+                )?;
+                if let Some(modified) = fetched {
+                    staged.append()?;
                     // HttpFD's `finished` status for the fragment.
                     reporter.fragment = Some(crate::FragmentBytes {
                         index: index as u32,
@@ -693,6 +703,14 @@ fn fetch_with_retries(
         // reported to observers, before waiting, retrying or skipping.
         file.truncate(prefix)?;
         *stored = prefix;
+        // HttpFD reports it (`to_stderr('\n')`, then `report_error`, so the
+        // run exits 1) and FragmentFD goes on without the fragment.
+        let no_data =
+            matches!(&failure.error, Error::Reported(message) if message == NO_DATA_BLOCKS);
+        if no_data {
+            crate::screen::stderr("\n");
+            crate::report_trouble(NO_DATA_BLOCKS);
+        }
         // Upstream retries every HTTP status error for fragments when
         // unavailable fragments may be skipped.
         let retry = failure.retry.or_else(|| {
@@ -718,9 +736,18 @@ fn fetch_with_retries(
             reporter.wait(delay, *stored)?;
             continue;
         }
-        // Upstream `skip_unavailable_fragments`, never for the first one.
+        // Upstream `skip_unavailable_fragments`: HlsFD and IsmFD skip any
+        // fragment, DashSegmentsFD never the first; IsmFD fails on a
+        // fragment without data.
+        let protocol = info.protocol.as_deref().unwrap_or_default();
+        let ism = protocol == "ism";
+        let skippable = if no_data && ism {
+            false
+        } else {
+            index > 0 || ism || protocol.starts_with("m3u8")
+        };
         if options.skip_unavailable_fragments == Some(true)
-            && index > 0
+            && skippable
             && !matches!(failure.error, Error::DownloadCancelled | Error::Io(_))
         {
             crate::screen::screen(&format!(
@@ -737,6 +764,11 @@ fn fetch_with_retries(
                     options.fragment_retries,
                 )),
             }
+        } else if no_data {
+            Error::Reported(format!(
+                "fragment {} not found, unable to continue",
+                index + 1
+            ))
         } else {
             failure.error
         });
@@ -902,6 +934,68 @@ impl Drop for Spool<'_> {
     }
 }
 
+impl Spool<'_> {
+    /// Appends the fragment to `output` whole.
+    fn append_to(&self, output: &mut fs::File) -> Result<()> {
+        append_whole(output, |output| match &self.file {
+            Some(spilled) => std::io::copy(&mut spilled.reopen()?, output).map(drop),
+            None => output.write_all(&self.memory),
+        })
+    }
+}
+
+/// Appends with `write`, or (when it fails, e.g. on a full disk) truncates
+/// `output` back, so a resumed download never builds on part of a fragment.
+fn append_whole(
+    output: &mut fs::File,
+    write: impl FnOnce(&mut fs::File) -> std::io::Result<()>,
+) -> Result<()> {
+    let before = output.stream_position()?;
+    write(output).map_err(|error| {
+        // The write's error matters; restoring the length is best effort.
+        let _ = output
+            .set_len(before)
+            .and_then(|()| output.seek(SeekFrom::Start(before)).map(drop));
+        error.into()
+    })
+}
+
+/// A sequential fragment until it is whole: kept in a [`Spool`], then
+/// appended to `output`, so a killed download leaves only whole fragments
+/// in the part file (upstream's `-FragN.part` files, mostly in memory).
+struct Staged<'a, 'b> {
+    output: &'b mut fs::File,
+    /// The output's length, where the fragment starts.
+    base: u64,
+    spool: Spool<'a>,
+}
+
+impl Staged<'_, '_> {
+    fn append(self) -> Result<()> {
+        self.spool.append_to(self.output)
+    }
+}
+
+impl Write for Staged<'_, '_> {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        self.spool.write(bytes)
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
+impl Sink for Staged<'_, '_> {
+    fn truncate(&mut self, len: u64) -> std::io::Result<()> {
+        self.spool.truncate(len.saturating_sub(self.base))
+    }
+
+    fn expect(&mut self, len: u64) {
+        self.spool.expect(len);
+    }
+}
+
 /// Holds concurrent workers back while the assembling thread, not the
 /// network, is behind: once the next fragment to append has arrived, a
 /// fragment starts only while the fragments queued for appending and
@@ -1020,13 +1114,18 @@ fn download_concurrent(
     let next = Arc::new(AtomicUsize::new(start));
     let cancelled = Arc::new(AtomicBool::new(false));
     let (sender, receiver) = mpsc::channel::<Event>();
+    // Workers' screen messages (retries, skipped fragments), written by the
+    // assembling thread, which may hold the output streams.
+    let (message_sender, messages) = mpsc::channel::<crate::screen::OwnedMessage>();
     let count = info.fragments.len();
     std::thread::scope(|scope| -> Result<(u64, Option<i64>)> {
         for _ in 0..concurrency.min(count - start) {
             let (next, cancelled, sender) = (next.clone(), cancelled.clone(), sender.clone());
+            let messages = message_sender.clone();
             let context = crate::control::current();
             scope.spawn(move || {
                 let _context = crate::control::resume(context);
+                let _forward = crate::screen::forward_to(messages);
                 let mut keys: HashMap<url::Url, [u8; 16]> =
                     match crate::manifest_args::external_key(info).ok().flatten() {
                         Some(key) => info
@@ -1130,6 +1229,7 @@ fn download_concurrent(
         let mut latest = None;
         let mut outcome = Ok(());
         for event in receiver {
+            messages.try_iter().for_each(|message| message.emit());
             match event {
                 Event::Progress {
                     index,
@@ -1159,15 +1259,8 @@ fn download_concurrent(
             while let Some(file) = finished.remove(&cursor) {
                 let len = file.as_ref().map_or(0, |(file, _)| file.len);
                 if let Some((file, modified)) = file {
-                    match &file.file {
-                        Some(spilled) => {
-                            written += std::io::copy(&mut spilled.reopen()?, output)?;
-                        }
-                        None => {
-                            output.write_all(&file.memory)?;
-                            written += file.len;
-                        }
-                    }
+                    file.append_to(output)?;
+                    written += file.len;
                     keep_fragment(cursor, &mut file.reader()?)?;
                     appended(cursor)?;
                     latest = crate::filetime::filetime(modified.as_deref()).or(latest);
@@ -1187,6 +1280,7 @@ fn download_concurrent(
                 }
             }
         }
+        messages.try_iter().for_each(|message| message.emit());
         outcome?;
         Ok((written, latest))
     })
@@ -1304,7 +1398,7 @@ fn fetch(
         }));
     }
     if received == 0 {
-        return Err(unsupported("empty media fragment").into());
+        return Err(Error::Reported(NO_DATA_BLOCKS.into()).into());
     }
     Ok(modified)
 }
@@ -1546,6 +1640,9 @@ fn decrypt_response(
             reporter,
         )?;
     }
+    if cipher_bytes == 0 {
+        return Err(Error::Reported(NO_DATA_BLOCKS.into()).into());
+    }
     if let Some(expected) = expected
         && cipher_bytes != expected
     {
@@ -1601,6 +1698,25 @@ fn write_plain(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A failed append (a full disk) leaves the output as it was, so a
+    /// resumed download continues after whole fragments only.
+    #[test]
+    fn a_failed_append_truncates_the_output_back() {
+        let mut output = tempfile::tempfile().unwrap();
+        output.write_all(b"whole").unwrap();
+        let result = append_whole(&mut output, |output| {
+            output.write_all(b"part")?;
+            Err(std::io::Error::other("No space left on device"))
+        });
+        assert!(result.is_err());
+        assert_eq!(output.metadata().unwrap().len(), 5);
+        output.write_all(b"!").unwrap();
+        let mut bytes = Vec::new();
+        output.seek(SeekFrom::Start(0)).unwrap();
+        output.read_to_end(&mut bytes).unwrap();
+        assert_eq!(bytes, b"whole!");
+    }
 
     fn contents(spool: &Spool<'_>) -> Vec<u8> {
         let mut bytes = Vec::new();

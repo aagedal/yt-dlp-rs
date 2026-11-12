@@ -88,6 +88,17 @@ jobs:
         with:
           tool: cargo-semver-checks
       - run: python3 tools/semver_check.py
+  advisories:
+    # RustSec advisories for every feature's dependencies and the fuzz crate.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deny
+      - run: cargo deny --all-features check advisories
+      - run: cargo deny check advisories
+        working-directory: fuzz
   upstream-tooling:
     runs-on: ubuntu-latest
     steps:
