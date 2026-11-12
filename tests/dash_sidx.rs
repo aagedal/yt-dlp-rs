@@ -9,6 +9,8 @@ use std::{
     thread,
 };
 
+mod support;
+
 const VIDEO: &[u8] = include_bytes!("fixtures/dash_sidx/video.mp4");
 
 fn mpd(index_range: &str) -> String {
@@ -168,4 +170,39 @@ fn an_unavailable_segment_fails_instead_of_being_skipped() {
     assert!(!output.status.success(), "{stdout}");
     assert!(!stdout.contains("Skipping fragment"), "{stdout}");
     assert!(!directory.path().join("out.mp4").exists());
+}
+
+/// `--download-sections` fetches the section's ranges on worker threads;
+/// their retry lines once deadlocked against the thread holding stdout.
+#[test]
+fn section_range_retries_are_printed_from_the_workers() {
+    let (base, _) = serve(mpd("819-954"), Some("955"));
+    let directory = tempfile::tempdir().unwrap();
+    let ffmpeg = support::fake_tool(
+        directory.path(),
+        "ffmpeg",
+        "#!/bin/sh\nif [ \"$1\" = -version ]; then echo 'ffmpeg version test'; exit 0; fi\nexit 1\n",
+    );
+    let output = support::output_within_a_minute(
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                "--ignore-config",
+                "-o",
+                "out.%(ext)s",
+                "--download-sections",
+                "*0-2",
+            ])
+            .args(["--retries", "1", "--retry-sleep", "0", "--ffmpeg-location"])
+            .arg(&ffmpeg)
+            .arg(format!("{base}/v.mpd"))
+            .current_dir(directory.path()),
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[download] Got error: HTTP Error 503: Service Unavailable. Retrying (1/1)...\n"
+        ),
+        "{stdout}"
+    );
+    assert_eq!(output.status.code(), Some(1));
 }

@@ -8,6 +8,8 @@ use std::{
     thread,
 };
 
+mod support;
+
 /// A media playlist whose second segment is missing.
 const GAP: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
@@ -68,6 +70,16 @@ fn run(directory: &Path, media: &str, subtitle: Option<&str>, args: &[&str]) -> 
 
 fn text(bytes: &[u8]) -> String {
     String::from_utf8_lossy(bytes).into_owned()
+}
+
+/// `--ignore-config --no-progress -o o.%(ext)s` with `args` in `directory`.
+fn fragments(directory: &Path, args: &[&str]) -> Output {
+    support::output_within_a_minute(
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o", "o.%(ext)s"])
+            .args(args)
+            .current_dir(directory),
+    )
 }
 
 #[test]
@@ -230,20 +242,20 @@ fn transport_errors_use_urllib_errno_text() {
     );
 }
 
+/// Also with `-N`: the workers' retry and skip lines once deadlocked
+/// against the thread holding stdout.
 #[test]
 fn unavailable_fragments_are_skipped_or_end_the_download() {
     let origin = serve();
-    for abort in [false, true] {
+    for (abort, jobs) in [(false, "1"), (true, "1"), (false, "2"), (true, "2")] {
         let directory = tempfile::tempdir().unwrap();
-        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
-        command
-            .args(["--ignore-config", "--no-progress", "-o", "o.%(ext)s"])
-            .args(["--fragment-retries", "1", "--retry-sleep", "fragment:0"])
-            .current_dir(directory.path());
+        let playlist = format!("{origin}/gap.m3u8");
+        let mut args = vec!["--fragment-retries", "1", "--retry-sleep", "fragment:0"];
+        args.extend(["-N", jobs, &playlist]);
         if abort {
-            command.arg("--abort-on-unavailable-fragments");
+            args.push("--abort-on-unavailable-fragments");
         }
-        let output = command.arg(format!("{origin}/gap.m3u8")).output().unwrap();
+        let output = fragments(directory.path(), &args);
         let stdout = text(&output.stdout);
         assert!(stdout.contains(
             "[download] Got error: HTTP Error 404: File not found. Retrying fragment 2 (1/1)...\n"

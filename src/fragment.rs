@@ -1020,13 +1020,18 @@ fn download_concurrent(
     let next = Arc::new(AtomicUsize::new(start));
     let cancelled = Arc::new(AtomicBool::new(false));
     let (sender, receiver) = mpsc::channel::<Event>();
+    // Workers' screen messages (retries, skipped fragments), written by the
+    // assembling thread, which may hold the output streams.
+    let (message_sender, messages) = mpsc::channel::<crate::screen::OwnedMessage>();
     let count = info.fragments.len();
     std::thread::scope(|scope| -> Result<(u64, Option<i64>)> {
         for _ in 0..concurrency.min(count - start) {
             let (next, cancelled, sender) = (next.clone(), cancelled.clone(), sender.clone());
+            let messages = message_sender.clone();
             let context = crate::control::current();
             scope.spawn(move || {
                 let _context = crate::control::resume(context);
+                let _forward = crate::screen::forward_to(messages);
                 let mut keys: HashMap<url::Url, [u8; 16]> =
                     match crate::manifest_args::external_key(info).ok().flatten() {
                         Some(key) => info
@@ -1130,6 +1135,7 @@ fn download_concurrent(
         let mut latest = None;
         let mut outcome = Ok(());
         for event in receiver {
+            messages.try_iter().for_each(|message| message.emit());
             match event {
                 Event::Progress {
                     index,
@@ -1187,6 +1193,7 @@ fn download_concurrent(
                 }
             }
         }
+        messages.try_iter().for_each(|message| message.emit());
         outcome?;
         Ok((written, latest))
     })

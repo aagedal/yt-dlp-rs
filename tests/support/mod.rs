@@ -146,3 +146,42 @@ mod windows {
         })
     }
 }
+
+/// `command.output()`, failing instead of hanging when the run does not end
+/// within a minute (a deadlocked download).
+pub fn output_within_a_minute(command: &mut std::process::Command) -> std::process::Output {
+    let mut child = command
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .unwrap();
+    let read = |mut pipe: Box<dyn std::io::Read + Send>| {
+        std::thread::spawn(move || {
+            let mut bytes = Vec::new();
+            let _ = pipe.read_to_end(&mut bytes);
+            bytes
+        })
+    };
+    let stdout = read(Box::new(child.stdout.take().unwrap()));
+    let stderr = read(Box::new(child.stderr.take().unwrap()));
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(60);
+    let status = loop {
+        if let Some(status) = child.try_wait().unwrap() {
+            break status;
+        }
+        if std::time::Instant::now() > deadline {
+            let _ = child.kill();
+            let _ = child.wait();
+            panic!(
+                "the run did not end: {}",
+                String::from_utf8_lossy(&stdout.join().unwrap())
+            );
+        }
+        std::thread::sleep(std::time::Duration::from_millis(20));
+    };
+    std::process::Output {
+        status,
+        stdout: stdout.join().unwrap(),
+        stderr: stderr.join().unwrap(),
+    }
+}
