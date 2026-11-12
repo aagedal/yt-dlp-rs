@@ -5622,6 +5622,12 @@ indefinitely). The library exposes `DownloadOptions` (`retries`, `fragment_retri
 `YoutubeDl::download_with_options`; `download` uses the default policy.
 After the retry budget is exhausted, return `Error::RetriesExhausted`, which
 wraps the final attempt's error with upstream's Giving-up text.
+A body read that fails is `Error::MediaTransport` with the pinned upstream's
+requests-handler text: `N bytes read, M more expected` for a body that ended
+early (counted for that response) and `HTTP[S]ConnectionPool(host='H',
+port=P): Read timed out.` for a stalled one. A fragment's is retried with
+`--fragment-retries` and then skipped like an unavailable fragment (upstream
+first retries it inside HttpFD with `--retries`).
 
 After a body interruption, a retry can reuse bytes already written in the same
 private temporary file. This requires a known Content-Length and a valid strong

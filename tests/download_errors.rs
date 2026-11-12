@@ -16,6 +16,9 @@ const GAP: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2
 /// The same with an empty second segment.
 const EMPTY: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nempty.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
+/// The same with a second segment cut short.
+const SHORT: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nshort.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
 /// A media playlist whose first segment is missing.
 const HEADLESS: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
@@ -39,6 +42,13 @@ fn serve() -> String {
                 "/headless.m3u8" => ("200 OK", HEADLESS.as_bytes()),
                 "/s0.ts" | "/s2.ts" => ("200 OK", b"segment"),
                 "/empty.ts" => ("200 OK", b""),
+                "/short.m3u8" => ("200 OK", SHORT.as_bytes()),
+                "/short.ts" => {
+                    let _ = stream.write_all(
+                        b"HTTP/1.1 200 OK\r\nContent-Length: 100\r\nConnection: close\r\n\r\npartial",
+                    );
+                    continue;
+                }
                 path if path.starts_with("/busy") => ("503 Service Unavailable", b"busy"),
                 _ => ("404 File not found", b"missing"),
             };
@@ -324,6 +334,39 @@ fn empty_fragments_are_reported_then_skipped() {
             );
         }
     }
+}
+
+/// A fragment whose body ends early is a transport error, retried, then
+/// skipped like an unavailable one (not a filesystem error that ends the
+/// download).
+#[test]
+fn a_truncated_fragment_is_retried_then_skipped() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let playlist = format!("{origin}/short.m3u8");
+    let output = fragments(
+        directory.path(),
+        &[
+            "--fragment-retries",
+            "1",
+            "--retry-sleep",
+            "fragment:0",
+            &playlist,
+        ],
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    let stdout = text(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[download] Got error: 7 bytes read, 93 more expected. Retrying fragment 2 (1/1)...\n"
+        ),
+        "{stdout}"
+    );
+    assert!(stdout.contains("[download] fragment not found; Skipping fragment 2 ...\n"));
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4")).unwrap(),
+        b"segmentsegment"
+    );
 }
 
 /// HlsFD may skip the first fragment too (only DashSegmentsFD never does).

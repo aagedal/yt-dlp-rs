@@ -1362,11 +1362,14 @@ fn fetch(
     let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
     let mut blocks = crate::download::Blocks::new();
     let mut pending: Option<Vec<u8>> = Some(Vec::new());
+    // Bytes off the wire, some of them held in `pending` before writing.
+    let (url, mut read) = (response.url().clone(), 0_u64);
     loop {
         let block = blocks
             .read(&mut response, None)
-            .map_err(|error| body_failure(crate::http::read_error(error)))?;
+            .map_err(|error| body_failure(crate::http::body_error(error, &url, read, expected)))?;
         let count = block.len();
+        read += count as u64;
         limiter.consume(count);
         let data = match &mut pending {
             Some(buffered) => {
@@ -1596,7 +1599,10 @@ fn fetch_key(
             Ok(0) => break,
             Ok(count) => count,
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(crate::http::read_error(error))),
+            Err(error) => {
+                let error = crate::http::body_error(error, url, received as u64, expected);
+                return Err(body_failure(error));
+            }
         };
         received += count;
     }
@@ -1622,13 +1628,17 @@ fn decrypt_response(
     let mut sniffed = false;
     let mut buffer = [0; 32 * 1024];
     let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
+    let url = response.url().clone();
     loop {
         reporter.report(DownloadPhase::Downloading, *stored)?;
         let count = match response.read(&mut buffer) {
             Ok(0) => break,
             Ok(count) => count,
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(crate::http::read_error(error))),
+            Err(error) => {
+                let error = crate::http::body_error(error, &url, cipher_bytes, expected);
+                return Err(body_failure(error));
+            }
         };
         limiter.consume(count);
         cipher_bytes = cipher_bytes

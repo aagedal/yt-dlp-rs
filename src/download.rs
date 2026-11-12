@@ -477,11 +477,12 @@ impl AttemptFailure {
         }
     }
 
-    /// A body read's failure: retried, unless an interrupt ended it.
-    fn read(error: std::io::Error) -> Self {
-        match crate::http::read_error(error) {
-            Error::Io(error) => Self::retry(Error::Io(error)),
-            error => error.into(),
+    /// A body read's failure, `read` bytes into a response of `length`:
+    /// retried, unless an interrupt ended it.
+    fn read(error: std::io::Error, url: &url::Url, read: u64, length: Option<u64>) -> Self {
+        match crate::http::body_error(error, url, read, length) {
+            Error::DownloadCancelled => Error::DownloadCancelled.into(),
+            error => Self::retry(error),
         }
     }
 
@@ -1317,6 +1318,7 @@ fn chunked_attempt(
         let mut limiter = RateLimit::new(resource.rate_limit);
         let mut throttle = Throttle::new(resource.throttled_rate);
         let mut blocks = Blocks::new();
+        let url = response.url().clone();
         loop {
             let limit = data_len.map(|length| length.saturating_sub(*actual));
             if limit == Some(0) {
@@ -1325,7 +1327,10 @@ fn chunked_attempt(
             let block = match blocks.read(&mut response, limit) {
                 Ok([]) => break,
                 Ok(block) => block,
-                Err(error) => return Err(AttemptFailure::read(error)),
+                Err(error) => {
+                    let length = data_len.map(|length| length.saturating_sub(start));
+                    return Err(AttemptFailure::read(error, &url, *actual - start, length));
+                }
             };
             let count = block.len();
             temporary.write_all(block)?;
@@ -1412,6 +1417,7 @@ pub(crate) fn fetch_span(
                 .filter(|(start, range_end, _)| *start == position && *range_end == end)
                 .ok_or(Error::InvalidRangeResponse)?;
             total = range.2;
+            let (url, first) = (response.url().clone(), position);
             loop {
                 let limit = end + 1 - position;
                 if limit == 0 {
@@ -1425,7 +1431,10 @@ pub(crate) fn fetch_span(
                         }));
                     }
                     Ok(block) => block,
-                    Err(error) => return Err(AttemptFailure::read(error)),
+                    Err(error) => {
+                        let length = Some(end + 1 - first);
+                        return Err(AttemptFailure::read(error, &url, position - first, length));
+                    }
                 };
                 let count = block.len();
                 output.write_all(block)?;
@@ -1592,12 +1601,16 @@ fn download_attempt(
     let mut throttle = Throttle::new(resource.throttled_rate);
     let mut blocks = Blocks::new();
     let mut received = false;
+    let (url, start) = (response.url().clone(), *actual);
     loop {
         // Separate network reads from filesystem writes: only the former retry.
         let block = match blocks.read(&mut response, None) {
             Ok([]) => break,
             Ok(block) => block,
-            Err(error) => return Err(AttemptFailure::read(error)),
+            Err(error) => {
+                let length = expected.map(|total| total.saturating_sub(start));
+                return Err(AttemptFailure::read(error, &url, *actual - start, length));
+            }
         };
         let count = block.len();
         let next = actual
