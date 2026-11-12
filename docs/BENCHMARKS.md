@@ -146,6 +146,25 @@ fragments at once to 0–7, system time from 0.86 s to 0.31 s (the same as
 peak RSS from 82–111 MiB to 72–80 MiB. The 50 ms latency cases did not
 change.
 
+Rerun on 2026-11-12 with the machine idle (load about 5), `benchmark.py
+--segments 400 --segment-kib 1024 --latencies 0,50 --workers 1,4,8
+--runs 5`, medians, the release binary before (187d43f7) and after:
+
+| case | `-N 1` | `-N 4` | `-N 8` |
+| --- | --- | --- | --- |
+| hls, 0 ms, before | 0.47 s, 30 MiB | 1.63 s, 74 MiB | 1.67 s, 92 MiB |
+| hls, 0 ms, after | 0.43 s, 29 MiB | 0.28 s, 69 MiB | 0.30 s, 75 MiB |
+| dash, 0 ms, before | 0.37 s, 30 MiB | 1.46 s, 75 MiB | 1.50 s, 91 MiB |
+| dash, 0 ms, after | 0.44 s, 29 MiB | 0.27 s, 68 MiB | 0.28 s, 76 MiB |
+| hls, 50 ms, before | 22.7 s, 35 MiB | 5.69 s, 65 MiB | 2.97 s, 85 MiB |
+| hls, 50 ms, after | 22.8 s, 31 MiB | 5.69 s, 47 MiB | 2.95 s, 60 MiB |
+| dash, 50 ms, before | 22.5 s, 37 MiB | 5.59 s, 74 MiB | 2.85 s, 86 MiB |
+| dash, 50 ms, after | 22.7 s, 32 MiB | 5.62 s, 45 MiB | 2.89 s, 61 MiB |
+
+On localhost `-N 4/8` are now 5–6× faster than before and 1.5× faster than
+`-N 1`, instead of 3.5× slower. With latency the times are unchanged and
+peak RSS is 20–40% lower. `-N 1` differences are run-to-run noise.
+
 ### Default `-N`
 
 The port keeps upstream's default of `-N 1` (`concurrent_fragment_downloads`
