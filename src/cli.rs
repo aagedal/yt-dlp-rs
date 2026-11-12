@@ -3235,8 +3235,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     crate::pp_args::set(postprocessor_args);
     flush_validation_warnings();
     if args.verbose {
-        // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 62 extractors");
+        // `len(self._ies)`: the `--list-extractors` names.
+        eprintln!("[debug] Loaded {} extractors", SUITABLE.len());
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
