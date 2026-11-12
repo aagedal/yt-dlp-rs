@@ -183,13 +183,17 @@ fn media_demuxer(ext: &str) -> Result<&'static str> {
 
 /// `get_stream_number(path, keys, value)` through `ffprobe -show_streams`.
 fn stream_number(
-    ffprobe: &Path,
+    ffprobe: Option<&Path>,
     media: &Path,
     demuxer: &str,
     matches: &dyn Fn(&Value) -> bool,
     started: Instant,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<(Option<usize>, usize)> {
+    // `get_metadata_object` needs ffprobe.
+    let ffprobe = ffprobe.ok_or_else(|| {
+        failure("ffprobe not found. Please install or provide the path using --ffmpeg-location")
+    })?;
     let (executable, directory) = tool(ffprobe, b"ffprobe version ", started, callback)?;
     let mut args: Vec<OsString> = [
         "-hide_banner",
@@ -258,7 +262,7 @@ fn stream(
 #[allow(clippy::too_many_arguments)]
 pub fn embed(
     ffmpeg: &Path,
-    ffprobe: &Path,
+    ffprobe: Option<&Path>,
     media: &Path,
     display: &Path,
     ext: &str,

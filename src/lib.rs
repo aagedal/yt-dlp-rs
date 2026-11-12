@@ -3255,8 +3255,9 @@ impl YoutubeDl {
         self.ffmpeg.is_some()
     }
 
-    /// Configure an explicit ffprobe executable for audio codec inspection.
-    /// Without this override, audio processing uses ffprobe beside explicit ffmpeg.
+    /// Configure an explicit ffprobe executable for media inspection.
+    /// Without it, an ffprobe beside ffmpeg is used when present; audio
+    /// codec inspection then falls back to `ffmpeg -i`, like upstream.
     pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffprobe = Some(executable.into());
         self
@@ -6216,11 +6217,10 @@ impl YoutubeDl {
         output: &Path,
         target: &str,
     ) -> Result<()> {
-        let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
-            Error::Postprocess(
-                "thumbnail conversion requires an explicit --ffmpeg-location PATH".into(),
-            )
-        })?;
+        let ffmpeg = self
+            .ffmpeg
+            .as_ref()
+            .ok_or_else(|| Error::Postprocess(crate::postprocess::FFMPEG_NOT_FOUND.into()))?;
         thumbnail_process::convert(ffmpeg, input, output, target, &mut || {
             std::ops::ControlFlow::Continue(())
         })

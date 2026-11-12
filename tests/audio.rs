@@ -586,6 +586,43 @@ fn missing_probe_preserves_source_and_publication_replaces_outputs_like_upstream
     clean(directory.path());
 }
 
+/// Upstream `get_audio_codec` without ffprobe: `ffmpeg -i`'s stream list.
+#[test]
+fn without_ffprobe_the_codec_comes_from_ffmpeg_and_without_either_fails_like_upstream() {
+    let server = Server::new();
+    let tools = Tools::new("unused", false);
+    let client = YoutubeDl::new().unwrap().with_ffmpeg(&tools.ffmpeg);
+    let info = client.extract_info(&server.url("source.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let result = client
+        .download_audio_with_options(
+            &info,
+            directory.path().join("out.mp4"),
+            DownloadOptions::default(),
+            &AudioOptions::new("mp3", "5").unwrap(),
+        )
+        .unwrap();
+    assert_eq!(std::fs::read(result.path).unwrap(), b"converted audio");
+    let log = tools.log(&tools.ffmpeg);
+    assert!(log.contains("\n-i\n"), "{log}");
+    assert!(tools.log(&tools.probe).is_empty());
+
+    let client = YoutubeDl::new().unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    match client.download_audio_with_options(
+        &info,
+        directory.path().join("out.mp4"),
+        DownloadOptions::default(),
+        &AudioOptions::new("mp3", "5").unwrap(),
+    ) {
+        Err(Error::Postprocess(message)) => assert_eq!(
+            message,
+            "ffprobe and ffmpeg not found. Please install or provide the path using --ffmpeg-location"
+        ),
+        other => panic!("{other:?}"),
+    }
+}
+
 #[test]
 fn selected_pair_merges_then_probes_and_converts_with_original_retention() {
     let server = Server::new();

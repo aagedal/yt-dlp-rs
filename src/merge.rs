@@ -6,7 +6,7 @@ use std::{
     io::Read,
     ops::ControlFlow,
     path::Path,
-    process::{Command, Stdio},
+    process::{Command, ExitStatus, Stdio},
     sync::mpsc,
     thread,
     time::{Duration, Instant},
@@ -247,6 +247,8 @@ fn read_pipe(mut pipe: impl Read, cap: usize) -> Result<Vec<u8>> {
     }
 }
 
+/// Runs `executable` and returns its stdout; a failed exit is upstream's
+/// error, the last line of stderr.
 pub(crate) fn execute(
     executable: &Path,
     args: &[OsString],
@@ -255,6 +257,28 @@ pub(crate) fn execute(
     deadline: Duration,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<Vec<u8>> {
+    let (status, output, errors) =
+        execute_capture(executable, args, directory, started, deadline, callback)?;
+    if !status.success() {
+        let text = String::from_utf8_lossy(&errors);
+        return Err(failure(match text.trim().lines().last() {
+            Some(last) => last.to_owned(),
+            None => format!("FFmpeg exited with {status}"),
+        }));
+    }
+    Ok(output)
+}
+
+/// [`execute`] keeping the exit status and stderr (a tail of at most
+/// `MAX_STDERR` bytes) for the caller.
+pub(crate) fn execute_capture(
+    executable: &Path,
+    args: &[OsString],
+    directory: &Path,
+    started: Instant,
+    deadline: Duration,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<(ExitStatus, Vec<u8>, Vec<u8>)> {
     if callback().is_break() {
         return Err(Error::DownloadCancelled);
     }
@@ -318,17 +342,8 @@ pub(crate) fn execute(
                 }
             }
             match child.try_wait() {
-                // Upstream checks only the exit status and raises
-                // `stderr.strip().splitlines()[-1]`.
-                Ok(Some(status)) if !status.success() && errors.is_some() => {
-                    let text = String::from_utf8_lossy(errors.as_deref().unwrap_or_default());
-                    break Err(failure(match text.trim().lines().last() {
-                        Some(last) => last.to_owned(),
-                        None => format!("FFmpeg exited with {status}"),
-                    }));
-                }
-                Ok(Some(_)) if output.is_some() && errors.is_some() => {
-                    break Ok(output.take().unwrap());
+                Ok(Some(status)) if output.is_some() && errors.is_some() => {
+                    break Ok((status, output.take().unwrap(), errors.take().unwrap()));
                 }
                 Ok(_) => {}
                 Err(error) => break Err(error.into()),
