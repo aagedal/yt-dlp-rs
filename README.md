@@ -180,7 +180,9 @@ integration tests bind localhost sockets; no test contacts a live site. CI runs
 the whole suite on Linux, macOS and Windows (GitHub's hosted runners). On
 Windows the tests' FFmpeg and downloader stand-ins are shell scripts run by
 Git for Windows' `sh.exe` (or `YT_DLP_RS_TEST_SH`); the few tests that need
-POSIX pseudo-terminals, symlinks, named pipes or non-UTF-8 paths are Unix-only. Pushing a `vX.Y.Z[-PRE]` tag runs
+POSIX pseudo-terminals, symlinks, named pipes or non-UTF-8 paths are Unix-only.
+CI also fails on RustSec advisories for any feature's dependencies
+(`cargo deny --all-features check advisories`). Pushing a `vX.Y.Z[-PRE]` tag runs
 `.github/workflows/release.yml`, and a tag with a pre-release suffix publishes
 a pre-release.
 
