@@ -5622,6 +5622,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     Err(crate::Error::DownloadStopped { path }) => {
                                         keep_stopped!(path)
                                     }
+                                    // A stop before any data arrived kept
+                                    // nothing; the run ends as an interrupt.
+                                    Err(crate::Error::DownloadCancelled)
+                                        if args.keep_partial_on_stop =>
+                                    {
+                                        return Err(crate::Error::Reported(
+                                            "Interrupted by user".into(),
+                                        )
+                                        .into());
+                                    }
                                     result => result?,
                                 };
                                 for warning in result.warnings {
@@ -5687,6 +5697,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 ) {
                                     Err(crate::Error::DownloadStopped { path }) => {
                                         keep_stopped!(path)
+                                    }
+                                    // A stop before any data arrived kept
+                                    // nothing; the run ends as an interrupt.
+                                    Err(crate::Error::DownloadCancelled)
+                                        if args.keep_partial_on_stop =>
+                                    {
+                                        return Err(crate::Error::Reported(
+                                            "Interrupted by user".into(),
+                                        )
+                                        .into());
                                     }
                                     result => result?,
                                 };

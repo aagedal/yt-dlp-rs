@@ -1013,11 +1013,31 @@ impl Target {
     /// written, the partial file is published at `destination` and
     /// `Error::DownloadStopped` returned; otherwise `error` (a private
     /// temporary file is removed when dropped).
-    fn stopped(mut self, error: Error, written: u64, destination: &Path, overwrite: bool) -> Error {
-        stop_publish(error, written, destination, || {
+    /// A part file this transfer created (`fresh`) that is still empty is
+    /// removed: upstream opens it only once data arrives.
+    fn stopped(
+        mut self,
+        error: Error,
+        written: u64,
+        destination: &Path,
+        overwrite: bool,
+        fresh: bool,
+    ) -> Error {
+        let created = match &self {
+            Target::Part { path, .. } if fresh => Some(path.clone()),
+            _ => None,
+        };
+        let error = stop_publish(error, written, destination, || {
             self.file().flush()?;
             self.publish(destination, overwrite)
-        })
+        });
+        if matches!(error, Error::DownloadCancelled)
+            && let Some(path) = created
+            && fs::metadata(&path).is_ok_and(|metadata| metadata.len() == 0)
+        {
+            let _ = fs::remove_file(path);
+        }
+        error
     }
 }
 
@@ -1098,7 +1118,7 @@ fn download_resource(
     for attempt in 0..=options.retries {
         reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
         if let Err(error) = reporter.report(DownloadPhase::Requesting, actual) {
-            return Err(temporary.stopped(error, actual, destination, options.overwrite));
+            return Err(temporary.stopped(error, actual, destination, options.overwrite, !resumed));
         }
         match download_attempt(
             client,
@@ -1136,7 +1156,13 @@ fn download_resource(
                     |delay| delay.max(failure.retry_after),
                 );
                 if let Err(error) = reporter.wait(delay, actual) {
-                    return Err(temporary.stopped(error, actual, destination, options.overwrite));
+                    return Err(temporary.stopped(
+                        error,
+                        actual,
+                        destination,
+                        options.overwrite,
+                        !resumed,
+                    ));
                 }
             }
             Err(failure) if matches!(failure.error, Error::DownloadCancelled) => {
@@ -1145,6 +1171,7 @@ fn download_resource(
                     actual,
                     destination,
                     options.overwrite,
+                    !resumed,
                 ));
             }
             Err(failure) => {

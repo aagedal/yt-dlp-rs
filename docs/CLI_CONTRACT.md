@@ -183,7 +183,8 @@ Without `--keep-partial-on-stop` (upstream behavior):
 
 - stdout: no `after_move` line for the interrupted video. The last progress
   status is `downloading`, with no `finished`.
-- Files: the download's `tmpfilename` stays (`NAME.EXT.part`), along with
+- Files: the download's `tmpfilename` stays (`NAME.EXT.part`; for a
+  whole-file download only once data arrived, like upstream), along with
   the `NAME.EXT.ytdl` state of an HLS/DASH download and the
   `NAME.fFORMAT_ID.EXT` files of a merge, so a later run with the same
   options continues where it stopped (`--continue`, the default). A
@@ -201,7 +202,10 @@ With `--keep-partial-on-stop` (a port extension, not in upstream):
   download archive record are skipped.
 - stderr and exit code as above (`ERROR: Interrupted by user`, exit 1), and
   later videos are not processed.
-- A stop before any data arrived leaves nothing.
+- A stop before any data arrived (before an HLS/DASH download's first
+  whole fragment) leaves nothing, not even its `.part` and `.ytdl` files.
+  A stop right after a resumed download continues keeps the earlier run's
+  fragments.
 - A merge of large streams takes time after the signal. Wait for the
   process to exit before killing it.
 

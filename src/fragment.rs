@@ -418,9 +418,9 @@ fn download_with(
         || part_path.clone(),
         |temporary| temporary.path().to_path_buf(),
     );
-    // The output's length after the last whole fragment, which a library
-    // `Interrupt::stop` publishes.
-    let committed = std::cell::Cell::new(None::<u64>);
+    // The output's length after the last whole fragment (a resumed part
+    // file's to begin with), which a library `Interrupt::stop` publishes.
+    let committed = std::cell::Cell::new((resumed_bytes > 0).then_some(resumed_bytes));
     let mut appended = |_: usize| -> Result<()> {
         completed += 1;
         committed.set(
@@ -589,36 +589,44 @@ fn download_with(
     })();
     if let Err(error) = assembled {
         let length = committed.get().unwrap_or(0);
-        return Err(crate::download::stop_publish(
-            error,
-            length,
-            destination,
-            || {
-                let output: &mut fs::File = match (&mut private, &mut named) {
-                    (Some(temporary), _) => temporary.as_file_mut(),
-                    (_, Some((file, _))) => file,
-                    _ => unreachable!("one output file is open"),
-                };
-                output.set_len(length)?;
-                output.sync_all()?;
-                match private.take() {
-                    Some(temporary) => {
-                        crate::download::persist(temporary, destination, options.overwrite)
-                    }
-                    None => {
-                        drop(named.take());
-                        let _ = fs::remove_file(&ytdl_path);
-                        if part_path != destination {
-                            if !options.overwrite && fs::symlink_metadata(destination).is_ok() {
-                                return Err(Error::OutputExists(destination.into()));
-                            }
-                            fs::rename(&part_path, destination)?;
-                        }
-                        Ok(())
-                    }
+        let error = crate::download::stop_publish(error, length, destination, || {
+            let output: &mut fs::File = match (&mut private, &mut named) {
+                (Some(temporary), _) => temporary.as_file_mut(),
+                (_, Some((file, _))) => file,
+                _ => unreachable!("one output file is open"),
+            };
+            output.set_len(length)?;
+            output.sync_all()?;
+            match private.take() {
+                Some(temporary) => {
+                    crate::download::persist(temporary, destination, options.overwrite)
                 }
-            },
-        ));
+                None => {
+                    drop(named.take());
+                    let _ = fs::remove_file(&ytdl_path);
+                    if part_path != destination {
+                        if !options.overwrite && fs::symlink_metadata(destination).is_ok() {
+                            return Err(Error::OutputExists(destination.into()));
+                        }
+                        fs::rename(&part_path, destination)?;
+                    }
+                    Ok(())
+                }
+            }
+        });
+        // A stop (`--keep-partial-on-stop`) before any data arrived leaves
+        // nothing, not an empty part file and its state.
+        if matches!(error, Error::DownloadCancelled)
+            && crate::control::stopping()
+            && length == 0
+            && named.take().is_some()
+        {
+            let _ = fs::remove_file(&ytdl_path);
+            if fs::metadata(&part_path).is_ok_and(|metadata| metadata.len() == 0) {
+                let _ = fs::remove_file(&part_path);
+            }
+        }
+        return Err(error);
     }
     reporter.report(DownloadPhase::Publishing, stored)?;
     match private {
