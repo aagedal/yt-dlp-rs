@@ -8014,10 +8014,7 @@ fn after_download(
             options,
         )
     });
-    if !handle(after_move) {
-        return false;
-    }
-    true
+    handle(after_move)
 }
 
 /// `--console-title` and the `--progress-template` title and postprocessor
