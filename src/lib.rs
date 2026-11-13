@@ -3482,6 +3482,7 @@ impl YoutubeDl {
             let growing = ffmpeg_fd::Growing {
                 timecode: growing::timecode(growing::now()),
                 pipes: false,
+                metadata: growing::metadata(),
             };
             return ffmpeg_fd::download_growing(
                 ffmpeg,
@@ -3542,14 +3543,24 @@ impl YoutubeDl {
                     start_time: 0.0,
                 })
                 .collect();
-            // The stream's start, when the extractor knows it.
+            // Where the recording starts: YouTube's first fragment (the
+            // stream's start, or 120 hours back), else the stream's start
+            // when the extractor knows it.
             let start = info
-                .extra
-                .get("release_timestamp")
-                .and_then(serde_json::Value::as_i64);
+                .requested_formats
+                .iter()
+                .map(|format| &format.extra)
+                .chain([&info.extra])
+                .find_map(extractor::youtube::live::first_fragment_time)
+                .or_else(|| {
+                    info.extra
+                        .get("release_timestamp")
+                        .and_then(serde_json::Value::as_i64)
+                });
             let growing = ffmpeg_fd::Growing {
                 timecode: start.map_or_else(|| "00:00:00:00".into(), growing::timecode),
                 pipes: true,
+                metadata: growing::metadata(),
             };
             // One handler for both threads' interrupt checks.
             let _interrupt = interrupt::Guard::install_recording();

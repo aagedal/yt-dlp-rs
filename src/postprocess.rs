@@ -416,6 +416,15 @@ pub(crate) fn download(
     // A growing file (`--growing-file`) is recorded at its final name, so
     // editors can import it; the processors then replace it.
     let growing = existing.is_none() && downloader.grows(info);
+    // Its `--embed-metadata` tags are written by the recording itself, so
+    // the file an editor tracks is not replaced by a rewritten one (unless
+    // `--parse-metadata` changes them after the download).
+    let recorded_metadata = growing
+        && processors.metadata
+        && processors
+            .metadata_parser
+            .as_ref()
+            .is_none_or(|(actions, _)| !actions.has("post_process"));
     // Upstream downloads a single format to its name (through `NAME.part`,
     // which `--continue` resumes after an interruption) before processing.
     let single = existing.is_none() && info.requested_formats.is_empty();
@@ -428,12 +437,19 @@ pub(crate) fn download(
     } else if upstream_merge || growing || single {
         // Each merged stream's download reports its own completion; a single
         // source's publication is not the processed result's.
-        let bytes = downloader.download_with_progress(info, destination, options, |progress| {
-            if single && progress.phase == DownloadPhase::Publishing {
-                ControlFlow::Continue(())
-            } else {
-                callback(progress)
-            }
+        let metadata = if recorded_metadata {
+            crate::growing::metadata_args(info)
+        } else {
+            Vec::new()
+        };
+        let bytes = crate::growing::with_metadata(metadata, || {
+            downloader.download_with_progress(info, destination, options, |progress| {
+                if single && progress.phase == DownloadPhase::Publishing {
+                    ControlFlow::Continue(())
+                } else {
+                    callback(progress)
+                }
+            })
         })?;
         // A growing file stays at its name (an editor may be reading it)
         // until a result replaces it, like an existing file.
@@ -1159,14 +1175,20 @@ pub(crate) fn download(
                             );
                         }
                     }
+                    // A recording that has its tags is rewritten only for
+                    // chapters or an attachment (which then repeat them).
+                    let add_metadata = processors.metadata
+                        && (!recorded_metadata || chapters || attachment.is_some());
                     let Some(args) = crate::embed_metadata::plan_args(
                         &working,
                         &current.ext,
-                        processors.metadata,
+                        add_metadata,
                         chapters,
                         attachment.as_deref(),
                     ) else {
-                        crate::screen::screen("[Metadata] There isn't any metadata to add");
+                        if !recorded_metadata {
+                            crate::screen::screen("[Metadata] There isn't any metadata to add");
+                        }
                         return Ok(());
                     };
                     if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()

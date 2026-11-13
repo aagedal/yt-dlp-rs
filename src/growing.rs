@@ -78,6 +78,47 @@ pub(crate) fn output_args(timecode: &str, ext: &str) -> Vec<OsString> {
     .into()
 }
 
+thread_local! {
+    /// The `-metadata` options growing recordings started on this thread
+    /// write ([`with_metadata`]).
+    static METADATA: std::cell::RefCell<Vec<String>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
+/// Runs `record` with its growing recordings writing `metadata`, so
+/// `--embed-metadata` need not replace a file an editor is reading.
+pub(crate) fn with_metadata<T>(metadata: Vec<String>, record: impl FnOnce() -> T) -> T {
+    struct Restore(Vec<String>);
+    impl Drop for Restore {
+        fn drop(&mut self) {
+            METADATA.set(std::mem::take(&mut self.0));
+        }
+    }
+    let _restore = Restore(METADATA.replace(metadata));
+    record()
+}
+
+/// The `-metadata` options for a recording started now ([`with_metadata`]).
+pub(crate) fn metadata() -> Vec<String> {
+    METADATA.with_borrow(Clone::clone)
+}
+
+/// `FFmpegMetadataPP`'s `-metadata` options for a recording of `info`
+/// (without its stream copy and muxer options).
+pub(crate) fn metadata_args(info: &crate::VideoInfo) -> Vec<String> {
+    let args = crate::embed_metadata::args(info, ext(info));
+    let mut options = Vec::new();
+    let mut index = 0;
+    while index < args.len() {
+        if args[index].starts_with("-metadata") && index + 1 < args.len() {
+            options.extend_from_slice(&args[index..index + 2]);
+            index += 2;
+        } else {
+            index += 1;
+        }
+    }
+    options
+}
+
 /// The recording's start as an `HH:MM:SS:00` time-of-day timecode in local
 /// time (`unix` seconds; UTC where the local offset is unavailable).
 pub(crate) fn timecode(unix: i64) -> String {

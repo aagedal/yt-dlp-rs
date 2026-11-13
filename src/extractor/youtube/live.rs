@@ -263,6 +263,14 @@ pub(crate) struct LiveFeed {
     cache: std::sync::Mutex<Option<((bool, i64), i64)>>,
 }
 
+/// The wall time a from-start download of a live format begins at: the
+/// stream's start, or the start of the last 120 hours when YouTube no
+/// longer has the beginning (`lack_early_segments`).
+pub(crate) fn first_fragment_time(extra: &serde_json::Map<String, Value>) -> Option<i64> {
+    let start = extra.get(LIVE)?.get("live_start_time")?.as_i64()?;
+    Some(start.max((now() - MAX_DURATION) as i64))
+}
+
 /// Whether a format (or selected result) is generated from the start of a
 /// live stream.
 pub(crate) fn is_live_from_start(extra: &serde_json::Map<String, Value>) -> bool {
@@ -520,5 +528,29 @@ impl LiveFragments {
             }
             self.known = last_seq;
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A stream older than YouTube's 120 hours is downloaded (and its
+    /// growing file's timecode starts) from the start of that window.
+    #[test]
+    fn the_first_fragment_is_at_most_120_hours_old() {
+        let extra = |start: i64| -> serde_json::Map<String, Value> {
+            let mut extra = serde_json::Map::new();
+            extra.insert(LIVE.into(), json!({"live_start_time": start}));
+            extra
+        };
+        let current = now() as i64;
+        assert_eq!(
+            first_fragment_time(&extra(current - 3600)),
+            Some(current - 3600)
+        );
+        let old = first_fragment_time(&extra(1_678_406_400)).unwrap();
+        assert!((old - (current - 432_000)).abs() <= 2, "{old}");
+        assert_eq!(first_fragment_time(&serde_json::Map::new()), None);
     }
 }
