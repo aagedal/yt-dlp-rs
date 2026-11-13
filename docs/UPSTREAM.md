@@ -14,11 +14,11 @@ and those up to release `2026.10.26` in
 [upstream/notes/upstream-2026.10.26.md](../upstream/notes/upstream-2026.10.26.md). Upstream is reference material, not a
 runtime dependency. The source clone is not vendored into this repository.
 
-The first slice was informed by upstream's `GenericIE` direct-response detection,
-`InfoExtractor` result conventions, `YoutubeDL` output behavior, and `HttpFD`'s
-separation from extraction. Rust behavior is intentionally narrower. For example,
-the current implementation neither probes arbitrary binary bodies nor supports
-upstream's full format/result dictionaries, resumption, or retry policy.
+The first slice (2026-10) was informed by upstream's `GenericIE`
+direct-response detection, `InfoExtractor` result conventions, `YoutubeDL`
+output behavior, and `HttpFD`'s separation from extraction. The port has
+since grown to the scope recorded in `upstream/manifest.json`;
+[COMPATIBILITY.md](COMPATIBILITY.md) describes current behavior.
 
 ## Change report
 
@@ -90,6 +90,7 @@ For each update, the agent should:
    ([extractor tiers](../upstream/notes/extractor-tiers.md)). Regenerate
    `docs/SITES.md` with `tools/extractor_tiers.py --write`.
 
-Before enabling unattended updates, implement the differential harness, persistent
-triage/update notes, PR/review integration, and release rollback/versioning. The
-current report plus coverage ledger is the input layer for that system.
+Before enabling unattended updates, add PR/review integration and release
+rollback. The report, the coverage ledger, the update notes and the
+differential tools (`tools/capture_sites.py`, `tools/compare_*.py`) are the
+input layer for that system.

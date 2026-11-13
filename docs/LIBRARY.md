@@ -3,8 +3,19 @@
 The `yt_dlp_rs` crate exposes the extraction and download pipeline the CLI
 uses. The CLI and its machine-readable output ([CLI_CONTRACT.md](CLI_CONTRACT.md))
 are the primary contract; Aagedal Media Converter runs the binary. The library
-is secondary and unstable until 1.0 (see [Stability](#stability)). See the
-[compatibility inventory](COMPATIBILITY.md) for the behavior behind each call.
+is secondary; from 1.0 its public API follows semantic versioning (see
+[Stability](#stability)). See the [compatibility inventory](COMPATIBILITY.md)
+for the behavior behind each call.
+
+The crate is not published on crates.io. Depend on a release tag from Git:
+
+```toml
+[dependencies]
+yt-dlp-rs = { git = "https://github.com/aagedal/yt-dlp-rs", tag = "v1.0.0" }
+```
+
+Add `features = ["impersonate"]` for browser impersonation (it builds
+BoringSSL; see the README's Install section for the toolchain).
 
 ```rust,no_run
 use std::ops::ControlFlow;
@@ -39,9 +50,10 @@ fn main() -> yt_dlp_rs::Result<()> {
 The public API is what rustdoc shows for the crate root and `output`. Two
 modules are `#[doc(hidden)]` and not part of it: `cli` (the binary's
 implementation; `src/main.rs` only calls `cli::main`) and `__private`
-(helpers the integration tests use, including the `Extractor` trait and
-`YoutubeDl::register_extractor`, whose hooks follow upstream's extractor
-internals and expose the reqwest client). Anything there can change in any
+(helpers the integration tests use, including the `Extractor` trait, whose
+hooks follow upstream's extractor internals and expose the reqwest client).
+`YoutubeDl::register_extractor`, which takes an `Extractor`, is
+`#[doc(hidden)]` for the same reason. Anything there can change in any
 release.
 
 - **Growing types are `#[non_exhaustive]`**: the option, control, progress,
@@ -80,9 +92,8 @@ release.
 - **`cargo-semver-checks`**: CI's `semver` job (`tools/semver_check.py`)
   compares the library with the latest `v*` release tag, default features
   only (`impersonate` adds no public items). From 1.0 on a breaking change
-  fails the job unless `Cargo.toml`'s major version is above the tag's;
-  before 1.0 the job only reports it (a warning), since a 0.x release may
-  break the API. Run it locally with
+  fails the job unless `Cargo.toml`'s major version is above the tag's
+  (0.x releases only reported it, as a warning). Run it locally with
   `cargo install cargo-semver-checks --locked` and
   `python3 tools/semver_check.py`.
 
@@ -105,7 +116,9 @@ strings with the same normalization and validation as the binary.
 `HttpOptions.cookies` accepts a shared `Arc<CookieJar>`, or the client creates a
 fresh in-memory jar. `YoutubeDl::cookie_jar()` returns it for reuse or saving.
 `HttpOptions.proxy` accepts an explicit URL or empty string for direct routing;
-`None` preserves the existing reqwest environment/system routing policy.
+`None` finds proxies in the environment like upstream's `getproxies()`
+(`http_proxy`, `https_proxy`, `all_proxy` and `no_proxy`); the macOS and
+Windows system proxy settings are not read.
 `HttpOptions::validate()` checks configuration without network/DNS requests.
 Cookie files are credential state: an explicit `--cookies` path is updated after
 requests even in JSON/listing/simulation modes and after extraction failures.
@@ -135,7 +148,6 @@ recording remain explicit library operations.
 library callers choose when to filter and record, after successful publication.
 `archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.
 The existing `extract_info` methods accept single videos and reject playlists.
-`--dump-json` emits one video object per entry.
 `download_with_options(info, path, options)` with `options.retries = 0` disables
 download retries for a library call; `download` uses the default policy.
 `download_with_progress(info, path, options, callback)` reports one-based attempts,
@@ -207,8 +219,9 @@ variant URLs on other hosts. `.cookie(name, value)` adds a host-only session
 cookie and `.set_cookie("name=value; Domain=...; Path=...")` any cookie the
 scope's URL could set; they follow RFC 6265 domain/path matching, are added to
 the client's jar only for the duration of the call, never saved, and never
-shown in info dicts. Values are redacted from `Debug`. Note that reqwest keeps
-custom (non-`Authorization`) headers on a redirect to another host.
+shown in info dicts. Values are redacted from `Debug`. A redirect to another
+origin drops the scope's headers (and `Authorization`), and cookies are
+matched again for the new URL.
 `CookieJar::set_cookie(&url, "name=value; ...")` stores a cookie permanently,
 for copying another application's cookies into the shared jar.
 
