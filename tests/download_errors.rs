@@ -633,6 +633,67 @@ fn a_killed_fragment_download_resumes_without_its_partial_fragment() {
     );
 }
 
+/// A failure after a fragment is whole but before `FILE.ytdl` counts it
+/// (here `--keep-fragments` cannot write its copy) leaves the part file at
+/// the fragments the state counts, so `--continue` does not append that
+/// fragment twice.
+#[test]
+fn a_fragment_failing_after_its_download_is_not_resumed_twice() {
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let origin = format!("http://{}", listener.local_addr().unwrap());
+    thread::spawn(move || {
+        for stream in listener.incoming() {
+            let Ok(mut stream) = stream else { continue };
+            let mut request = [0; 4096];
+            let read = stream.read(&mut request).unwrap_or(0);
+            let request = String::from_utf8_lossy(&request[..read]);
+            let path = request.split_whitespace().nth(1).unwrap_or("/").to_owned();
+            let body: &[u8] = match path.as_str() {
+                "/gap.m3u8" => GAP.as_bytes(),
+                "/s0.ts" => b"first-",
+                "/s1.ts" => b"second-",
+                _ => b"third",
+            };
+            let _ = write!(
+                stream,
+                "HTTP/1.1 200 OK\r\nContent-Type: video/mp2t\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            let _ = stream.write_all(body);
+        }
+    });
+    for concurrency in ["1", "2"] {
+        let directory = tempfile::tempdir().unwrap();
+        // A directory where the second fragment's kept copy goes.
+        let blocker = directory.path().join("o.ts.part-Frag2");
+        std::fs::create_dir(&blocker).unwrap();
+        let run = || {
+            Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+                .args(["--ignore-config", "--no-progress", "--fixup", "never"])
+                .args(["-N", concurrency, "--keep-fragments", "-o", "o.ts"])
+                .arg(format!("{origin}/gap.m3u8"))
+                .current_dir(directory.path())
+                .output()
+                .unwrap()
+        };
+        let output = run();
+        assert_eq!(output.status.code(), Some(1), "{}", text(&output.stderr));
+        assert_eq!(
+            std::fs::read(directory.path().join("o.ts.part")).unwrap(),
+            b"first-",
+            "-N {concurrency}"
+        );
+        std::fs::remove_dir(&blocker).unwrap();
+        let output = run();
+        assert!(output.status.success(), "{}", text(&output.stderr));
+        assert_eq!(
+            std::fs::read(directory.path().join("o.ts")).unwrap(),
+            b"first-second-third",
+            "-N {concurrency}"
+        );
+    }
+}
+
 /// Upstream's filesystem errors name the path: HttpFD's `unable to open for
 /// writing`, FragmentFD's `Unable to download video` (its `.ytdl` comes
 /// first) and `_ensure_dir_exists`' `Unable to create directory`.
