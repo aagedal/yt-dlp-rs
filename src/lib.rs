@@ -3552,7 +3552,7 @@ impl YoutubeDl {
                 pipes: true,
             };
             // One handler for both threads' interrupt checks.
-            let _interrupt = interrupt::Guard::install_with_terminate();
+            let _interrupt = interrupt::Guard::install_recording();
             let ended = &AtomicBool::new(false);
             let client = &self.client;
             // The feeders' messages are written by this thread, which may

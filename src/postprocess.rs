@@ -435,7 +435,11 @@ pub(crate) fn download(
                 callback(progress)
             }
         })?;
-        fs::rename(destination, &input)?;
+        // A growing file stays at its name (an editor may be reading it)
+        // until a result replaces it, like an existing file.
+        if !(growing && fs::hard_link(destination, &input).is_ok()) {
+            fs::rename(destination, &input)?;
+        }
         bytes
     } else {
         // A merge with private format files (the library default) happens
@@ -485,10 +489,12 @@ pub(crate) fn download(
         .map(str::to_owned)
         .unwrap_or_else(|| info.ext.to_lowercase());
     let source = input.clone();
+    // A growing file left at its name is published like an existing one.
+    let in_place = existing.or((growing && destination.is_file()).then_some(destination));
     // Publish a stage's file to `path`: an unchanged existing source stays in
     // place, and results named like the existing file replace it.
     let place = |disk: &Path, path: &Path| -> Result<()> {
-        if existing == Some(path) {
+        if in_place == Some(path) {
             if disk != source {
                 fs::rename(disk, path)?;
             }
@@ -1286,7 +1292,7 @@ pub(crate) fn download(
         place(&last.disk, &last.path)?;
         // Upstream deletes the processed original unless it is kept (also
         // the file a repeated download replaced).
-        let replaced = existing.or(options.overwrite.then_some(destination));
+        let replaced = in_place.or(options.overwrite.then_some(destination));
         if let Some(existing) = replaced
             && existing != last.path
             && !retained.iter().any(|path| path == existing)

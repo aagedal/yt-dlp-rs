@@ -16,6 +16,11 @@ static INTERRUPTED: AtomicBool = AtomicBool::new(false);
 #[cfg(any(unix, windows))]
 static EXIT_ON_REPEAT: AtomicBool = AtomicBool::new(false);
 
+/// Growing-file recordings in progress: a repeated signal waits for them
+/// to finish their file and remove its recording mark instead of exiting.
+#[cfg(any(unix, windows))]
+static RECORDING: AtomicUsize = AtomicUsize::new(0);
+
 /// Temporary guards installed over the run-wide handler: while any is, the
 /// signal is theirs to handle.
 #[cfg(any(unix, windows))]
@@ -134,7 +139,11 @@ extern "C" fn record(signum: i32) {
     #[cfg(unix)]
     let _ = signum;
     let repeated = INTERRUPTED.swap(true, Ordering::SeqCst);
-    if EXIT_AT_ONCE.load(Ordering::SeqCst) || (repeated && EXIT_ON_REPEAT.load(Ordering::SeqCst)) {
+    if EXIT_AT_ONCE.load(Ordering::SeqCst)
+        || (repeated
+            && EXIT_ON_REPEAT.load(Ordering::SeqCst)
+            && RECORDING.load(Ordering::SeqCst) == 0)
+    {
         write_stderr(b"\nERROR: Interrupted by user\n");
         // SAFETY: `_exit` is async-signal-safe.
         unsafe { _exit(1) };
@@ -151,6 +160,9 @@ pub(crate) struct Guard {
     /// Whether SIGTERM is handled too.
     #[cfg(any(unix, windows))]
     terminate: bool,
+    /// Whether this guard holds a growing-file recording ([`RECORDING`]).
+    #[cfg(any(unix, windows))]
+    recording: bool,
 }
 
 impl Guard {
@@ -174,6 +186,7 @@ impl Guard {
             Self {
                 nested,
                 terminate: false,
+                recording: false,
             }
         }
         #[cfg(not(any(unix, windows)))]
@@ -193,6 +206,21 @@ impl Guard {
             }
             installed.terminating += 1;
             guard.terminate = true;
+            guard
+        }
+        #[cfg(not(any(unix, windows)))]
+        Self {}
+    }
+
+    /// [`Guard::install_with_terminate`] for a growing-file recording: a
+    /// second signal does not end the process before FFmpeg has finished
+    /// the file and its recording mark is removed (SIGKILL still does).
+    pub(crate) fn install_recording() -> Self {
+        #[cfg(any(unix, windows))]
+        {
+            let mut guard = Self::install_with_terminate();
+            RECORDING.fetch_add(1, Ordering::SeqCst);
+            guard.recording = true;
             guard
         }
         #[cfg(not(any(unix, windows)))]
@@ -292,6 +320,9 @@ impl Drop for Guard {
     fn drop(&mut self) {
         #[cfg(any(unix, windows))]
         {
+            if self.recording {
+                RECORDING.fetch_sub(1, Ordering::SeqCst);
+            }
             let mut installed = installed();
             GUARDS.fetch_sub(1, Ordering::SeqCst);
             installed.guards -= 1;

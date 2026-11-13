@@ -528,7 +528,7 @@ fn run(
     // Upstream `real_download`: interrupting a live download completes it
     // (FFmpegSinkFD always handles the interrupt its connection raises).
     let interrupt = if growing.is_some() {
-        Some(crate::interrupt::Guard::install_with_terminate())
+        Some(crate::interrupt::Guard::install_recording())
     } else {
         (crate::is_live(info) || piped).then(crate::interrupt::Guard::install)
     };

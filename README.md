@@ -126,7 +126,10 @@ These options are not in upstream yt-dlp:
   `com.blackmagicdesign.metadata:recording` attribute while it grows, which
   DaVinci Resolve reads at import to treat it as a recording clip. The
   attribute is removed when the recording ends, including on SIGINT or SIGTERM
-  (which finish the file), but not if the process is killed. H.264/AAC formats
+  (which finish the file; a second signal waits for that), but not if the
+  process is killed. Postprocessors such as `--embed-metadata` then work on a
+  link of the recording, which stays at its name until their result (a
+  regular, unfragmented file) replaces it. H.264/AAC formats
   are preferred after any `-S` fields. MOV cannot hold AV1, VP9, Opus or FLAC
   (FFmpeg refuses them: "av1 only supported in MP4"), so when those are
   selected the recording is a fragmented `.mp4` instead, which is also the
