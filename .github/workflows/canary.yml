@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -36,7 +36,7 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.9.7
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install the pinned upstream yt-dlp
@@ -70,7 +70,7 @@ jobs:
             --report canary-report.json --summary canary-summary.md \
             --issue canary-issue.json --run-url "$RUN_URL"
           echo "code=$?" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: canary-report
