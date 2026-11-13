@@ -531,9 +531,14 @@ struct Args {
     /// Abort download if a fragment is unavailable
     #[arg(long, alias = "no-skip-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
     abort_on_unavailable_fragments: bool,
-    /// Retry the entire extraction after transient network failures (0 disables retries)
-    #[arg(long, default_value_t = 0)]
-    extractor_retries: u8,
+    /// Number of retries for known extractor errors (default is 3), or "infinite"
+    #[arg(
+        long,
+        default_value = "3",
+        value_name = "RETRIES",
+        allow_hyphen_values = true
+    )]
+    extractor_retries: String,
     /// Seconds to wait for connections and each read/write before giving up
     #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
     socket_timeout: Option<f64>,
@@ -3039,6 +3044,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     };
     let retries = parse_retries("download", &args.retries)?;
     let fragment_retries = parse_retries("fragment", &args.fragment_retries)?;
+    crate::extractor::set_extractor_retries(parse_retries("extractor", &args.extractor_retries)?);
     let mut retry_sleep = crate::RetrySleep::default();
     for spec in &args.retry_sleep {
         let (key, expression) = match spec.split_once(':') {
@@ -3557,10 +3563,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // Upstream `download_with_info_file` retries a raised DownloadError
                 // with the webpage URL.
                 let from_info_json = matches!(loaded, Some(ExtractResult::Video(_)));
-                let options = ExtractionOptions {
-                    retries: args.extractor_retries,
-                    ..Default::default()
-                };
+                let options = ExtractionOptions::default();
                 let mut pending: Option<Cancel> = None;
                 let mut skipped = std::collections::VecDeque::new();
                 let mut header_printed = false;
@@ -4374,7 +4377,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         &mut info,
                         &sponsorblock_query,
                         &args.sponsorblock_api,
-                        u32::from(args.extractor_retries),
+                        crate::extractor::extractor_retries(),
                     ) {
                         Ok(()) => postprocess_progress("SponsorBlock", "finished"),
                         Err(error) => {

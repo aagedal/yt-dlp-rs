@@ -317,7 +317,7 @@ impl LiveFeed {
             video_id: info.id.clone(),
             runtimes: runtimes.to_vec(),
             live_start_time: marker["live_start_time"].as_i64(),
-            retries: 3,
+            retries: crate::extractor::extractor_retries(),
             state: std::sync::Mutex::new(FeedState {
                 formats: known,
                 start_time: marker["start_time"].as_f64().unwrap_or_else(now),

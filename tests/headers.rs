@@ -380,7 +380,7 @@ fn headers_reach_dash_manifest_and_selected_stream_init_and_fragments() {
 }
 
 #[test]
-fn extractor_and_download_retries_keep_configured_headers() {
+fn download_retries_keep_configured_headers() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     let flags = [
@@ -392,16 +392,9 @@ fn extractor_and_download_retries_keep_configured_headers() {
         "https://referrer.invalid/start",
     ];
     let mut args = flags.to_vec();
-    args.extend(["--extractor-retries", "1", "-o", "page.mp4"]);
-    success(&server.cli("/retry.html", &args, directory.path()));
-    let mut args = flags.to_vec();
     args.extend(["--retries", "1", "-o", "direct.mp4"]);
     success(&server.cli("/retry.mp4", &args, directory.path()));
     let requests = server.recorded();
-    assert_eq!(
-        requests.iter().filter(|r| r.path == "/retry.html").count(),
-        2
-    );
     assert_eq!(
         requests.iter().filter(|r| r.path == "/retry.mp4").count(),
         3

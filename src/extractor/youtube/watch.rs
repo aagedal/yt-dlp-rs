@@ -762,9 +762,6 @@ fn read_page(
     Ok(String::from_utf8_lossy(&bytes).into_owned())
 }
 
-/// Upstream's default `extractor_retries` for InnerTube requests.
-const API_RETRIES: u32 = 3;
-
 /// `_select_api_hostname`: `innertube_host`, else the client's host.
 fn api_host(config: &innertube::ClientConfig) -> String {
     super::args::non_empty("innertube_host").unwrap_or_else(|| config.host.to_owned())
@@ -980,9 +977,10 @@ impl<'a> ApiRequest<'a> {
     /// Report a retried failure like `RetryManager.report_retry`.
     fn report_retry(&self, text: &str, retry: u32) {
         crate::screen::warning(&format!(
-            "[{}] {}. Retrying ({retry}/{API_RETRIES})...",
+            "[{}] {}. Retrying ({retry}/{})...",
             self.extractor,
-            text.strip_suffix('.').unwrap_or(text)
+            text.strip_suffix('.').unwrap_or(text),
+            crate::retry::Retries(crate::extractor::extractor_retries())
         ));
     }
 }
@@ -1037,7 +1035,7 @@ fn call_api(
         match request.attempt(client) {
             Ok(value) => return Ok(value),
             Err(Failure { error, retry }) => {
-                if retry && retries < API_RETRIES {
+                if retry && retries < crate::extractor::extractor_retries() {
                     retries += 1;
                     request.report_retry(&retry_text(&error), retries);
                     continue;
@@ -1074,7 +1072,7 @@ fn extract_response(
             Ok(response) => response,
             Err(Failure { error, retry }) => {
                 if retry {
-                    if main_retries < API_RETRIES {
+                    if main_retries < crate::extractor::extractor_retries() {
                         main_retries += 1;
                         request.report_retry(&retry_text(&error), main_retries);
                         continue;
@@ -1086,7 +1084,7 @@ fn extract_response(
         };
         if let Err(message) = report_alerts(&response, extractor) {
             if message.to_lowercase().contains("unknown error") {
-                if main_retries < API_RETRIES {
+                if main_retries < crate::extractor::extractor_retries() {
                     main_retries += 1;
                     request.report_retry(&message, main_retries);
                     continue;
@@ -1102,7 +1100,7 @@ fn extract_response(
         if complete {
             return Ok(Some(response));
         }
-        if incomplete_retries < API_RETRIES {
+        if incomplete_retries < crate::extractor::extractor_retries() {
             incomplete_retries += 1;
             request.report_retry("Incomplete data received", incomplete_retries);
             continue;
@@ -1113,7 +1111,8 @@ fn extract_response(
             )));
         }
         crate::screen::warning(&format!(
-            "[{extractor}] Incomplete data received. Giving up after {API_RETRIES} retries"
+            "[{extractor}] Incomplete data received. Giving up after {} retries",
+            crate::retry::Retries(crate::extractor::extractor_retries())
         ));
         return Ok(None);
     }
@@ -1459,7 +1458,7 @@ fn download_initial_webpage(
         .collect();
     // `_download_webpage_with_retries`: network errors other than HTTP 403
     // and 429 are retried; the page is never fatal.
-    for attempt in 1..=API_RETRIES + 1 {
+    for attempt in 1..=crate::extractor::extractor_retries().saturating_add(1) {
         let error = match super::super::download_webpage_note_headers(
             client,
             &url,
@@ -1485,10 +1484,11 @@ fn download_initial_webpage(
             _ => None,
         };
         if let Some(cause) = &cause
-            && attempt <= API_RETRIES
+            && attempt <= crate::extractor::extractor_retries()
         {
             crate::screen::warning(&format!(
-                "[youtube] {cause}. Retrying ({attempt}/{API_RETRIES})..."
+                "[youtube] {cause}. Retrying ({attempt}/{})...",
+                crate::retry::Retries(crate::extractor::extractor_retries())
             ));
             continue;
         }
@@ -1497,7 +1497,10 @@ fn download_initial_webpage(
         }
         let mut text = crate::upstream_error_text(&error);
         if cause.is_some() {
-            text.push_str(&format!(". Giving up after {API_RETRIES} retries"));
+            text.push_str(&format!(
+                ". Giving up after {} retries",
+                crate::retry::Retries(crate::extractor::extractor_retries())
+            ));
         }
         crate::screen::warning(&text);
         break;

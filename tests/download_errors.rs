@@ -19,6 +19,9 @@ const EMPTY: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF
 /// The same with a second segment cut short.
 const SHORT: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\nshort.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
+/// Two available segments.
+const TWO: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
 /// A media playlist whose first segment is missing.
 const HEADLESS: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
 
@@ -39,6 +42,7 @@ fn serve() -> String {
                 "/v.mp4" => ("200 OK", b"media"),
                 "/gap.m3u8" => ("200 OK", GAP.as_bytes()),
                 "/empty.m3u8" => ("200 OK", EMPTY.as_bytes()),
+                "/two.m3u8" => ("200 OK", TWO.as_bytes()),
                 "/headless.m3u8" => ("200 OK", HEADLESS.as_bytes()),
                 "/s0.ts" | "/s2.ts" => ("200 OK", b"segment"),
                 "/empty.ts" => ("200 OK", b""),
@@ -367,6 +371,71 @@ fn a_truncated_fragment_is_retried_then_skipped() {
         std::fs::read(directory.path().join("o.mp4")).unwrap(),
         b"segmentsegment"
     );
+}
+
+/// FragmentFD's HttpFD applies `--min/max-filesize` to each fragment:
+/// one out of bounds is skipped (or fatal) without a message, and with
+/// every fragment skipped the download is empty and fails.
+#[test]
+fn filesize_limits_apply_to_each_fragment() {
+    struct Case {
+        args: &'static [&'static str],
+        stdout_has: &'static str,
+        stderr_end: &'static str,
+        file: Option<&'static [u8]>,
+        /// The files left, an abort's part file and state among them.
+        kept: &'static [&'static str],
+    }
+    let origin = serve();
+    let playlist = format!("{origin}/two.m3u8");
+    for case in [
+        Case {
+            args: &["--max-filesize", "3"],
+            stdout_has: "[download] fragment not found; Skipping fragment 2 ...\n",
+            stderr_end: "ERROR: The downloaded file is empty\n",
+            file: None,
+            kept: &[],
+        },
+        Case {
+            args: &["--max-filesize", "3", "--abort-on-unavailable-fragments"],
+            stdout_has: "",
+            stderr_end: "ERROR: fragment 1 not found, unable to continue\n",
+            file: None,
+            kept: &["o.mp4.part", "o.mp4.ytdl"],
+        },
+        Case {
+            args: &["--min-filesize", "7"],
+            stdout_has: "",
+            stderr_end: "",
+            file: Some(b"segmentsegment"),
+            kept: &["o.mp4"],
+        },
+    ] {
+        let args = case.args;
+        let directory = tempfile::tempdir().unwrap();
+        let output = fragments(directory.path(), &[args, &[&playlist]].concat());
+        let (stdout, stderr) = (text(&output.stdout), text(&output.stderr));
+        assert!(stdout.contains(case.stdout_has), "{args:?}: {stdout}");
+        assert!(!stdout.contains("Retrying"), "{args:?}: {stdout}");
+        assert!(stderr.ends_with(case.stderr_end), "{args:?}: {stderr}");
+        assert_eq!(
+            output.status.success(),
+            case.file.is_some(),
+            "{args:?}: {stderr}"
+        );
+        if let Some(bytes) = case.file {
+            assert_eq!(
+                std::fs::read(directory.path().join("o.mp4")).unwrap(),
+                bytes
+            );
+        }
+        let mut names: Vec<String> = std::fs::read_dir(directory.path())
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+            .collect();
+        names.sort();
+        assert_eq!(names, case.kept, "{args:?}");
+    }
 }
 
 /// HlsFD may skip the first fragment too (only DashSegmentsFD never does).

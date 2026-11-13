@@ -2266,10 +2266,6 @@ pub(super) fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
     Ok(info)
 }
 
-/// Upstream's default `extractor_retries` (this port's `--extractor-retries`
-/// retries whole extractions instead).
-const EXTRACTOR_RETRIES: u32 = 3;
-
 /// `_extract_data(fatal=True, webpage_fatal=False)`: the webpage's
 /// `ytInitialData` and `ytcfg`, else the `navigation/resolve_url` endpoint's
 /// browse response.
@@ -2337,7 +2333,7 @@ pub(super) fn extract_webpage(
         .any(|key| truthy(data.get(*key)))
     };
     let mut ytcfg = Map::new();
-    for attempt in 1..=EXTRACTOR_RETRIES + 1 {
+    for attempt in 1..=crate::extractor::extractor_retries().saturating_add(1) {
         let webpage = match super::super::download_webpage(client, url, extractor, item_id) {
             Ok(webpage) => webpage,
             Err(error) => {
@@ -2357,10 +2353,11 @@ pub(super) fn extract_webpage(
                     _ => None,
                 };
                 if let Some(cause) = &cause
-                    && attempt <= EXTRACTOR_RETRIES
+                    && attempt <= crate::extractor::extractor_retries()
                 {
                     crate::screen::warning(&format!(
-                        "[{extractor}] {cause}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
+                        "[{extractor}] {cause}. Retrying ({attempt}/{})...",
+                        crate::retry::Retries(crate::extractor::extractor_retries())
                     ));
                     continue;
                 }
@@ -2369,7 +2366,10 @@ pub(super) fn extract_webpage(
                 }
                 let mut text = crate::upstream_error_text(&error);
                 if cause.is_some() {
-                    text.push_str(&format!(". Giving up after {EXTRACTOR_RETRIES} retries"));
+                    text.push_str(&format!(
+                        ". Giving up after {} retries",
+                        crate::retry::Retries(crate::extractor::extractor_retries())
+                    ));
                 }
                 crate::screen::warning(&text);
                 return Ok((None, ytcfg));
@@ -2401,9 +2401,10 @@ pub(super) fn extract_webpage(
             return Ok((Some(found), ytcfg));
         }
         const INCOMPLETE: &str = "Incomplete yt initial data received";
-        if attempt <= EXTRACTOR_RETRIES {
+        if attempt <= crate::extractor::extractor_retries() {
             crate::screen::warning(&format!(
-                "[{extractor}] {INCOMPLETE}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
+                "[{extractor}] {INCOMPLETE}. Retrying ({attempt}/{})...",
+                crate::retry::Retries(crate::extractor::extractor_retries())
             ));
         } else if fatal {
             return Err(Error::Reported(format!(
@@ -2413,8 +2414,9 @@ pub(super) fn extract_webpage(
         } else {
             // The unexpected error's message carries the bug report hint.
             crate::screen::warning(&format!(
-                "[{extractor}] {INCOMPLETE}; {}. Giving up after {EXTRACTOR_RETRIES} retries",
-                crate::BUG_REPORTS_MESSAGE
+                "[{extractor}] {INCOMPLETE}; {}. Giving up after {} retries",
+                crate::BUG_REPORTS_MESSAGE,
+                crate::retry::Retries(crate::extractor::extractor_retries())
             ));
         }
     }

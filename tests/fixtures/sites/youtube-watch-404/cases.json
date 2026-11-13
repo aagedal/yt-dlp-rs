@@ -1,3 +1,4 @@
 [
- {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--print", "id"]}
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--print", "id"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--print", "id", "--extractor-retries", "1"]}
 ]

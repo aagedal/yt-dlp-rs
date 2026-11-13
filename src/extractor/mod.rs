@@ -3663,6 +3663,19 @@ pub(crate) fn get_comments() -> bool {
     crate::control::settings().is_some_and(|settings| settings.get_comments)
 }
 
+/// `extractor_retries` (`--extractor-retries`, default 3; `u32::MAX` is
+/// `infinite`), the count of `InfoExtractor.RetryManager`.
+static EXTRACTOR_RETRIES: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(3);
+
+pub(crate) fn set_extractor_retries(retries: u32) {
+    EXTRACTOR_RETRIES.store(retries, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// `self.get_param('extractor_retries', 3)`.
+pub(crate) fn extractor_retries() -> u32 {
+    EXTRACTOR_RETRIES.load(std::sync::atomic::Ordering::Relaxed)
+}
+
 /// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).
 pub(crate) static SUBTITLES_REQUESTED: std::sync::atomic::AtomicBool =
     std::sync::atomic::AtomicBool::new(false);

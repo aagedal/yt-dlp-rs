@@ -891,7 +891,7 @@ another extractor.
 | YouJizz | 2 | 4 |  |
 | youku | 2 | 2 |  |
 | YouPorn | 2 | 1 |  |
-| youtube | 1 | 168 | canary: YouTube |
+| youtube | 1 | 169 | canary: YouTube |
 | youtube:clip | 2 | 2 |  |
 | youtube:consent | 2 | 3 |  |
 | youtube:favorites | 2 | 1 |  |

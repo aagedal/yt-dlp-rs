@@ -639,6 +639,14 @@ fn download_with(
         }
         return Err(error);
     }
+    // `_finish_frag_download`: every fragment skipped leaves nothing.
+    if stored == 0 {
+        if named.take().is_some() {
+            let _ = fs::remove_file(&ytdl_path);
+            let _ = fs::remove_file(&part_path);
+        }
+        return Err(Error::Reported("The downloaded file is empty".into()));
+    }
     reporter.report(DownloadPhase::Publishing, stored)?;
     match private {
         Some(temporary) => crate::download::persist(temporary, destination, options.overwrite)?,
@@ -714,7 +722,8 @@ fn fetch_with_retries(
         *stored = prefix;
         reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
         reporter.report(DownloadPhase::Requesting, *stored)?;
-        let failure = match fetch(client, info, fragment, keys, file, stored, reporter) {
+        let limits = (options.min_filesize, options.max_filesize);
+        let failure = match fetch(client, info, fragment, keys, file, stored, reporter, limits) {
             Ok(modified) => return Ok(Some(modified)),
             Err(failure) => failure,
         };
@@ -730,6 +739,9 @@ fn fetch_with_retries(
             crate::screen::stderr("\n");
             crate::report_trouble(NO_DATA_BLOCKS);
         }
+        // HttpFD declined the fragment (`--min/max-filesize`, unreported by
+        // its quiet downloader); like an empty one, it is not retried.
+        let declined = no_data || matches!(failure.error, Error::FileSizeLimit(_));
         // Upstream retries every HTTP status error for fragments when
         // unavailable fragments may be skipped.
         let retry = failure.retry.or_else(|| {
@@ -760,7 +772,7 @@ fn fetch_with_retries(
         // fragment without data.
         let protocol = info.protocol.as_deref().unwrap_or_default();
         let ism = protocol == "ism";
-        let skippable = if no_data && ism {
+        let skippable = if declined && ism {
             false
         } else {
             index > 0 || ism || protocol.starts_with("m3u8")
@@ -783,7 +795,7 @@ fn fetch_with_retries(
                     options.fragment_retries,
                 )),
             }
-        } else if no_data {
+        } else if declined {
             Error::Reported(format!(
                 "fragment {} not found, unable to continue",
                 index + 1
@@ -1305,6 +1317,9 @@ fn download_concurrent(
     })
 }
 
+/// One fragment's transfer; `limits` are `--min-filesize`/`--max-filesize`,
+/// which HttpFD also applies to each fragment's declared length.
+#[allow(clippy::too_many_arguments)]
 fn fetch(
     client: &Client,
     info: &VideoInfo,
@@ -1313,6 +1328,7 @@ fn fetch(
     file: &mut dyn Sink,
     stored: &mut u64,
     reporter: &mut Reporter<'_>,
+    limits: (Option<u64>, Option<u64>),
 ) -> std::result::Result<Option<String>, Failure> {
     let decryption = if let Some(encryption) = &fragment.encryption {
         let key = match keys.get(&encryption.key_url) {
@@ -1353,6 +1369,11 @@ fn fetch(
     // MhtmlFD's storyboard fragments are images.
     let images = info.protocol.as_deref() == Some("mhtml");
     let expected = validate(&response, fragment, false, images)?;
+    if let Some(length) = expected
+        && (limits.0.is_some_and(|min| length < min) || limits.1.is_some_and(|max| length > max))
+    {
+        return Err(Error::FileSizeLimit(format!("fragment of {length} bytes")).into());
+    }
     if let Some(expected) = expected {
         file.expect(expected);
     }

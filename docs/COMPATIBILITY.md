@@ -84,7 +84,7 @@ print stages, exit codes, signals) is specified in
 | `--max-downloads NUMBER` | Stop after NUMBER processed videos (simulated, already-downloaded and size-skipped ones count), print upstream's message and exit 101; 0 means unlimited |
 | `-r`, `--limit-rate`, `--rate-limit RATE` | Upstream `slow_down` per whole-file media transfer or fragment request: sleep after each read until the average rate is at most RATE (`parse_bytes`, strictly positive); subtitles are not limited |
 | `--sleep-interval`/`--min-sleep-interval`, `--max-sleep-interval`, `--sleep-subtitles SECONDS` | Upstream validation messages; sleep a uniform random interval (time-seeded, not Python's RNG) before each media stream download after existing-file checks, and before each subtitle download (`--sleep-requests` is described above) |
-| `--min-filesize SIZE`, `--max-filesize SIZE` | Upstream `parse_bytes` sizes (`50k`, `44.6M`); whole-file HTTP media transfers with a declared length outside the limits are skipped with upstream's `[download]` message, no error and no archive record; fragment/HLS/DASH transfers are not checked |
+| `--min-filesize SIZE`, `--max-filesize SIZE` | Upstream `parse_bytes` sizes (`50k`, `44.6M`); whole-file HTTP media transfers with a declared length outside the limits are skipped with upstream's `[download]` message, no error and no archive record. Like FragmentFD's HttpFD, each HLS/DASH fragment is checked too: one out of bounds is skipped (or fatal, `fragment N not found, unable to continue`) without a message or retry, and when every fragment is skipped the download fails with `ERROR: The downloaded file is empty` |
 | `--write-description`, `--no-write-description` | Write the represented description to the `description` output type (`.description`) before subtitles; upstream messages for missing/present descriptions; follows overwrite options; playlists report no description |
 | `--list-thumbnails` | Upstream `[info] Available thumbnails for ID:` table (ID/Width/Height/URL) or `ID has no thumbnails`; implies list-only simulation like other listings |
 | `--write-thumbnail`, `--no-write-thumbnail`, `--write-all-thumbnails` | Upstream flag folding; try thumbnails best-first until one is written (all with `--write-all-thumbnails`, named `ID.EXT` when several), before info JSON; upstream messages, 404 skip, overwrite options; raw bytes unless converted |
@@ -127,7 +127,7 @@ print stages, exit codes, signals) is specified in
 | Format filter fields | Besides the original fields, `[...]` filters accept upstream's `acodec`, `vcodec`, `container`, `protocol`, `dynamic_range`, `resolution`, `video_ext`, `audio_ext`, `format` (string operators, `!`, `?`) and numeric `fps`, `vbr`, `asr`, `audio_channels`; like upstream, any other key is looked up too, and a format without it matches only with `?` (see Format selection) |
 | `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (`html5`, `youtube`, `generic`, with upstream's descriptions); command-line URLs are listed under every suitable extractor (`generic` takes the rest). Extractors upstream marks `_WORKING = False` carry its `(CURRENTLY BROKEN)` suffix and have no description line. Upstream lists about 1800 extractors; [SITES.md](SITES.md) has this port's list with tiers |
 | `--color [STREAM:]POLICY`, `--no-colors`, `--no-colours` | Upstream's per-stream dict (`stdout`/`stderr` keys, comma-separated, both by default; `--no-colors` replaces it with `no_color`) in command-line order, with only the final values validated (`"X" is not a valid color policy`). `process_color_policy`: `auto` (default) colors a terminal stream when `TERM` is set and not `dumb` (Windows: VT mode) unless `NO_COLOR` is set (then `no_color`); `auto-tty`/`no_color-tty` ignore `NO_COLOR`; `always`, `never`, `no_color`; `-o -` gives the output stream stderr's policy and quiet modes move screen lines there. `minicurses.format_text` and `YoutubeDL.Styles` color the `ERROR:`/`WARNING:`/`Deprecated Feature:` prefixes, the `-F`/`--list-subs`/`--list-thumbnails` headers and `-F`'s IDs, `│`/`─` delimiters (when stdout's encoding has them), suppressed `audio only`/`video only`/`~` sizes and DRM/UNSUPPORTED/Untested notes, unavailable impersonate targets, `Downloading item N of M`, archive skips, the `--wait-for-video` countdown and the unplayable-formats warning; `ProgressStyles` color the progress fields (also in `--progress-template` values), and a stream allowing sequences (`always`, `no_color`) erases progress lines with `\r\x1b[K` like `MultilinePrinter`'s `_HAVE_FULLCAP`. `_search_regex`/`_search_json`'s `Unable to extract NAME` (and the `unable to extract NAME` warning) style the name in error and warning lines, except for the messages upstream raises literally (`Unable to extract video URL`, `JSON-LD`, …, matched by their pinned texts). Not styled: update/plugin warnings this port does not have |
-| `--write-comments`, `--get-comments`, `--no-write-comments`, `--no-get-comments` | Upstream `getcomments`: without `--write-info-json`/`--no-write-info-json` or `--embed-info-json`, and unless `-j` prints the JSON, it implies `--write-info-json`. The generic extractor has no comments, so nothing else changes; YouTube watch pages extract comments as described under [YouTube comments](#youtube-comments) |
+| `--write-comments`, `--get-comments`, `--no-write-comments`, `--no-get-comments` | Upstream `getcomments`: without `--write-info-json`/`--no-write-info-json` or `--embed-info-json`, and unless `-j` prints the JSON, it implies `--write-info-json`. YouTube watch pages extract comments as described under [YouTube comments](#youtube-comments), as do Instagram, Mixch and PiaLive. SoundCloud tracks, Bilibili videos and bangumi, GameJolt posts and Rokfin posts, whose upstream extractors fetch comments, warn `[EXTRACTOR] ID: Comments are not supported natively and are not extracted`; other extractors (generic included) have none upstream either |
 | `--clean-info-json`, `--clean-infojson`, `--no-clean-info-json`, `--no-clean-infojson` | Upstream `clean_infojson`: the default drops `None` values, `__` keys and the private bookkeeping keys; `--no-clean-info-json` writes every represented field |
 | `-N N`, `--concurrent-fragments N` | Upstream concurrent fragment downloads for HLS and DASH: N workers fetch fragments (each with its own `--fragment-retries` and skip handling) into private files beside the output, appended in order; progress reports completed fragments and in-flight bytes. Upstream's `concurrent fragments "N" must be positive` validation. Screen lines match sequential downloads apart from progress timing |
 | `--downloader [PROTO:]NAME`, `--external-downloader`, `--downloader-args NAME:ARGS`, `--hls-prefer-native`, `--hls-prefer-ffmpeg` | Upstream `get_suitable_downloader` for `native` and `ffmpeg`/`avconv` (names or paths) per simplified protocol (`http`, `ftp`, `m3u8`, `dash`, `rtmp`, `default`): FFmpegFD downloads whole formats (merging all-FFmpeg pairs directly, without HlsFD's manifest line or fixups) when ffmpeg is available, otherwise the native downloaders run like upstream's `can_download` fallback. FFmpeg `--downloader-args` follow `_configuration_args` (`ffmpeg_iN`/`ffmpeg_i` before each input, `ffmpeg_oN`/`ffmpeg_o`/`ffmpeg`/`default` before the output); unnamed arguments print upstream's `External Downloader arguments given without specifying name` warning and move to the default downloader's key. `curl`, `wget`, `aria2c`, `axel` and `httpie` (names or paths, matched like `get_external_downloader`) run upstream's `CurlFD`/`WgetFD`/`Aria2cFD`/`AxelFD`/`HttpieFD` command lines for whole-file `http`/`https`/`ftp`/`ftps` formats without `hls_aes` or extractor query arguments, including merged formats' separate streams. That covers the headers, cookies (curl reads them from stdin; wget and aria2c load the `--cookies` file or an announced temporary file; axel and httpie get a `Cookie` header), `continuedl`, `noprogress`, `--limit-rate`, retries, `--max-filesize`, `--source-address`, `--proxy`, `--no-check-certificates`, aria2c's `--remote-time` from `--mtime`/`--no-mtime`, and `_configuration_args` keys. The tool writes the `.part` file, which is then renamed and reported like `ExternalFD.real_download`; a non-zero exit reports the captured stderr and `ERROR: NAME exited with code N`. An executable that cannot be run, other protocols and stdout output use the native downloaders, like upstream's `can_download`. As in the pinned upstream, no external downloader supports the `m3u8_frag_urls`/`dash_frag_urls` protocols, so HLS and DASH formats keep the native fragment downloaders. Unknown names are upstream's `No such [PROTO ]external downloader "NAME"` usage error. `--hls-prefer-ffmpeg` (the last of the two flags wins) downloads non-live `m3u8_native` formats with FFmpegFD when no `--downloader` names their protocol, and `--hls-prefer-native` keeps a non-live `m3u8` format on HlsFD, as upstream's `hls_prefer_native` does |
@@ -174,7 +174,7 @@ print stages, exit codes, signals) is specified in
 | `--break-on-existing`, `--no-break-on-existing` | Stop at the first archived video (earlier playlist entries are still processed), print upstream's cancellation message and exit 101 |
 | `--break-per-input`, `--no-break-per-input` | `--max-downloads`/`--break-on-existing` only end the current input and reset the count |
 | `--force-write-archive`, `--force-write-download-archive`, `--force-download-archive` | Record archive entries for successfully simulated or skip-download videos too |
-| `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
+| `--extractor-retries RETRIES` | Upstream `extractor_retries` (default 3, or `infinite`; `parse_retries`' usage errors): the count of the ported extractors' `RetryManager`s (YouTube's webpage, InnerTube and tab requests, live-from-start feeds and TikTok user pages) and SponsorBlock's API requests. Extractions are not re-run, as upstream never does (the library's `ExtractionOptions::retries` still offers that) |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | `--all-formats` | Upstream's hidden `-f all`, sharing `--format`'s destination: the last of the two given wins |
 | All other flags | Every upstream option is accepted except the hidden debug option `--load-pages`; options documented here as unsupported are explicit errors or warnings |
@@ -5702,10 +5702,11 @@ existing baseline and does not advance it.
 
 ## Extraction retries
 
-`--extractor-retries N` opts into up to N additional whole-extraction attempts
-(default 0, maximum 255). The library exposes the same policy through
-`extract_result_with_options(url, format, options)` with `ExtractionOptions::retries`.
-Existing extraction methods retain zero retries. Call `into_video()` on the
+Library callers can opt into whole-extraction attempts through
+`extract_result_with_options(url, format, options)` with `ExtractionOptions::retries`
+(default 0, maximum 255), a port extension: the CLI's `--extractor-retries` is
+upstream's count for extractors' own retries (see the CLI table) and never re-runs
+an extraction. Existing extraction methods retain zero retries. Call `into_video()` on the
 result when a single video is required; playlists still fail at that boundary.
 
 A failed generic page request reports upstream's `ERROR: [generic] ID: Unable to
@@ -5727,17 +5728,16 @@ remains a permanent failure so local filesystem errors cannot cause retries.
 Format selection, unsupported content/schemes, invalid URLs, HTML size and encoding
 limits, unsolicited 206 responses, and permanent HTTP statuses fail without
 another attempt. After exhaustion return the final error. No partial playlist
-metadata or downloads are emitted. The CLI continues to later input URLs and
-returns a failing exit status if any input fails. The policy also applies under
-`--simulate` and `--dump-json`; `--retries` controls downloads independently.
+metadata or downloads are emitted. `--retries` controls downloads independently.
 Standalone `Extractor` calls do not retry automatically.
 
 This is a native transport policy extension of the existing supported subset,
-not a port of upstream's extractor-specific retry semantics or defaults. It does
-not advance the pinned baseline or claim general `--extractor-retries` parity.
+not a port of upstream's extractor-specific retry semantics or defaults, and it
+does not advance the pinned baseline.
 `tests/retries.rs` covers status recovery/exhaustion, interrupted HTML, full
-playlist restart after source-probe failures, referrers, CLI modes and budget
-isolation, permanent error boundaries, and custom extractor filesystem errors.
+playlist restart after source-probe failures, referrers, budget isolation (the
+CLI's retry options never re-run an extraction), permanent error boundaries, and
+custom extractor filesystem errors.
 The Retry-After extension is a native policy on this existing retry slice;
 it does not advance the upstream baseline. Pure unit tests cover parsing and
 delay bounds without sleeping; local HTTP tests cover recovery delays, exhausted

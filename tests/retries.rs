@@ -433,7 +433,7 @@ fn cli_rejects_retry_values_outside_bounded_integer_range() {
     for (option, values) in [
         ("--retries", &["-1", "infinity", "1.5", "x"][..]),
         ("--fragment-retries", &["-1", "infinity", "1.5"][..]),
-        ("--extractor-retries", &["-1", "256", "infinity", "1.5"][..]),
+        ("--extractor-retries", &["-1", "infinity", "1.5"][..]),
     ] {
         for value in values {
             let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
@@ -1139,75 +1139,15 @@ fn extraction_does_not_retry_format_selection_or_oversized_html() {
 }
 
 #[test]
-fn cli_extraction_retries_apply_to_json_and_simulation_without_downloads() {
-    for mode in ["--dump-json", "--simulate"] {
-        let server = Server::start(|_, count| {
-            if count == 1 {
-                Response::status(503)
-            } else {
-                Response::media()
-            }
-        });
-        let directory = tempfile::tempdir().unwrap();
-        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-            .args([
-                mode,
-                "--extractor-retries",
-                "1",
-                "--retries",
-                "0",
-                &server.url("/clip.mp4"),
-            ])
-            .current_dir(directory.path())
-            .output()
-            .unwrap();
-        assert!(
-            output.status.success(),
-            "{}",
-            String::from_utf8_lossy(&output.stderr)
-        );
-        assert_eq!(server.requests_for("/clip.mp4").len(), 2);
-        assert!(directory_names(directory.path()).is_empty());
-        if mode == "--dump-json" {
-            let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-            assert_eq!(info["ext"], "mp4");
-        } else {
-            // Simulation prints no JSON: stdout holds only screen lines.
-            let stdout = String::from_utf8_lossy(&output.stdout);
-            assert!(stdout.lines().all(|line| line.starts_with('[')), "{stdout}");
-        }
-    }
-}
-
-#[test]
-fn cli_exhausted_extraction_emits_no_partial_playlist_and_continues() {
-    let server = Server::start(|path, _| match path {
-        "/page.html" => page("<video src='/first.mp4'></video><video src='/failed.mp4'></video>"),
-        "/failed.mp4" => Response::status(503),
-        _ => Response::media(),
-    });
-    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .args([
-            "-j",
-            "--extractor-retries",
-            "1",
-            &server.url("/page.html"),
-            &server.url("/next.mp4"),
-        ])
-        .output()
-        .unwrap();
-    assert!(!output.status.success());
-    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(info["id"], "next");
-    assert_eq!(server.requests_for("/page.html").len(), 2);
-    assert_eq!(server.requests_for("/first.mp4").len(), 2);
-    assert_eq!(server.requests_for("/failed.mp4").len(), 2);
-    assert_eq!(server.requests_for("/next.mp4").len(), 1);
-}
-
-#[test]
-fn cli_download_retry_budget_does_not_enable_extraction_retries() {
-    for options in [vec![], vec!["--retries", "2"]] {
+/// Neither retry budget re-runs an extraction: `--extractor-retries` is
+/// upstream's count for extractors' own `RetryManager`s.
+fn cli_retry_budgets_do_not_rerun_extractions() {
+    for options in [
+        vec![],
+        vec!["--retries", "2"],
+        vec!["--extractor-retries", "5"],
+        vec!["--extractor-retries", "infinite"],
+    ] {
         let server = Server::start(|_, _| Response::status(503));
         let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
             .args(options)
