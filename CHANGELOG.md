@@ -7,10 +7,13 @@ page.
 
 Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 
-## [Unreleased]
+## [1.0.0-rc.1]
 
-The first stable release. From here on releases follow semantic versioning;
-the README's [Stability](https://github.com/aagedal/yt-dlp-rs/blob/main/README.md#stability) section says what that covers.
+The release candidate for 1.0, the first stable release. It runs against
+the live canaries before 1.0.0 is tagged. From 1.0 releases follow semantic
+versioning; the README's
+[Stability](https://github.com/aagedal/yt-dlp-rs/blob/main/README.md#stability)
+section says what that covers.
 
 ### Release
 
