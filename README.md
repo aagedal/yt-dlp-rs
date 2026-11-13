@@ -4,13 +4,15 @@ A native Rust port of [yt-dlp](https://github.com/yt-dlp/yt-dlp), with a few
 extensions for video editing workflows. Extraction and downloads run entirely
 in Rust: the binary never invokes Python or an installed yt-dlp.
 
-This is a beta. The port follows upstream release **2026.10.26** (pinned in
+The port follows upstream release **2026.10.26** (pinned in
 [upstream/manifest.json](upstream/manifest.json)) and covers over 900 extractors
 ([docs/SITES.md](docs/SITES.md), or `yt-dlp-rs --list-extractors`). The
 tier-1 sites (YouTube, Instagram, TikTok, X, Facebook, Reddit, Vimeo,
-Twitch, Bluesky, SoundCloud, Bandcamp) are checked daily against the live
-site; the rest are checked against pinned upstream output on saved
-responses and are best effort (see [supported sites](docs/COMPATIBILITY.md#supported-sites)).
+Twitch, Bluesky, SoundCloud, Bandcamp) are run daily against the live site
+(a site behind a bot check or login is reported as blocked rather than
+checked; see [Live canaries](#live-canaries)); the rest are checked against
+pinned upstream output on saved responses and are best effort (see
+[supported sites](docs/COMPATIBILITY.md#supported-sites)).
 That is tested behavior, not a general promise of yt-dlp compatibility:
 options this port does not implement are rejected with an error, or
 accepted with a `WARNING: … is not supported natively and is ignored`
@@ -19,12 +21,29 @@ without any effect are listed in the [CLI inventory](docs/COMPATIBILITY.md#cli).
 
 ## Install
 
-Pre-release binaries for Linux, macOS and Windows are attached to the
-[GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases). To build
-from source you need current stable Rust:
+Binaries are attached to the
+[GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases) as
+`yt-dlp-rs-vX.Y.Z-TARGET.tar.gz` (`.zip` on Windows), with `SHA256SUMS`
+and the third-party license notices:
+
+| Platform | Target | Needs |
+| --- | --- | --- |
+| Linux x86-64 | `x86_64-unknown-linux-gnu` | glibc 2.39 (Ubuntu 24.04, Debian 13, Fedora 40 or later) |
+| Linux ARM64 | `aarch64-unknown-linux-gnu` | glibc 2.39 |
+| macOS Apple silicon | `aarch64-apple-darwin` | macOS 11 |
+| macOS Intel | `x86_64-apple-darwin` | macOS 10.12 |
+| Windows x64 | `x86_64-pc-windows-msvc` | Windows 10; on ARM64 under emulation |
+
+The binaries are not signed or notarized. macOS blocks a binary downloaded
+with a browser until its quarantine attribute is removed
+(`xattr -d com.apple.quarantine yt-dlp-rs`), and Windows SmartScreen may
+warn before the first run.
+
+To build from source you need current stable Rust (there is no fixed
+minimum version; the code follows the latest stable release):
 
 ```sh
-cargo install --locked --path .
+cargo install --locked --git https://github.com/aagedal/yt-dlp-rs --tag vX.Y.Z
 ```
 
 The default build uses rustls. `cargo build --locked --features impersonate`
@@ -72,6 +91,27 @@ Programs that run the CLI should parse the machine-readable output in the
 yt-dlp. The human-readable lines follow upstream but are not a stable
 interface.
 
+## Stability
+
+From 1.0, releases follow semantic versioning. Within a major version:
+
+- **Stable:** the machine-readable CLI output in the
+  [CLI output contract](docs/CLI_CONTRACT.md#versioning) (what its tests
+  cover), exit codes and stop signals; the names and meaning of the options
+  under [Extensions in this fork](#extensions-in-this-fork); and the library
+  API described in [docs/LIBRARY.md](docs/LIBRARY.md#stability), checked
+  by `cargo-semver-checks` in CI.
+- **Not covered:** human-readable and `--verbose` output; the full
+  `-j`/`%(info)j` dict beyond named fields and its key order; site
+  behavior (a site can break whenever it changes, and tier 2 is best
+  effort); behavior that changes because the upstream baseline advances
+  (each release names its baseline); platforms other than the release
+  targets; the hidden `cli` and `__private` library modules.
+
+Site fixes and upstream ports ship as minor or patch releases, as needed.
+`-U` stays an error: install a newer release, or update through the
+application that bundles yt-dlp-rs.
+
 ## Extensions in this fork
 
 These options are not in upstream yt-dlp:
@@ -111,6 +151,15 @@ These options are not in upstream yt-dlp:
 - **`--section-timecode`** gives a section the timecode its first frame has in
   the whole video, so clips line up with full downloads in an editor. It needs
   ffprobe and an MP4/MOV result: use `--remux-video mp4` for WebM sections.
+- **`--ffprobe-location PATH`** picks the ffprobe executable separately
+  (upstream takes it from `--ffmpeg-location` or `PATH` only).
+- **`--youtube-js-runtime PATH`** names the Deno 2.3+ or Node.js 22+
+  executable for YouTube's challenges, instead of the `--js-runtimes` list.
+
+Two download paths also go beyond upstream without an option: live HLS is
+recorded natively when FFmpeg is not available (upstream requires it), and
+DASH formats with a single indexed file (SegmentBase) download as byte-range
+fragments from its `sidx`/`Cues` index instead of in one request.
 
 ## Supported sites
 
@@ -119,8 +168,9 @@ hashtags, clips, comments and YouTube Music) is extracted like upstream,
 including PO-token policies, age-gate fallbacks and account cookies. It was
 also spot-checked against the live site.
 
-The largest social networks were compared live with upstream 2026.10.21 on
-2026-10-23 and matched (same formats and metadata, or the same error):
+The largest social networks were last compared live with upstream
+(2026.10.21, on 2026-10-23) and matched (same formats and metadata, or the
+same error):
 
 | Network | Covered | Notes |
 | --- | --- | --- |
@@ -161,6 +211,8 @@ players of supported sites.
 - Generic-page features beyond HTML5 media elements and known embeds, such as
   JavaScript-built players.
 - Chromium cookies on Windows (DPAPI) and from the GNOME keyring.
+- The macOS and Windows system proxy settings (proxy environment variables
+  such as `https_proxy` and `no_proxy` work as upstream).
 - On Windows: password and two-factor prompts echo the input (upstream
   reads them without echo), and `--growing-file` with `--live-from-start`
   (it needs named pipes). Stopping a run there uses Ctrl+Break
@@ -184,9 +236,15 @@ Windows the tests' FFmpeg and downloader stand-ins are shell scripts run by
 Git for Windows' `sh.exe` (or `YT_DLP_RS_TEST_SH`); the few tests that need
 POSIX pseudo-terminals, symlinks, named pipes or non-UTF-8 paths are Unix-only.
 CI also fails on RustSec advisories for any feature's dependencies
-(`cargo deny --all-features check advisories`). Pushing a `vX.Y.Z[-PRE]` tag runs
-`.github/workflows/release.yml`, and a tag with a pre-release suffix publishes
-a pre-release.
+(`cargo deny --all-features check advisories`) and on a dependency license
+that `tools/notices/about.toml` does not accept.
+
+To release, update `version` in Cargo.toml and the CHANGELOG, merge, and
+once CI has passed on that commit push a `vX.Y.Z[-PRE]` tag for it. The tag
+runs `.github/workflows/release.yml`, which refuses a tag that does not
+match the version or a commit without a passing CI run, and publishes the
+CHANGELOG section with the binaries. A tag with a pre-release suffix
+publishes a pre-release.
 
 Upstream changes are tracked against the pinned baseline:
 
@@ -225,7 +283,13 @@ More documentation:
 
 - [Compatibility inventory](docs/COMPATIBILITY.md): every supported option and
   its exact behavior.
-- [Library API](docs/LIBRARY.md): using the `yt_dlp_rs` crate (unstable until 1.0).
+- [CLI output contract](docs/CLI_CONTRACT.md): the machine-readable output
+  programs can rely on.
+- [Supported sites](docs/SITES.md): every extractor and its tier.
+- [Library API](docs/LIBRARY.md): using the `yt_dlp_rs` crate as a Git
+  dependency.
+- [Changelog](CHANGELOG.md): what changed in each release.
+- [Upstream workflow](docs/UPSTREAM.md): how upstream changes are ported.
 - [Benchmarks](docs/BENCHMARKS.md): local comparisons with upstream and how to
   rerun them.
 - [Roadmap](docs/ROADMAP.md): architecture and upcoming work.

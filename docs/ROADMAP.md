@@ -14,7 +14,7 @@ tractable for future agents.
 
 ## Current architecture
 
-- `src/cli.rs` (the hidden `cli` module; `src/main.rs` only calls it): strict CLI subset, per-URL errors, per-video NDJSON metadata output, sequential HTML5 playlist processing.
+- `src/cli.rs` (the hidden `cli` module; `src/main.rs` only calls it): the whole CLI: upstream option parsing, config files, the per-URL queue, output and postprocessor orchestration.
 - `src/lib.rs`: ordered extractor registry and download orchestration.
 - `src/info.rs`: typed subset of upstream video info fields and video/HTML5 playlist results.
 - `src/extractor/`: independent extractors, generic fallback last.
@@ -81,16 +81,15 @@ tractable for future agents.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
 - `tools/upstream_report.py`: machine-readable input for an update agent.
-- `tools/compare_html5.py`: saved-fixture upstream/Rust metadata comparison.
+- `tools/capture_sites.py`: captures pinned upstream output on saved site
+  fixtures (`tests/fixtures/sites/`), which `tests/sites.rs` compares with the
+  port; `tools/compare_*.py` are older single-purpose comparisons.
 
-The initial implementation uses blocking reqwest with Rustls. It runs one URL at
-a time; the extractor trait is synchronous. Async/concurrent execution should be
-introduced when playlist/fragment workflows need it, with explicit cancellation
-and bounded concurrency. The initial info structure intentionally does not
-pretend to model every upstream field. `VideoFormat` models probed progressive
-sources and optional declared dimensions. Default/`best`/`worst` selection ranks
-by the smaller known dimension, with declaration-order ties; it does not reproduce
-upstream's full sorter. `ExtractResult` distinguishes a video from a fully extracted HTML5
+Transport is blocking reqwest with Rustls (wreq on BoringSSL with the
+`impersonate` feature) on threads: `-N` fragment workers, and helper threads
+that make blocked requests and reads interruptible. The extractor trait is
+synchronous. `VideoFormat` models upstream's format dict, and selection is
+upstream's FormatSorter (`-S`) and `build_format_selector`. `ExtractResult` distinguishes a video from a fully extracted HTML5
 `PlaylistInfo`; nested playlists (`PlaylistInfo::nested`, YouTube channel tabs) and
 deferred entry pages (`PlaylistInfo::pending`) are processed by the CLI's input queue;
 a `MULTI_VIDEO` marker makes a playlist upstream's `_type: multi_video`
@@ -149,8 +148,9 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    HTTP-date formats remain unsupported.
    Download byte-progress observers and cooperative cancellation are implemented,
    with polling during retry waits and cancellation before publication; the CLI
-   emits throttled byte progress on stderr. Blocking requests/reads are not
-   interruptible. Native HLS VOD master/media selection, MPEG-TS/AAC/fMP4
+   prints upstream's progress lines (stdout). With an `Interrupt` or the CLI's
+   signal handler, blocked requests and reads end within about 100 ms (Road to
+   1.0, step 3). Native HLS VOD master/media selection, MPEG-TS/AAC/fMP4
    assembly, explicit/implicit media ranges, fragment retries and cancellation are
    implemented. Identity AES-128 CBC keys, sequence/explicit IVs, rotation and
    streaming decryption are implemented with exact local media fixtures.
@@ -268,8 +268,8 @@ suspended as a `PlaylistRun` and resumed through the input queue).
    force-write and archive disabling, as are early temp-ID skips and
    unresolved playlist entries matched by their own `ie_key`/`id` (a recorded
    YouTube playlist entry is not extracted; `--break-on-existing` stops
-   fetching playlist pages). The URL-suitable extractor fallback for entries
-   without an `ie_key` and broader archive option parity remain open.
+   fetching playlist pages). Entries without an `ie_key` take the first
+   suitable extractor's key in upstream's `_ies` order (Road to 1.0, step 7).
    Audio extraction now supports bounded format mappings, quality plans and local
    FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
    cancellation and archive-after-final-publication. Video remux/recode now follows
@@ -312,6 +312,7 @@ Work in this order; each step lands with deterministic tests like any other chan
    panic and unbounded DASH planning memory (fragment and URL-byte budgets).
    A panic outside an extractor still ends the run with exit 1, like an
    upstream crash. Not fuzzed yet: `jsinterp` (no step limit, like upstream).
+   Update (2026-11-13): 19 targets, including `jsinterp`.
 2. **Live canary suite.** A scheduled, non-required workflow that extracts and
    downloads a few megabytes from the tier-1 sites (at least the Media Converter
    site list: YouTube, Instagram, TikTok, X, Facebook, Reddit, Vimeo, Twitch,
@@ -344,7 +345,7 @@ Work in this order; each step lands with deterministic tests like any other chan
    or `--sleep-*` waits end within about 100 ms; tests in
    `tests/stalled_transfers.rs`. No throughput change measured on a local 1 GiB
    transfer. Not covered: WebSocket connects, filesystem operations; Windows
-   Ctrl+C still ends the process at once.
+   Ctrl+C still ends the process at once (fixed in step 6).
 4. **CLI output contract.** A machine-readable interface rather than frozen
    human-readable lines: `--progress-template` with JSON fields
    (`%(progress)j` and friends), `--print` stage templates (`before_dl`,
@@ -363,7 +364,8 @@ Work in this order; each step lands with deterministic tests like any other chan
    progress dict keys and order now follow each upstream downloader;
    `-J` playlist entries lacked `epoch`; a `--keep-partial-on-stop` stop went
    on to the next video and lacked the message's blank line. Not covered:
-   Windows (no signals), the full `%(info)j` dict, the human output.
+   Windows (no signals; covered since step 6), the full `%(info)j` dict, the
+   human output.
    Media Converter itself is not changed yet.
 5. **Benchmarks.** A local-server harness comparing startup, extraction from
    saved fixtures, HLS/DASH throughput with `-N 1/4/8` and peak memory with
@@ -372,7 +374,8 @@ Work in this order; each step lands with deterministic tests like any other chan
    Status (2026-11-01): `tools/benchmark.py` measures both programs on local
    servers (fixture proxy, generated HLS/DASH with and without 50 ms
    per-request latency); results and their limits are in `docs/BENCHMARKS.md`.
-   On an M5 Pro the port starts and extracts fixtures 6–18× faster; with
+   On an M5 Pro the port starts and extracts fixtures 6–18× faster (19–36×
+   after the follow-ups below; docs/BENCHMARKS.md); with
    latency, `-N 4`/`-N 8` cut download time 3.5×/6× for both programs.
    Peak RSS is higher than upstream's whenever all extractor URL patterns
    are compiled (about 80 MiB), and `-N > 1` writes each fragment twice,
@@ -390,6 +393,9 @@ Work in this order; each step lands with deterministic tests like any other chan
    Dispatch then compiles only the URL patterns whose literals a URL
    contains (`UrlRegex`, generated `src/extractor/url_literals.rs`): startup
    with a YouTube URL went from about 57 ms and 58 MiB to 24 ms and 32 MiB.
+   Update (2026-11-11): `-N > 1` spools are bounded by a backpressure
+   window, so a disk-bound download spills almost nothing to files and
+   `-N 4/8` beat `-N 1` on localhost (docs/BENCHMARKS.md).
 6. **Platform parity.** Impersonation in the Windows release (or a documented
    tier-2 limitation), and test runs on real Windows hardware.
    Status (2026-11-02): the `impersonate` feature (BoringSSL through
@@ -499,8 +505,16 @@ Work in this order; each step lands with deterministic tests like any other chan
     `upstream` issue with the report when a release appears and fails once
     it is a week old without a baseline advance (docs/UPSTREAM.md). Done
     when the first release after 2026.10.26 is advanced through that loop
-    in time.
+    in time. Update (2026-11-13): still open; upstream has published no
+    release since 2026.10.26.
 
-Then a release candidate runs against the canaries for a few weeks before 1.0.
+Then a release candidate runs against the canaries for a few weeks before 1.0
+(not tagged yet). Release mechanics (2026-11-13): the release workflow
+refuses a tag that does not match Cargo.toml or whose commit has no passing
+CI run, builds Linux on Ubuntu 24.04 (glibc 2.39 is the documented minimum)
+and ships `THIRD-PARTY-NOTICES.txt` and the CHANGELOG section. The crate is
+not published on crates.io (`publish = false`; the library is a Git
+dependency), and the macOS binaries are not notarized (the README documents
+removing the quarantine attribute).
 Not required: splitting `src/cli.rs`, self-update (`-U` stays an error;
-distribution goes through package managers and Media Converter's bundle).
+install a newer GitHub release or update through Media Converter's bundle).

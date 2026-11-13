@@ -1,6 +1,7 @@
 # CLI output contract
 
-This is the machine-readable interface yt-dlp-rs keeps stable from 1.0 on.
+This is the machine-readable interface yt-dlp-rs keeps stable from 1.0 on
+(see [Versioning](#versioning) for what that promises).
 It is built only from upstream yt-dlp's own options, so a program that runs
 the CLI as a subprocess can use the same arguments and parsing with either
 yt-dlp or yt-dlp-rs. Where the two differ, the difference is listed here.
@@ -75,6 +76,7 @@ Which keys a status has depends on the downloader, as upstream:
 - FragmentFD, for HLS, DASH, ISM and F4M (also with `-N`): `downloading` has `status, downloaded_bytes, fragment_index, fragment_count, filename, tmpfilename, max_progress, progress_idx, elapsed, total_bytes_estimate, speed, eta` and then the strings. `finished` adds `max_progress, progress_idx` after `ctx_id`.
 - A merge input that already exists (reused): one `finished` with `filename, status, total_bytes` and then the strings.
 - FFmpeg (`--download-sections`, live HLS through FFmpeg, `--downloader ffmpeg`) and other external downloaders: no `downloading` statuses. After success there is one `finished` with `filename, status, elapsed, downloaded_bytes, total_bytes` (this shape has unit tests only).
+- The port's indexed `--download-sections` path for adaptive HTTPS formats (a [port extension](../README.md#extensions-in-this-fork)) reports `downloading` statuses with HttpFD's keys while it fetches the section's byte ranges. No contract test covers it, so its statuses are outside the contract; add `--downloader ffmpeg` for upstream's shape.
 
 With `-N`, fragments are fetched in parallel. `fragment_index` counts the
 fragments completed in any order, and its order relative to the byte counts
@@ -247,6 +249,25 @@ runners, except:
   for `cmd.exe`, not a POSIX shell.
 - Lines end with `\n`, not `\r\n`. Output of `--exec` commands is their
   own (`cmd`'s `echo` ends lines with `\r\n`).
+
+## Versioning
+
+From 1.0, within one major version:
+
+- No key, `status` value, `--print` stage, exit code or signal behavior
+  listed here is removed or renamed, and its meaning does not change.
+- New keys and statuses may appear. Key order is not promised; parse the
+  JSON.
+- When an upstream baseline advance changes one of these upstream, the
+  port keeps the old shape until its next major version and lists the
+  difference here. A change to `tests/fixtures/cli_contract/expected.json`
+  that removes a key or changes a value's meaning needs a major release.
+- `--version` is not covered. It prints `yt-dlp-rs X.Y.Z`, where upstream
+  prints its release date.
+
+Human-readable output, `--verbose` output and the full `%(info)j` dict are
+outside the contract (see the top of this page) and may change in any
+release.
 
 ## Migration note for Aagedal Media Converter
 
