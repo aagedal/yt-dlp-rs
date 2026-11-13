@@ -48,6 +48,12 @@ jobs:
       - run: cargo clippy --locked --all-targets --features impersonate -- -D warnings
       - run: cargo test --locked --features impersonate --test impersonate
       - run: cargo test --locked --features impersonate --lib impersonate
+      # The static C runtime (.cargo/config.toml), BoringSSL's included.
+      - if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          cargo build --locked --features impersonate
+          ! grep -aqi -e vcruntime140 -e msvcp140 target/debug/yt-dlp-rs.exe
   fuzz:
     # Short libFuzzer runs of every parser target (fuzz/), seeded from the
     # test fixtures. Longer runs: `cargo +nightly fuzz run TARGET` locally.

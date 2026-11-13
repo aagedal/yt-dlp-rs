@@ -81,6 +81,10 @@ jobs:
         with:
           key: release-${{ matrix.target }}
       - run: cargo build --locked --release --target ${{ matrix.target }} ${{ matrix.features }}
+      # The static C runtime (.cargo/config.toml): no Visual C++ Redistributable.
+      - if: runner.os == 'Windows'
+        shell: bash
+        run: "! grep -aqi -e vcruntime140 -e msvcp140 target/${{ matrix.target }}/release/yt-dlp-rs.exe"
       - uses: actions/download-artifact@v4
         with:
           name: notices
