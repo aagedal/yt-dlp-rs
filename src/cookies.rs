@@ -624,13 +624,28 @@ fn parse_record(line: &str, http_only: bool) -> std::result::Result<(Cookie<'sta
 /// `DefaultCookiePolicy.set_ok_domain` (without `strict_domain`): a
 /// `Domain` attribute needs an embedded dot unless the effective request
 /// host is local (no dot, or `.local`), so a site cannot set a cookie for a
-/// whole top-level domain. Rejected silently, as upstream does.
+/// whole top-level domain, and (a Netscape cookie) must domain-match the
+/// effective request host, so a site cannot set one for another site's
+/// domain. Rejected silently, as upstream does.
 fn domain_ok(domain: Option<&str>, url: &Url) -> bool {
     let Some(domain) = domain else {
         return true;
     };
+    let domain = domain.to_ascii_lowercase();
     let host = url.host_str().unwrap_or_default().to_ascii_lowercase();
-    domain.trim_start_matches('.').contains('.') || !host.contains('.') || host.ends_with(".local")
+    // `eff_request_host`.
+    let erhn = if host.contains('.') {
+        host
+    } else {
+        format!("{host}.local")
+    };
+    let undotted = domain.strip_prefix('.').unwrap_or(&domain);
+    if !undotted.contains('.') && !erhn.ends_with(".local") {
+        return false;
+    }
+    erhn.ends_with(&domain)
+        || erhn.ends_with(&format!("{undotted}.local"))
+        || (!erhn.starts_with('.') && format!(".{erhn}").ends_with(&domain))
 }
 
 /// The request-scope cookies `scoped` sends to `url`.
@@ -1144,8 +1159,12 @@ mod tests {
                 "tld=1; Domain=com",
                 "dot=1; Domain=.com",
                 "own=1; Domain=evil.com",
+                // Another site's domain (Instagram sends Threads' cookies).
+                "other=1; Domain=.threads.net",
+                "bare=1; Domain=bank.com",
             ],
         );
+        assert_eq!(header(&jar, "https://www.threads.net/"), None);
         assert_eq!(header(&jar, "https://bank.com/"), None);
         assert_eq!(
             header(&jar, "https://www.evil.com/").as_deref(),
