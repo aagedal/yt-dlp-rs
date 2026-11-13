@@ -1,0 +1,17 @@
+yt-dlp-rs third-party notices
+
+yt-dlp-rs is released under the Unlicense (LICENSE). The binary includes the
+following open source software, under the licenses reproduced below.
+{{#each licenses}}
+
+================================================================================
+{{{name}}}
+
+Used by:
+{{#each used_by}}
+  {{crate.name}} {{crate.version}}{{#if crate.repository}} ({{crate.repository}}){{/if}}
+{{/each}}
+--------------------------------------------------------------------------------
+
+{{{text}}}
+{{/each}}

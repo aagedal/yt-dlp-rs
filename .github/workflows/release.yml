@@ -1,23 +1,63 @@
 name: Release
 # A `v*` tag builds release binaries and publishes a GitHub release; tags
-# with a pre-release suffix (`v0.3.0-beta.1`) publish a pre-release.
+# with a pre-release suffix (`v0.3.0-beta.1`) publish a pre-release. Nothing
+# is built unless the tag matches Cargo.toml's version and CI passed on the
+# tagged commit (push the commit, wait for CI, then tag it).
 on:
   push:
     tags: ['v*']
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag matches the crate version
+        shell: bash
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml | head -n 1)
+          if [[ "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match Cargo.toml version $version"
+            exit 1
+          fi
+      - name: CI passed on the tagged commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          passed=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml \
+            --commit "$GITHUB_SHA" --status success --json databaseId --jq length)
+          if [[ "$passed" == 0 ]]; then
+            echo "::error::No successful CI run for $GITHUB_SHA; wait for CI on the commit, then re-run this job"
+            exit 1
+          fi
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-about
+      - run: tools/notices/generate.sh THIRD-PARTY-NOTICES.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: notices
+          path: THIRD-PARTY-NOTICES.txt
+
   build:
+    needs: verify
     strategy:
       fail-fast: false
       matrix:
         # Every binary includes browser impersonation (wreq on BoringSSL),
         # which sites such as Dailymotion's CDN require.
         include:
+          # Ubuntu 24.04 runners for both Linux targets: the binaries need its
+          # glibc 2.39, the documented minimum (README, Install). A newer
+          # runner could raise that.
           - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-24.04
             features: --features impersonate
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-24.04-arm
@@ -41,12 +81,15 @@ jobs:
         with:
           key: release-${{ matrix.target }}
       - run: cargo build --locked --release --target ${{ matrix.target }} ${{ matrix.features }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: notices
       - name: Package
         shell: bash
         run: |
           name="yt-dlp-rs-${GITHUB_REF_NAME}-${{ matrix.target }}"
           mkdir "$name"
-          cp README.md LICENSE "$name/"
+          cp README.md LICENSE THIRD-PARTY-NOTICES.txt "$name/"
           if [[ "${{ matrix.target }}" == *windows* ]]; then
             cp "target/${{ matrix.target }}/release/yt-dlp-rs.exe" "$name/"
             7z a "$name.zip" "$name" >/dev/null
@@ -65,14 +108,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
       - name: Checksums
         run: cd dist && sha256sum * > SHA256SUMS
+      # The version's CHANGELOG.md section, above GitHub's generated notes.
+      - name: Release notes
+        run: |
+          awk -v v="${GITHUB_REF_NAME#v}" '
+            /^## / { on = index($0, "## [" v "]") == 1; next }
+            on' CHANGELOG.md > notes.md
       - uses: softprops/action-gh-release@v2
         with:
           files: dist/*
+          body_path: notes.md
           prerelease: ${{ contains(github.ref_name, '-') }}
           generate_release_notes: true

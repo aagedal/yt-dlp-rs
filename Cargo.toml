@@ -4,6 +4,11 @@ version = "0.10.0-beta.1"
 edition = "2024"
 license = "Unlicense"
 description = "An incremental, native Rust adaptation of yt-dlp"
+repository = "https://github.com/aagedal/yt-dlp-rs"
+readme = "README.md"
+# Not on crates.io: releases are GitHub binaries, and the library is used as a
+# git dependency (docs/LIBRARY.md).
+publish = false
 
 [dependencies]
 aes = "0.9"

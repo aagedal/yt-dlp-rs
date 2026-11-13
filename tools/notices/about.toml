@@ -1,0 +1,34 @@
+# cargo-about configuration for THIRD-PARTY-NOTICES.txt, which every release
+# archive ships (.github/workflows/release.yml). Build-only and dev-only
+# dependencies are not in the binary and are left out.
+accepted = [
+    "0BSD",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "CDLA-Permissive-2.0",
+    "ISC",
+    "MIT",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+
+# btls-sys vendors and statically links BoringSSL (Apache-2.0), whose license
+# file is not at the crate root.
+[btls-sys.clarify]
+license = "MIT AND Apache-2.0"
+
+[[btls-sys.clarify.files]]
+path = "LICENSE-MIT"
+license = "MIT"
+checksum = "2f55c7cce4da9f8334dce14d53e35410f67973510bc9793ac2dafa5e8cddd3c3"
+
+[[btls-sys.clarify.files]]
+path = "deps/boringssl/LICENSE"
+license = "Apache-2.0"
+checksum = "827c8d8fc207c2392794eef9e00fe246f9f61fdcc132556c275be3dd8c3cd97f"

@@ -4730,7 +4730,9 @@ impl YoutubeDl {
         subtitle_convert::convert(self, source.as_ref(), source_ext, options, &mut callback)
     }
 
-    /// Insert a site extractor before the generic fallback.
+    /// Insert a site extractor before the generic fallback. Hidden: it takes
+    /// `__private::Extractor`, which is not part of the stable API.
+    #[doc(hidden)]
     pub fn register_extractor(&mut self, extractor: Box<dyn Extractor>) {
         self.extractors.insert(0, extractor);
     }
