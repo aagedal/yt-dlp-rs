@@ -2756,7 +2756,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(path) = ffmpeg {
         downloader = downloader.with_ffmpeg(path);
     }
-    let ffprobe = args.ffprobe_location.or(ffprobe);
+    // Upstream's `probe_available`: a missing ffprobe beside ffmpeg is no
+    // ffprobe (audio extraction then reads `ffmpeg -i`).
+    let ffprobe = args
+        .ffprobe_location
+        .or(ffprobe.filter(|path| path.is_file()));
     if args.verbose {
         print_debug_header(
             QUIET.load(Ordering::Relaxed),
