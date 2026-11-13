@@ -15,7 +15,7 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Tag matches the crate version
         shell: bash
         run: |
@@ -40,7 +40,7 @@ jobs:
         with:
           tool: cargo-about
       - run: tools/notices/generate.sh THIRD-PARTY-NOTICES.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: notices
           path: THIRD-PARTY-NOTICES.txt
@@ -73,7 +73,7 @@ jobs:
             features: --features impersonate
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
@@ -81,7 +81,11 @@ jobs:
         with:
           key: release-${{ matrix.target }}
       - run: cargo build --locked --release --target ${{ matrix.target }} ${{ matrix.features }}
-      - uses: actions/download-artifact@v4
+      # The static C runtime (.cargo/config.toml): no Visual C++ Redistributable.
+      - if: runner.os == 'Windows'
+        shell: bash
+        run: "! grep -aqi -e vcruntime140 -e msvcp140 target/${{ matrix.target }}/release/yt-dlp-rs.exe"
+      - uses: actions/download-artifact@v8
         with:
           name: notices
       - name: Package
@@ -99,7 +103,7 @@ jobs:
             tar -czf "$name.tar.gz" "$name"
             echo "ASSET=$name.tar.gz" >> "$GITHUB_ENV"
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.target }}
           path: ${{ env.ASSET }}
@@ -108,8 +112,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
@@ -121,7 +125,7 @@ jobs:
           awk -v v="${GITHUB_REF_NAME#v}" '
             /^## / { on = index($0, "## [" v "]") == 1; next }
             on' CHANGELOG.md > notes.md
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: dist/*
           body_path: notes.md

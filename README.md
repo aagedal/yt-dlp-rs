@@ -119,14 +119,19 @@ These options are not in upstream yt-dlp:
 - **`--growing-file`** records a live stream into one fragmented QuickTime
   `.mov` at its final name, instead of `.part` files and a merge at the end.
   Editors can import the file while it is still being written. FFmpeg adds a
-  time-of-day timecode track: the stream's start time with
-  `--live-from-start`, when known. The progress line also shows how much has
+  time-of-day timecode track: with `--live-from-start`, where the download
+  begins (the stream's start when known, or 120 hours back on YouTube). The progress line also shows how much has
   been recorded (`, recorded HH:MM:SS`, or `progress.recorded_seconds` in
   `--progress-template`). On macOS the file carries Blackmagic's
   `com.blackmagicdesign.metadata:recording` attribute while it grows, which
   DaVinci Resolve reads at import to treat it as a recording clip. The
   attribute is removed when the recording ends, including on SIGINT or SIGTERM
-  (which finish the file), but not if the process is killed. H.264/AAC formats
+  (which finish the file; a second signal waits for that), but not if the
+  process is killed. `--embed-metadata` tags are written while recording, so
+  the file is not replaced afterwards (DaVinci Resolve mistimes a timeline
+  clip whose growing file is swapped for a rewritten one). Other
+  postprocessors work on a link of the recording, which stays at its name
+  until their result (a regular, unfragmented file) replaces it. H.264/AAC formats
   are preferred after any `-S` fields. MOV cannot hold AV1, VP9, Opus or FLAC
   (FFmpeg refuses them: "av1 only supported in MP4"), so when those are
   selected the recording is a fragmented `.mp4` instead, which is also the

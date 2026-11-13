@@ -512,8 +512,9 @@ fn download_with(
                     &mut reporter,
                 )?;
                 if let Some(modified) = fetched {
-                    staged.append()?;
-                    // HttpFD's `finished` status for the fragment.
+                    // HttpFD's `finished` status for the fragment, before
+                    // FragmentFD appends it: a stop seen here leaves the part
+                    // file and its state as they were.
                     reporter.fragment = Some(crate::FragmentBytes {
                         index: index as u32,
                         downloaded: stored - prefix,
@@ -524,47 +525,37 @@ fn download_with(
                     reporter.report(DownloadPhase::Downloading, stored)?;
                     filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
                     if keep.is_some() {
-                        let mut file = fs::File::open(&output_path)?;
-                        file.seek(SeekFrom::Start(prefix))?;
-                        keep_fragment(index, &mut file.take(stored - prefix))?;
+                        keep_fragment(index, &mut staged.spool.reader()?)?;
                     }
+                    // The assemblies that rewrite a fragment do it before it
+                    // is appended, so the part file only ever holds whole
+                    // fragments as `FILE.ytdl` counts them.
+                    let ism = matches!(assembly, Assembly::Ism(_)) && !track_written;
+                    let f4m = matches!(assembly, Assembly::F4m(_));
+                    if !(ism || f4m || mhtml.is_some()) {
+                        staged.append()?;
+                        appended(index)?;
+                        continue;
+                    }
+                    let mut bytes = Vec::new();
+                    staged.spool.reader()?.read_to_end(&mut bytes)?;
                     if let Assembly::Ism(params) = assembly
-                        && !track_written
+                        && ism
                     {
-                        let mut raw = Vec::new();
-                        let mut file = fs::File::open(&output_path)?;
-                        file.seek(SeekFrom::Start(prefix))?;
-                        file.take(stored - prefix).read_to_end(&mut raw)?;
-                        let id = crate::ism_fd::track_id(&raw)?;
+                        let id = crate::ism_fd::track_id(&bytes)?;
                         let now = std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .map_or(0, |elapsed| elapsed.as_secs());
-                        let header = crate::ism_fd::piff_header(params, id, now)?;
-                        output.set_len(prefix)?;
-                        output.seek(SeekFrom::Start(prefix))?;
-                        output.write_all(&header)?;
-                        output.write_all(&raw)?;
-                        stored = prefix + (header.len() + raw.len()) as u64;
-                        track_written = true;
+                        let mut header = crate::ism_fd::piff_header(params, id, now)?;
+                        header.extend_from_slice(&bytes);
+                        bytes = header;
                     }
                     // F4mFD appends only the fragment's `mdat` box data.
-                    if matches!(assembly, Assembly::F4m(_)) {
-                        let mut raw = Vec::new();
-                        let mut file = fs::File::open(&output_path)?;
-                        file.seek(SeekFrom::Start(prefix))?;
-                        file.take(stored - prefix).read_to_end(&mut raw)?;
-                        let payload = crate::f4m_fd::mdat(&raw)?;
-                        output.set_len(prefix)?;
-                        output.seek(SeekFrom::Start(prefix))?;
-                        output.write_all(payload)?;
-                        stored = prefix + payload.len() as u64;
+                    if f4m {
+                        bytes = crate::f4m_fd::mdat(&bytes)?.to_vec();
                     }
                     // MhtmlFD wraps each fragment in an image part.
                     if let Some((boundary, _)) = &mhtml {
-                        let mut raw = Vec::new();
-                        let mut file = fs::File::open(&output_path)?;
-                        file.seek(SeekFrom::Start(prefix))?;
-                        file.take(stored - prefix).read_to_end(&mut raw)?;
                         let duration = fragment
                             .duration
                             .ok_or_else(|| Error::Reported("KeyError: 'duration'".into()))?;
@@ -574,13 +565,13 @@ fn download_with(
                             boundary,
                             fragment.url.as_str(),
                             duration,
-                            &raw,
+                            &bytes,
                         ));
-                        output.set_len(prefix)?;
-                        output.seek(SeekFrom::Start(prefix))?;
-                        output.write_all(&part)?;
-                        stored = prefix + part.len() as u64;
+                        bytes = part;
                     }
+                    append_whole(&mut *staged.output, |output| output.write_all(&bytes))?;
+                    stored = prefix + bytes.len() as u64;
+                    track_written |= ism;
                     appended(index)?;
                 }
             }
@@ -600,6 +591,11 @@ fn download_with(
     })();
     if let Err(error) = assembled {
         let length = committed.get().unwrap_or(0);
+        // Anything after the last whole fragment (one appended before its
+        // state was saved) would be appended again by `--continue`.
+        if let Some((file, _)) = &mut named {
+            let _ = file.set_len(length);
+        }
         let error = crate::download::stop_publish(error, length, destination, || {
             let output: &mut fs::File = match (&mut private, &mut named) {
                 (Some(temporary), _) => temporary.as_file_mut(),

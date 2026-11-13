@@ -76,3 +76,30 @@ fn body_read_failures_use_upstream_transport_error_text() {
         assert!(!directory.path().join("o.mp4").exists());
     }
 }
+
+/// A chunked resume the server answers with the whole file (`200`, no
+/// range) restarts at byte 0, and a read failure counts from there.
+#[test]
+fn a_chunked_resume_without_a_range_counts_from_the_restart() {
+    let port = serve();
+    let directory = tempfile::tempdir().unwrap();
+    std::fs::write(directory.path().join("o.mp4.part"), [0; 50]).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ignore-config", "--no-progress", "--retries", "0"])
+        .args(["--http-chunk-size", "30", "--continue", "-o", "o.mp4"])
+        .arg(format!("http://127.0.0.1:{port}/short.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let (stdout, stderr) = (
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+    );
+    assert_eq!(output.status.code(), Some(1), "{stderr}");
+    assert!(stdout.contains("[download] Unable to resume\n"), "{stdout}");
+    assert!(!stderr.contains("panicked"), "{stderr}");
+    assert!(
+        stderr.contains("7 bytes read, 93 more expected"),
+        "{stderr}"
+    );
+}

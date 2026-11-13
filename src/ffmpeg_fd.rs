@@ -194,7 +194,7 @@ fn arguments(
     info: &VideoInfo,
     local: Option<&[LocalInput]>,
     timecode: Option<&str>,
-    growing: Option<&str>,
+    growing: Option<&Growing>,
     temporary: &Path,
     piped: bool,
 ) -> Result<Vec<OsString>> {
@@ -275,11 +275,12 @@ fn arguments(
             crate::download::TEST_FILE_SIZE.to_string().into(),
         ]);
     }
-    if let Some(timecode) = growing {
+    if let Some(growing) = growing {
         args.extend(crate::growing::output_args(
-            timecode,
+            &growing.timecode,
             crate::growing::ext(info),
         ));
+        args.extend(growing.metadata.iter().map(OsString::from));
     } else {
         if let Some(timecode) = timecode {
             args.extend(["-timecode".into(), timecode.into()]);
@@ -329,6 +330,19 @@ pub(crate) fn download(
     )
 }
 
+/// Python's `Popen.returncode`: the exit code, or minus the signal that
+/// ended the process.
+fn returncode(status: std::process::ExitStatus) -> i32 {
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::ExitStatusExt;
+        if let Some(signal) = status.signal() {
+            return -signal;
+        }
+    }
+    status.code().unwrap_or(-1)
+}
+
 /// A growing-file download (`--growing-file`, port extension).
 pub(crate) struct Growing {
     /// The `-timecode` of the recording's start.
@@ -336,6 +350,9 @@ pub(crate) struct Growing {
     /// The inputs are named pipes the native downloader feeds (`local`):
     /// FFmpeg finishes at their end instead of being asked to quit.
     pub pipes: bool,
+    /// `--embed-metadata`'s `-metadata` options, written by the recording
+    /// itself so the file is never replaced ([`crate::growing::metadata`]).
+    pub metadata: Vec<String>,
 }
 
 /// FFmpegFD writing a live stream into a growing QuickTime file at
@@ -473,7 +490,7 @@ fn run(
         info,
         local,
         timecode.as_deref(),
-        growing.map(|growing| growing.timecode.as_str()),
+        growing,
         &temporary,
         piped,
     )?;
@@ -528,7 +545,7 @@ fn run(
     // Upstream `real_download`: interrupting a live download completes it
     // (FFmpegSinkFD always handles the interrupt its connection raises).
     let interrupt = if growing.is_some() {
-        Some(crate::interrupt::Guard::install_with_terminate())
+        Some(crate::interrupt::Guard::install_recording())
     } else {
         (crate::is_live(info) || piped).then(crate::interrupt::Guard::install)
     };
@@ -605,6 +622,10 @@ fn run(
         && interrupt
             .as_ref()
             .is_some_and(crate::interrupt::Guard::interrupted);
+    // FFmpeg exits 255 after a signal of its own: a recording stopped by a
+    // signal to the group that this process ignores (a background job's
+    // SIGINT) has ended like a stop too.
+    interrupted |= growing.is_some() && status.code() == Some(255);
     drop(interrupt);
     // The recording has ended either way.
     drop(tag);
@@ -659,7 +680,7 @@ fn run(
         let _ = callback(progress(DownloadPhase::Failed, 0));
         return Err(Error::Reported(format!(
             "ffmpeg exited with code {}",
-            status.code().unwrap_or(-1)
+            returncode(status)
         )));
     }
     let size = std::fs::metadata(&temporary)?.len();

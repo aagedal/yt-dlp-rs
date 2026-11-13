@@ -7,6 +7,39 @@ page.
 
 Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 
+## [Unreleased]
+
+### Fixed since 1.0.0-rc.1
+
+- `--growing-file` with `--embed-metadata`: the tags are written by the
+  recording itself, so the file is no longer replaced by a rewritten,
+  unfragmented one when it ends (DaVinci Resolve then showed a timeline
+  clip with the wrong duration or timecode). Other postprocessors leave the
+  recording at its name while they run, instead of moving it into a hidden
+  workspace; their result then replaces it.
+- A second signal while FFmpeg finishes a growing recording (a stop, then a
+  cancel) waits for it, so the file is finished and its recording mark
+  removed, instead of exiting at once. FFmpeg exiting 255 (stopped by a
+  group signal this process ignored, as in a background job) ends the
+  recording as a stop instead of an error.
+- `--live-from-start --growing-file` on a YouTube stream older than 120
+  hours: the timecode is where the download begins, not the stream's
+  start. FFmpeg ended by a signal reports Python's negative return code.
+- A fragment download stopped or failing right after a fragment was
+  appended (a Ctrl+C at that moment among them) no longer lets `--continue`
+  append that fragment a second time.
+- `-x` with `--ffmpeg-location DIR` where `DIR` has no ffprobe uses
+  `ffmpeg -i` like upstream instead of failing with a filesystem error.
+- A chunked resume (`--http-chunk-size`, YouTube's default) that the server
+  answers with the whole file reports a later read failure correctly
+  (debug builds panicked).
+- The Windows binary links the C runtime statically, so it starts without
+  the Visual C++ Redistributable.
+- Bandcamp's album artist is HTML-unescaped like upstream.
+- Response cookies set for another site's domain (Instagram sends
+  Threads' cookies) are dropped silently like upstream, without the
+  `Some cookies were ignored` warning.
+
 ## [1.0.0-rc.1]
 
 The release candidate for 1.0, the first stable release. It runs against

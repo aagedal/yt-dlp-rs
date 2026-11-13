@@ -623,6 +623,34 @@ fn without_ffprobe_the_codec_comes_from_ffmpeg_and_without_either_fails_like_ups
     }
 }
 
+/// `--ffmpeg-location DIR` without `DIR/ffprobe` (a bundled ffmpeg alone):
+/// upstream's `probe_available` is false, so `-x` reads `ffmpeg -i`.
+#[test]
+fn the_cli_extracts_audio_with_an_ffmpeg_location_that_has_no_ffprobe() {
+    let server = Server::new();
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools
+        .path()
+        .join(format!("ffmpeg{}", std::env::consts::EXE_SUFFIX));
+    std::fs::copy(helper(), &ffmpeg).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(directory.path())
+        .args(["--ignore-config", "--no-progress", "--ffmpeg-location"])
+        .arg(tools.path())
+        .args(["-x", "--audio-format", "mp3", "-o", "out.%(ext)s"])
+        .arg(server.url("source.mp4"))
+        .output()
+        .unwrap();
+    success(&output);
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp3")).unwrap(),
+        b"converted audio"
+    );
+    let log = std::fs::read_to_string(ffmpeg.with_extension("log")).unwrap();
+    assert!(log.contains("\n-i\n"), "{log}");
+}
+
 #[test]
 fn selected_pair_merges_then_probes_and_converts_with_original_retention() {
     let server = Server::new();

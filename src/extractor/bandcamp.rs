@@ -240,7 +240,8 @@ impl Extractor for Bandcamp {
             .or_else(|| text_of(tralbum.get("artist")));
         let album_artist = ALBUM_ARTIST
             .captures(&webpage)
-            .map(|found| found[1].to_owned());
+            // `_html_search_regex`.
+            .map(|found| crate::html::clean_html(&found[1]));
         if album_artist.is_none() {
             super::search_warning(NAME, "album artist");
         }

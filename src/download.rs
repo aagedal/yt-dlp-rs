@@ -1367,6 +1367,9 @@ fn chunked_attempt(
         let mut throttle = Throttle::new(resource.throttled_rate);
         let mut blocks = Blocks::new();
         let url = response.url().clone();
+        // Where this response's body starts (0 when the server ignored the
+        // range).
+        let first = *actual;
         loop {
             let limit = data_len.map(|length| length.saturating_sub(*actual));
             if limit == Some(0) {
@@ -1376,8 +1379,8 @@ fn chunked_attempt(
                 Ok([]) => break,
                 Ok(block) => block,
                 Err(error) => {
-                    let length = data_len.map(|length| length.saturating_sub(start));
-                    return Err(AttemptFailure::read(error, &url, *actual - start, length));
+                    let length = data_len.map(|length| length.saturating_sub(first));
+                    return Err(AttemptFailure::read(error, &url, *actual - first, length));
                 }
             };
             let count = block.len();

@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       # Commits and trees only: the report needs history and file names, not
@@ -40,7 +40,7 @@ jobs:
           python tools/upstream_watch.py .upstream/yt-dlp --report upstream-report.json \
             --issue upstream-issue.json --run-url "$RUN_URL"
           echo "code=$?" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: upstream-report

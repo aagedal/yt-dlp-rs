@@ -375,6 +375,13 @@ fn a_growing_file_is_fed_through_named_pipes_without_a_merge() {
     let tools = tempfile::tempdir().unwrap();
     let ffmpeg = growing_ffmpeg(tools.path());
     let work = tempfile::tempdir().unwrap();
+    let clock = || {
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+    };
+    let before = clock();
     let output = command(&proxy, work.path())
         .args([
             "-f",
@@ -388,6 +395,7 @@ fn a_growing_file_is_fed_through_named_pipes_without_a_merge() {
         .arg("https://www.youtube.com/watch?v=LiveStart01")
         .output()
         .unwrap();
+    let after = clock();
     assert!(output.status.success(), "{}", text(&output));
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(
@@ -425,13 +433,25 @@ fn a_growing_file_is_fed_through_named_pipes_without_a_merge() {
         assert!(input.contains("/.yt-dlp-rs-growing-"), "{calls}");
     }
     let tail = args[args.iter().position(|arg| *arg == "-c").unwrap()..].join(" ");
-    // The stream's start (2024-01-01T00:00:00-08:00) as the time of day.
+    let timecode =
+        &tail["-c copy -map 0:0 -map 1:0 -nostats -progress pipe:1 -timecode ".len()..][..11];
     assert_eq!(
         tail,
-        "-c copy -map 0:0 -map 1:0 -nostats -progress pipe:1 -timecode 08:00:00:00 \
-         -movflags +frag_keyframe -frag_duration 1000000 -flush_packets 1 -f mov \
-         file:LiveStart01.mov"
+        format!(
+            "-c copy -map 0:0 -map 1:0 -nostats -progress pipe:1 -timecode {timecode} \
+             -movflags +frag_keyframe -frag_duration 1000000 -flush_packets 1 -f mov \
+             file:LiveStart01.mov"
+        )
     );
+    // The stream started 2024-01-01, before YouTube's last 120 hours: the
+    // recording begins 120 hours (five days) back, at today's time of day.
+    let fields: Vec<u64> = timecode
+        .split(':')
+        .map(|field| field.parse().unwrap())
+        .collect();
+    let seconds = fields[0] * 3600 + fields[1] * 60 + fields[2];
+    let offset = (seconds + 86_400 - before % 86_400) % 86_400;
+    assert!(offset <= after - before + 1, "{timecode}");
 }
 
 // Unix only: named pipes (see `growing_ffmpeg`).

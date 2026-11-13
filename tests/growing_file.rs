@@ -16,7 +16,11 @@ const TAG: &str = "com.blackmagicdesign.metadata:recording";
 /// A fake FFmpeg: answers `-version`, appends its arguments to `calls.txt`
 /// (each call ended by `--`), saves the output's recording attribute (if
 /// any) to `tag.txt`, writes `partial` with one `-progress` report, then
-/// waits for `q` on stdin and writes `finished` with a final report.
+/// waits for `q` on stdin (then a second if `slow` exists) and writes
+/// `finished` with a final report; if `exit255` exists it writes `finished`
+/// and exits 255 at once, as FFmpeg does after a signal of its own. A
+/// postprocessor's call (no `-progress`) lists the directory named in
+/// `work.txt` in `during.txt` and writes `processed`.
 fn fake_ffmpeg(directory: &Path) -> String {
     let path = support::fake_tool(
         directory,
@@ -28,10 +32,13 @@ fn fake_ffmpeg(directory: &Path) -> String {
              {{ for a in \"$@\"; do printf '%s\\n' \"$a\"; done; echo --; }} >> \"$dir/calls.txt\"\n\
              for out; do :; done\n\
              out=${{out#file:}}\n\
+             case \" $* \" in *\" -progress \"*) ;; *) ls \"$(cat \"$dir/work.txt\")\" > \"$dir/during.txt\"; printf processed > \"$out\"; exit 0;; esac\n\
              xattr -p {TAG} \"$out\" > \"$dir/tag.txt\" 2>/dev/null\n\
              printf partial > \"$out\"\n\
              printf 'out_time_us=2000000\\ntotal_size=7\\nprogress=continue\\n'\n\
+             [ -f \"$dir/exit255\" ] && {{ sleep 0.3; printf finished > \"$out\"; exit 255; }}\n\
              while :; do c=$(dd bs=1 count=1 2>/dev/null); [ \"$c\" = q ] && break; [ -z \"$c\" ] && exit 9; done\n\
+             [ -f \"$dir/slow\" ] && sleep 1\n\
              printf finished > \"$out\"\n\
              printf 'out_time_us=3500000\\ntotal_size=8\\nprogress=end\\n'\n"
         ),
@@ -142,6 +149,172 @@ fn a_live_stream_is_recorded_into_a_growing_quicktime_file() {
         assert!(written.starts_with("{\"r\":1, \"uuid\":\""), "{written}");
         assert_eq!(tag(&file), None);
     }
+}
+
+/// Processors that rewrite the recording (here `--embed-metadata` after
+/// `--parse-metadata` changes the tags) read a link of the finished file,
+/// so the file an editor imported stays at its name until the result
+/// replaces it.
+#[test]
+fn a_processed_recording_stays_at_its_name_until_replaced() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    live_info(work.path());
+    std::fs::write(
+        tools.path().join("work.txt"),
+        work.path().to_string_lossy().as_bytes(),
+    )
+    .unwrap();
+    let child = command(work.path())
+        .args(["--ffmpeg-location", &ffmpeg, "--embed-metadata"])
+        .args(["--parse-metadata", "post_process:title:(?P<meta_title>.+)"])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let file = work.path().join("o.mov");
+    let deadline = Instant::now() + Duration::from_secs(20);
+    while std::fs::read(&file).ok().as_deref() != Some(b"partial") {
+        assert!(Instant::now() < deadline, "FFmpeg never started");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    support::interrupt(&child);
+    let output = child.wait_with_output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let during = std::fs::read_to_string(tools.path().join("during.txt")).unwrap();
+    assert!(during.lines().any(|name| name == "o.mov"), "{during}");
+    assert_eq!(std::fs::read(&file).unwrap(), b"processed");
+    #[cfg(target_os = "macos")]
+    assert_eq!(tag(&file), None);
+    let names: Vec<_> = std::fs::read_dir(work.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+        .collect();
+    assert!(
+        names.iter().all(|name| !name.starts_with(".yt-dlp-rs-")),
+        "{names:?}"
+    );
+}
+
+/// A second signal while FFmpeg finishes the recording (a stop, then a
+/// cancel) waits for it, so the file is finished and its mark removed.
+#[test]
+fn a_second_signal_waits_for_the_recording_to_finish() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    std::fs::write(tools.path().join("slow"), "").unwrap();
+    let work = tempfile::tempdir().unwrap();
+    live_info(work.path());
+    let child = command(work.path())
+        .args([
+            "--ffmpeg-location",
+            &ffmpeg,
+            "--print",
+            "after_move:filepath",
+        ])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let file = work.path().join("o.mov");
+    let deadline = Instant::now() + Duration::from_secs(20);
+    while std::fs::read(&file).ok().as_deref() != Some(b"partial") {
+        assert!(Instant::now() < deadline, "FFmpeg never started");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    support::interrupt(&child);
+    std::thread::sleep(Duration::from_millis(200));
+    support::stop(&child);
+    let output = child.wait_with_output().unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert!(
+        String::from_utf8_lossy(&output.stdout).ends_with("o.mov\n"),
+        "{stderr}"
+    );
+    assert_eq!(std::fs::read(&file).unwrap(), b"finished");
+    #[cfg(target_os = "macos")]
+    assert_eq!(tag(&file), None);
+}
+
+/// `--embed-metadata` tags are written by the recording itself: the file
+/// an editor tracks as a recording is never replaced by a rewritten one.
+#[test]
+fn embedded_metadata_is_written_by_the_recording() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    let work = tempfile::tempdir().unwrap();
+    live_info_with(work.path(), serde_json::json!({"uploader": "Channel"}));
+    let child = command(work.path())
+        .args(["--ffmpeg-location", &ffmpeg, "--embed-metadata"])
+        .args(["--print", "after_move:filepath"])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let file = work.path().join("o.mov");
+    let deadline = Instant::now() + Duration::from_secs(20);
+    while std::fs::read(&file).ok().as_deref() != Some(b"partial") {
+        assert!(Instant::now() < deadline, "FFmpeg never started");
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    support::interrupt(&child);
+    let output = child.wait_with_output().unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert!(
+        String::from_utf8_lossy(&output.stdout).ends_with("o.mov\n"),
+        "{stderr}"
+    );
+    // One FFmpeg call, the recording, with the tags before its output.
+    let calls = std::fs::read_to_string(tools.path().join("calls.txt")).unwrap();
+    assert_eq!(calls.matches("\n--\n").count(), 1, "{calls}");
+    assert!(
+        calls.contains("-f\nmov\n-metadata\ntitle=Live ")
+            && calls.contains("-metadata\nartist=Channel\n")
+            && calls.ends_with("file:o.mov\n--\n"),
+        "{calls}"
+    );
+    assert_eq!(std::fs::read(&file).unwrap(), b"finished");
+    #[cfg(target_os = "macos")]
+    assert_eq!(tag(&file), None);
+}
+
+/// FFmpeg ending at a signal this process did not see (a background job's
+/// ignored SIGINT sent to the group) exits 255: the recording was stopped,
+/// not failed.
+#[test]
+fn ffmpeg_stopped_by_a_signal_of_its_own_ends_the_recording() {
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    std::fs::write(tools.path().join("exit255"), "").unwrap();
+    let work = tempfile::tempdir().unwrap();
+    live_info(work.path());
+    let output = command(work.path())
+        .args([
+            "--ffmpeg-location",
+            &ffmpeg,
+            "--print",
+            "after_move:filepath",
+        ])
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "{stdout}{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(stdout.ends_with("o.mov\n"), "{stdout}");
+    assert_eq!(
+        std::fs::read(work.path().join("o.mov")).unwrap(),
+        b"finished"
+    );
 }
 
 #[test]
