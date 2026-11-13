@@ -2383,7 +2383,7 @@ dependencies = [
 
 [[package]]
 name = "yt-dlp-rs"
-version = "1.0.0-rc.1"
+version = "1.0.0-rc.2"
 dependencies = [
  "aes 0.9.3",
  "base64 0.22.1",
