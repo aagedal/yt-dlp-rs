@@ -7,7 +7,18 @@ page.
 
 Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 
-## [Unreleased]
+## [1.0.0-rc.2]
+
+The second release candidate for 1.0, with the fixes from checking rc.1:
+review of the last fixes before it, a live run of the release binaries
+against upstream, and Aagedal Media Converter's growing-file recordings in
+DaVinci Resolve.
+
+### Release
+
+- The Windows binary no longer needs the Visual C++ Redistributable.
+- CI and the release workflow use the Node 24 versions of their GitHub
+  Actions.
 
 ### Fixed since 1.0.0-rc.1
 
@@ -33,8 +44,6 @@ Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 - A chunked resume (`--http-chunk-size`, YouTube's default) that the server
   answers with the whole file reports a later read failure correctly
   (debug builds panicked).
-- The Windows binary links the C runtime statically, so it starts without
-  the Visual C++ Redistributable.
 - Bandcamp's album artist is HTML-unescaped like upstream.
 - Response cookies set for another site's domain (Instagram sends
   Threads' cookies) are dropped silently like upstream, without the
