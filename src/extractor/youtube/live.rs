@@ -265,7 +265,9 @@ pub(crate) struct LiveFeed {
 
 /// The wall time a from-start download of a live format begins at: the
 /// stream's start, or the start of the last 120 hours when YouTube no
-/// longer has the beginning (`lack_early_segments`).
+/// longer has the beginning (`lack_early_segments`). For growing files
+/// fed through named pipes (Unix only).
+#[cfg(unix)]
 pub(crate) fn first_fragment_time(extra: &serde_json::Map<String, Value>) -> Option<i64> {
     let start = extra.get(LIVE)?.get("live_start_time")?.as_i64()?;
     Some(start.max((now() - MAX_DURATION) as i64))
@@ -531,7 +533,7 @@ impl LiveFragments {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
 
