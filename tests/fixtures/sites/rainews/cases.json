@@ -13,5 +13,13 @@
    "\"%(id)s|%(title)s|%(upload_date)s|%(uploader)s|%(duration)s|%(is_live)s\"",
    "--no-geo-bypass"
   ]
+ },
+ {
+  "url": "https://www.rainews.it/dl/rainews/media/Weekend-al-cinema-da-Hollywood-arriva-il-thriller-di-Tate-Taylor-La-ragazza-del-treno-1632c009-c843-4836-bb65-80c33084a64b.html",
+  "args": [
+   "--no-geo-bypass",
+   "--print",
+   "%(extractor)s|%(extractor_key)s|%(id)s|%(title)s|%(upload_date)s|%(duration)s|%(formats.:.format_id)s|%(format_id)s"
+  ]
  }
 ]

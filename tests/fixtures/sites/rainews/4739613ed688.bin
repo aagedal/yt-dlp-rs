@@ -1,0 +1,42 @@
+
+		{
+			"type": "RaiTv Media Video Item",
+			"itemId": "ContentItem-1632c009-c843-4836-bb65-80c33084a64b",
+			"parentSet": "",
+			"weblink": "http://www.rai.tv/dl/RaiTV/programmi/media/ContentItem-1632c009-c843-4836-bb65-80c33084a64b.html",
+			"mediaUri": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=yssSlashxiQwwi3NoeeqqEEqual",
+			"h264": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=yssSlashxiQwwi3NoeeqqEEqual",
+			"m3u8": "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=yssSlashxiQwwi3NoeeqqEEqual",
+			"wmv": "",
+      "subtitlesUrl": "",
+      "highlights": "",
+			"image": "/dl/img/2016/05/105x79_1463147545239.png",
+			"image_medium": "/dl/img/2016/05/264x196_1463147545239.png",
+			"image_300": "/dl/img/2016/05/300x169_1463147545239.png",
+			"length": "",
+			"date": "03/11/2016",
+			"name": "Weekend al cinema, da Hollywood arriva il thriller di Tate Taylor \"La ragazza del treno\" ",
+			"author": "",
+			"from": "",
+			"desc": "I film in uscita questa settimana. ",
+      
+      "title": "Video Rai.TV - Weekend al cinema, da Hollywood arriva il thriller di Tate Taylor \"La ragazza del treno\"",
+      "imageLarge": "/dl/img/2016/05/1463147545239.png",
+      "editore":"",
+      "tematiche": [
+				],
+  
+		"tags" : [
+    ""
+
+		],
+		
+			"bsp":  "",
+      
+			"bsp_fmt": "",
+			"bspAudio": "",
+			"b100": "",
+			"b250": ""
+	
+		}
+	

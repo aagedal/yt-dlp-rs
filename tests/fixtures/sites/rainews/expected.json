@@ -36,6 +36,20 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.rainews.it/dl/rainews/media/Weekend-al-cinema-da-Hollywood-arriva-il-thriller-di-Tate-Taylor-La-ragazza-del-treno-1632c009-c843-4836-bb65-80c33084a64b.html",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(extractor)s|%(extractor_key)s|%(id)s|%(title)s|%(upload_date)s|%(duration)s|%(formats.:.format_id)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "RaiNews|RaiNews|1632c009-c843-4836-bb65-80c33084a64b|Weekend al cinema, da Hollywood arriva il thriller di Tate Taylor \"La ragazza del treno\"|20161103|833|['hls-Italiano', 'https-1200']|https-1200"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

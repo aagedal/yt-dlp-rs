@@ -1342,19 +1342,24 @@ impl Extractor for Rai {
             return Ok(None);
         };
         begin(RAI_NAME, url);
-        rai_extract(client, url, &found["id"]).map(Some)
+        rai_extract(client, RAI_NAME, url, &found["id"]).map(Some)
     }
 }
 
 /// `RaiIE._real_extract`: the rai.tv `?json` media.
-fn rai_extract(client: &Client, url: &Url, content_id: &str) -> Result<VideoInfo> {
+fn rai_extract(
+    client: &Client,
+    name: &'static str,
+    url: &Url,
+    content_id: &str,
+) -> Result<VideoInfo> {
     let media_url = parse(&format!(
         "https://www.rai.tv/dl/RaiTV/programmi/media/ContentItem-{content_id}.html?json"
     ))?;
     let media = download_json_note(
         client,
         &media_url,
-        RAI_NAME,
+        name,
         content_id,
         "Downloading video JSON",
     )?;
@@ -1375,17 +1380,17 @@ fn rai_extract(client: &Client, url: &Url, content_id: &str) -> Result<VideoInfo
                     ("vcodec", "none".into()),
                     ("acodec", audio_format.map_or(Value::Null, Value::from)),
                 ],
-                RAI_NAME,
+                name,
                 content_id,
             )?],
         }
     } else if media_type.contains("Video") {
         let media_uri =
             str_value(media.get("mediaUri")).ok_or_else(|| key_error(content_id, "mediaUri"))?;
-        extract_relinker(client, RAI_NAME, media_uri, content_id, false)?
+        extract_relinker(client, name, media_uri, content_id, false)?
     } else {
         return Err(Error::Reported(format!(
-            "[{RAI_NAME}] {content_id}: not a media file; {}",
+            "[{name}] {content_id}: not a media file; {}",
             crate::BUG_REPORTS_MESSAGE
         )));
     };
@@ -1424,7 +1429,7 @@ fn rai_extract(client: &Client, url: &Url, content_id: &str) -> Result<VideoInfo
     relinker_fields(&relinker, &mut fields);
     Ok(ordered_subtitles(dict_info(
         url,
-        (RAI_NAME, RAI_NAME),
+        (name, name),
         fields,
         relinker.formats,
     )))
@@ -1506,7 +1511,7 @@ fn news_extract(
 
     let Some(relinker_url) = relinker_url.filter(|text| !text.is_empty()) else {
         // fallback on old implementation for some old content
-        return match rai_extract(client, url, video_id) {
+        return match rai_extract(client, name, url, video_id) {
             Ok(info) => Ok(info),
             // `GeoRestrictedError` is re-raised as is.
             Err(Error::Reported(text)) if text.contains("geo restriction") => {
