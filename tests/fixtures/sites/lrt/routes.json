@@ -82,7 +82,7 @@
    "headers": {
     "Content-Type": "application/vnd.apple.mpegurl"
    },
-   "body_file": "master.m3u8"
+   "body_file": "radio-master.m3u8"
   }
  ]
 }
