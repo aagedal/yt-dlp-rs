@@ -7885,7 +7885,7 @@
         "tests/fixtures/sites/tvp-vod/",
         "tests/fixtures/sites/tvp-vod-series/"
       ],
-      "scope": "TVPEmbedIE (protocol-relative subtitle URLs error as unsupported), TVPVODVideoIE (metadata via --print; HLS audio ext differs) and TVPVODSeriesIE; TVPIE, stream and website classes not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "TVPEmbedIE (with protocol-relative subtitle URLs), TVPVODVideoIE (metadata via --print) and TVPVODSeriesIE; TVPIE, stream and website classes not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "cbc",

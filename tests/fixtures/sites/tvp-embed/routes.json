@@ -55,6 +55,69 @@
     "Content-Type": "application/vnd.apple.mpegurl"
    },
    "body_file": "r003.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=194536&@method=getTvpConfig&@callback=jebacpis",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config-194536-0.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=194536&@method=getTvpConfig&@callback=jebac_pis",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config-194536-1.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=194536&@method=getTvpConfig&@callback=ziobro",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config-194536-2.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=194536&@method=getTvpConfig&@callback=sasin70",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config-194536-3.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=194536&@method=getTvpConfig&@callback=sasin_przejebal_70_milionow_PLN",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config-194536-4.body"
+  },
+  {
+   "url": "https://www.tvp.pl/sess/TVPlayer2/api.php?id=194536&@method=getTvpConfig&@callback=tvp_is_a_state_propaganda_service",
+   "headers": {
+    "Content-Type": "text/javascript;charset=UTF-8"
+   },
+   "body_file": "config-194536-5.body"
+  },
+  {
+   "url": "https://sdt-l3-01-185.tvp.pl/token/video/vod/194536/20261114/1482413120/0aa3a541-65bf-44d1-8a56-af6f701ea0a8/video.ism/manifest",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "194536-manifest.xml"
+  },
+  {
+   "url": "https://sdt-l3-01-185.tvp.pl/token/video/vod/194536/20261114/1482413120/0aa3a541-65bf-44d1-8a56-af6f701ea0a8/video.ism/video-fmp4.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "194536-fmp4.m3u8"
+  },
+  {
+   "url": "https://sdt-l3-01-185.tvp.pl/token/video/vod/194536/20261114/1482413120/0aa3a541-65bf-44d1-8a56-af6f701ea0a8/video.ism/video.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "194536.mpd"
   }
  ]
 }
