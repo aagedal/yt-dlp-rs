@@ -7,6 +7,17 @@ page.
 
 Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 
+## [Unreleased]
+
+### Fixed since 1.0.0-rc.2
+
+- `--section-timecode`: an MP4/MOV section whose requested start fell in
+  the second half of a frame showed in DaVinci Resolve one frame later than
+  its timecode (Resolve rounds the cut's start to the nearest frame), and
+  its audio started up to a frame before its video. The cut now starts just
+  before the first frame, so the timecode, the first frame and the audio
+  agree; checked against full downloads in Resolve at 29.97 and 59.94 fps.
+
 ## [1.0.0-rc.2]
 
 The second release candidate for 1.0, with the fixes from checking rc.1:

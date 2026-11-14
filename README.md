@@ -156,6 +156,12 @@ These options are not in upstream yt-dlp:
 - **`--section-timecode`** gives a section the timecode its first frame has in
   the whole video, so clips line up with full downloads in an editor. It needs
   ffprobe and an MP4/MOV result: use `--remux-video mp4` for WebM sections.
+  So that every editor starts the clip on that frame, the cut begins 1 ms
+  before it rather than at the requested time. **The audio therefore starts
+  1 ms before the first video frame**, which is too little to see or hear
+  but means the audio is not sample-exact with the full download. Upstream's
+  cut, which sections without this option keep, starts the audio at the
+  requested time instead, and can leave it up to one frame late.
 - **`--ffprobe-location PATH`** picks the ffprobe executable separately
   (upstream takes it from `--ffmpeg-location` or `PATH` only).
 - **`--youtube-js-runtime PATH`** names the Deno 2.3+ or Node.js 22+
