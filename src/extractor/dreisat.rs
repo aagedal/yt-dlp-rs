@@ -43,6 +43,10 @@ impl Extractor for DreiSat {
         KEY
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["DE"])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }

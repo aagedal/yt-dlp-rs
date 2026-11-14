@@ -170,6 +170,10 @@ impl Extractor for Streaks {
         NAME
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&["JP"])
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some((project, url_key, media_id)) = captures(url.as_str()) else {
             return Ok(None);

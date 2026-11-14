@@ -4119,6 +4119,33 @@ mod tests {
     use reqwest::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderMap, HeaderValue};
 
     #[test]
+    fn extractors_keep_upstreams_geo_attributes() {
+        // Inherited `_GEO_*` attributes that these ports once missed (3sat's
+        // DACH-only HLS needs ZDFBaseIE's fake German address).
+        for (extractor, bypass, countries) in [
+            (&cbc::CBCPlayer as &dyn Extractor, true, &["CA"][..]),
+            (&dreisat::DreiSat, true, &["DE"]),
+            (&hrfensehen::HrFernsehen, true, &["DE"]),
+            (&ninenow::NineNow, false, &[]),
+            (&ondemandkorea::OnDemandKorea, true, &["US", "CA"]),
+            (&ondemandkorea::OnDemandKoreaProgram, true, &["US", "CA"]),
+            (&streaks::Streaks, false, &["JP"]),
+            (&tvp::TVPEmbed, false, &[]),
+            (&wdr::Wdr, true, &["DE"]),
+            (&ximalaya::Ximalaya, true, &["CN"]),
+            (&ximalaya::XimalayaAlbum, true, &["CN"]),
+        ] {
+            let geo = extractor.geo();
+            assert_eq!(
+                (geo.bypass, geo.countries, geo.ip_blocks),
+                (bypass, countries, &[][..]),
+                "{}",
+                extractor.key()
+            );
+        }
+    }
+
+    #[test]
     fn url_regexes_use_ascii_digit_and_word_classes() {
         for (pattern, expected) in [
             (r"/(?P<id>\d+)", r"/(?P<id>[0-9]+)"),

@@ -58,6 +58,10 @@ impl Extractor for NineNow {
         NAME
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }

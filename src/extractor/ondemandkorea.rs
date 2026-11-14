@@ -79,6 +79,10 @@ impl Extractor for OnDemandKoreaProgram {
         PROGRAM_NAME
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["US", "CA"])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }
@@ -271,6 +275,10 @@ fn age_limit(name: &str) -> Result<Option<i64>> {
 impl Extractor for OnDemandKorea {
     fn key(&self) -> &'static str {
         NAME
+    }
+
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["US", "CA"])
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
