@@ -41,10 +41,14 @@ fn read_manifest(response: Response) -> Result<(Url, crate::dash::Manifest)> {
     {
         return Err(unsupported("compressed DASH playlists are not supported"));
     }
+    // Repeated identical values (Yle Areena's CDN) are one Content-Type.
     let content_types = response.headers().get_all(CONTENT_TYPE);
-    if content_types.iter().count() > 1 {
+    if content_types
+        .iter()
+        .any(|value| Some(value) != content_types.iter().next())
+    {
         return Err(unsupported(
-            "duplicate DASH Content-Type headers are not supported",
+            "conflicting DASH Content-Type headers are not supported",
         ));
     }
     if let Some(value) = content_types.iter().next() {
