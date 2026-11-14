@@ -20,6 +20,20 @@
     "Content-Type": "application/json"
    },
    "body_file": "media-error.json"
+  },
+  {
+   "url": "http://api-media.3cat.cat/pvideo/media.jsp?media=video&idint=6031387&format=dm",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media-subtitles.json"
+  },
+  {
+   "url": "https://adaptive-int.3catvideos.cat/7/8/6031387/1674863264072/stream.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "subtitles-stream.mpd"
   }
  ]
 }

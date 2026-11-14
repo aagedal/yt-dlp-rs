@@ -185,13 +185,41 @@ impl Extractor for Ccma {
             Some(Value::Array(subtitles)) => subtitles.clone(),
             _ => Vec::new(),
         };
-        if subtitols
-            .iter()
-            .any(|subtitle| subtitle.get("url").is_some_and(super::nuxt::truthy))
-        {
-            return Err(Error::UnsupportedHtml5(
-                "CCMA subtitle tracks are not supported natively".into(),
-            ));
+        // `subtitles.setdefault(st.get('iso') or st.get('text') or 'ca', [])`.
+        let mut subtitles = crate::Subtitles::default();
+        for subtitle in &subtitols {
+            let Some(sub_url) = subtitle.get("url").filter(|url| super::nuxt::truthy(url)) else {
+                continue;
+            };
+            let Some(sub_url) = sub_url.as_str() else {
+                return Err(Error::UnsupportedHtml5(
+                    "CCMA subtitle URLs that are not strings are not supported natively".into(),
+                ));
+            };
+            let language = ["iso", "text"]
+                .iter()
+                .find_map(|key| subtitle.get(*key).and_then(Value::as_str))
+                .filter(|language| !language.is_empty())
+                .unwrap_or("ca")
+                .to_owned();
+            // Processing names an untyped track by its URL's extension.
+            let track = crate::SubtitleFormat {
+                name: None,
+                url: Url::parse(sub_url)?,
+                ext: super::direct::determine_ext(sub_url)
+                    .unwrap_or_else(|| "unknown_video".into()),
+                protocol: None,
+                fragments: Vec::new(),
+                extra: serde_json::Map::new(),
+            };
+            match subtitles
+                .entries
+                .iter_mut()
+                .find(|(key, _)| key.as_deref() == Some(language.as_str()))
+            {
+                Some((_, tracks)) => tracks.push(track),
+                None => subtitles.entries.push((Some(language), vec![track])),
+            }
         }
 
         let mut thumbnails = Vec::new();
@@ -248,7 +276,7 @@ impl Extractor for Ccma {
             formats,
         );
         order_thumbnails(&mut info);
-        info.subtitles = crate::Subtitles::default();
+        info.subtitles = subtitles;
         Ok(Some(info))
     }
 }

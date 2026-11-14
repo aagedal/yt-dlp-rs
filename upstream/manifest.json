@@ -6591,7 +6591,7 @@
         "src/extractor/ccma.rs",
         "tests/fixtures/sites/ccma/"
       ],
-      "scope": "CCMAIE video, audio and MPD media (subtitles unsupported), compared with pinned upstream output through the fixture proxy"
+      "scope": "CCMAIE video, audio and MPD media with subtitols tracks, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "dacast",
