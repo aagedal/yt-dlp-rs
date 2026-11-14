@@ -60,7 +60,7 @@ another extractor.
 | apple:podcasts | 2 | 10 |  |
 | archive.org | 2 | 5 |  |
 | ArcPublishing | 2 | 8 |  |
-| ARDAudiothek | 2 | 6 |  |
+| ARDAudiothek | 2 | 8 |  |
 | ARDAudiothekPlaylist | 2 | 3 |  |
 | ARDMediathek | 2 | 19 |  |
 | ARDMediathekCollection | 2 | 11 |  |
@@ -137,7 +137,7 @@ another extractor.
 | Canalsurmas | 2 | 4 |  |
 | cbc.ca:listen | 2 | 2 |  |
 | cbc.ca:player | 2 | 3 |  |
-| CCMA | 2 | 3 |  |
+| CCMA | 2 | 4 |  |
 | CCTV | 2 | 3 |  |
 | CDA | 2 | 4 |  |
 | Cellebrite | 2 | 3 |  |
@@ -220,7 +220,7 @@ another extractor.
 | Erocast | 2 | 5 |  |
 | EroProfile:album | 2 | 3 |  |
 | ERRArhiiv | 2 | 2 |  |
-| ERRJupiter | 2 | 6 |  |
+| ERRJupiter | 2 | 8 |  |
 | ertflix | 2 | 2 |  |
 | ertflix:codename | 2 | 2 |  |
 | EttuTv | 2 | 6 |  |
@@ -566,7 +566,7 @@ another extractor.
 | PodbayFM | 2 | 6 |  |
 | PodbayFMChannel | 2 | 7 |  |
 | Podchaser | 2 | 4 |  |
-| PolskieRadio | 2 | 1 |  |
+| PolskieRadio | 2 | 2 |  |
 | polskieradio:legacy | 2 | 1 |  |
 | polskieradio:podcast:list | 2 | 1 |  |
 | Popcorntimes | 2 | 3 |  |
@@ -591,7 +591,7 @@ another extractor.
 | RadioZetPodcast | 2 | 8 |  |
 | Rai | 2 | 3 |  |
 | RaiCultura | 2 | 2 |  |
-| RaiNews | 2 | 2 |  |
+| RaiNews | 2 | 3 |  |
 | RaiPlay | 2 | 2 |  |
 | RaiPlayLive | 2 | 1 |  |
 | RaiPlayPlaylist | 2 | 1 |  |
@@ -783,7 +783,7 @@ another extractor.
 | TVO | 2 | 3 |  |
 | tvopengr:embed | 2 | 1 |  |
 | tvopengr:watch | 2 | 4 |  |
-| tvp:embed | 2 | 1 |  |
+| tvp:embed | 2 | 2 |  |
 | tvp:vod | 2 | 1 |  |
 | tvp:vod:series | 2 | 1 |  |
 | tvw | 2 | 2 |  |
