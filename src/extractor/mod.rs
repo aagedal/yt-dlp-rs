@@ -4018,6 +4018,12 @@ pub(crate) fn dict_format(
             map.insert(key.to_owned(), value);
         }
     }
+    // Processing's `sanitize_url`: a protocol-relative `//host/...` gets `http:`.
+    if let Some(serde_json::Value::String(url)) = map.get_mut("url")
+        && url.starts_with("//")
+    {
+        *url = crate::info::sanitize_url(url);
+    }
     let has_quality = map.get("quality").is_some_and(serde_json::Value::is_i64);
     if !map.contains_key("ext") {
         let ext = map

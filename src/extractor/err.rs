@@ -93,10 +93,12 @@ fn manifests(
     formats: &mut Vec<crate::VideoFormat>,
     subtitles: &mut Subtitles,
 ) -> Result<()> {
+    // The API's protocol-relative `//vod.err.ee/...` URLs are requested over
+    // `http:`, like upstream's `Request`.
     for url in hls {
         if let Some(stream) = extract_m3u8_master_optional(
             client,
-            &Url::parse(url)?,
+            &Url::parse(&super::proto_relative_http(url))?,
             name,
             id,
             Some("hls"),
@@ -110,7 +112,7 @@ fn manifests(
     for url in dash {
         if let Some(stream) = extract_mpd_optional_note(
             client,
-            &Url::parse(url)?,
+            &Url::parse(&super::proto_relative_http(url))?,
             name,
             id,
             Some("dash"),

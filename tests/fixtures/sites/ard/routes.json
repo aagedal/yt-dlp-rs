@@ -222,6 +222,24 @@
    "headers": {
     "Content-Type": "application/json"
    },
+   "body_file": "audio-relative.json",
+   "request_body": [
+    "urn:ard:episode:2222222222222222",
+    "item(id: $id)"
+   ]
+  },
+  {
+   "url": "http://media.example/ard/relative.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ard-relative-audio"
+  },
+  {
+   "url": "https://api.ardaudiothek.de/graphql",
+   "headers": {
+    "Content-Type": "application/json"
+   },
    "body": "{\"data\": {\"item\": null}}",
    "request_body": [
     "urn:ard:extra:0000000000000000"
