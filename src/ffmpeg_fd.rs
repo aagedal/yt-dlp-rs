@@ -459,7 +459,7 @@ fn run(
         }
     };
     let piped = connection.is_some();
-    let timecode = timecode
+    let section = timecode
         .filter(|_| crate::sections::is_partial(info))
         .and_then(|request| {
             let formats = inputs(info);
@@ -484,12 +484,23 @@ fn run(
                 muxer(settings, info, &protocol),
             )
         });
+    // Every input is cut where the section's first frame starts.
+    let cut;
+    let info = match section.as_ref().and_then(|section| section.start) {
+        Some(start) => {
+            let mut moved = info.clone();
+            moved.section_start = Some(PyNumber::Float(start));
+            cut = moved;
+            &cut
+        }
+        None => info,
+    };
     let args = arguments(
         network,
         settings,
         info,
         local,
-        timecode.as_deref(),
+        section.as_ref().map(|section| section.timecode.as_str()),
         growing,
         &temporary,
         piped,

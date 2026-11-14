@@ -129,6 +129,12 @@ fn mp4_sections_start_at_the_first_frame_after_the_start() {
     );
     let cut = &calls(directory.path(), "ffmpeg")[0];
     assert!(cut.contains("\n-timecode\n00:00:21:08\n-f\nmp4\n"), "{cut}");
+    // The cut starts just before that frame (21.32 s), so editors that round
+    // the edit list's start to the nearest frame show it too.
+    assert!(
+        cut.contains("\n-ss\n21.319\n-t\n3.681000000000001\n"),
+        "{cut}"
+    );
     // Without the flag, upstream's arguments.
     let output = run(
         directory.path(),
@@ -140,7 +146,12 @@ fn mp4_sections_start_at_the_first_frame_after_the_start() {
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
     assert!(calls(directory.path(), "ffprobe").is_empty());
-    assert!(!calls(directory.path(), "ffmpeg")[0].contains("-timecode"));
+    let cut = &calls(directory.path(), "ffmpeg")[0];
+    assert!(!cut.contains("-timecode"), "{cut}");
+    assert!(
+        cut.contains("\n-ss\n21.3\n-t\n3.6999999999999993\n"),
+        "{cut}"
+    );
 }
 
 #[test]

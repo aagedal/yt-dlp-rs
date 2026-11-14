@@ -89,6 +89,20 @@ fn first_frame(probe: &Probe, start: f64, edit_list: bool) -> u64 {
     frames.max(0.0) as u64
 }
 
+/// Where an MP4/MOV cut of a section should start so that its first frame
+/// is `frame`: just before it. The cut's edit list starts at `-ss`, which
+/// editors round to the nearest frame (DaVinci Resolve) and FFmpeg to the
+/// next one; a start in the second half of a frame made Resolve show the
+/// frame before the one the timecode names, and the audio started up to a
+/// frame before the video either way.
+fn frame_start(probe: &Probe, frame: u64, start: f64) -> f64 {
+    let offset = probe.file_start - probe.video_start;
+    let time = frame as f64 / probe.rate - offset;
+    let before = time - (0.25 / probe.rate).min(0.001);
+    // Whole microseconds keep FFmpeg's `-ss` and `-t` readable.
+    ((before * 1e6).round() / 1e6).max(start)
+}
+
 /// ffprobe's view of `input`'s first video stream; `seek` (absolute
 /// seconds) also reads the first packet after seeking there like FFmpeg.
 fn probe(ffprobe: &Path, input: &Input<'_>, seek: Option<f64>) -> Option<Probe> {
@@ -148,6 +162,14 @@ fn probe(ffprobe: &Path, input: &Input<'_>, seek: Option<f64>) -> Option<Probe> 
     Some(probe)
 }
 
+/// A section's timecode, and the start its cut should use instead of the
+/// requested one (MP4/MOV: just before the first frame, [`frame_start`]).
+#[derive(Debug, PartialEq)]
+pub(crate) struct Section {
+    pub timecode: String,
+    pub start: Option<f64>,
+}
+
 /// The `-timecode` value for a section download, or `None` (warned) when
 /// it cannot be written. `inputs` are FFmpeg's inputs in order; `muxer` is
 /// the cut's output format.
@@ -156,7 +178,7 @@ pub(crate) fn timecode(
     info: &VideoInfo,
     inputs: &[Input<'_>],
     muxer: &str,
-) -> Option<String> {
+) -> Option<Section> {
     let Some(input) = inputs.iter().find(|input| is_video(input.info)) else {
         warn("the section has no video stream");
         return None;
@@ -188,12 +210,16 @@ pub(crate) fn timecode(
         warn("ffprobe could not read the video stream's frame rate");
         return None;
     };
-    let timecode = format(first_frame(&probe, start, edit_list), probe.rate);
+    let frame = first_frame(&probe, start, edit_list);
+    let timecode = format(frame, probe.rate);
     crate::screen::screen(&format!(
         "[download] Section timecode: {timecode} ({} fps)",
         crate::screen::py_float((probe.rate * 1000.0).round() / 1000.0)
     ));
-    Some(timecode)
+    Some(Section {
+        timecode,
+        start: (edit_list && start != 0.0).then(|| frame_start(&probe, frame, start)),
+    })
 }
 
 #[cfg(test)]
@@ -233,5 +259,36 @@ mod tests {
             ..probe
         };
         assert_eq!(first_frame(&muxed, 4.0, true), 98);
+    }
+
+    /// A cut starts 1 ms before its first frame (a quarter frame above
+    /// 250 fps), never before the requested start.
+    #[test]
+    fn cuts_start_just_before_the_first_frame() {
+        let ntsc = Probe {
+            rate: 30000.0 / 1001.0,
+            video_start: 0.0,
+            file_start: 0.0,
+            first: None,
+        };
+        // 1500 s is 32 ms before frame 44956 (1500.032 s).
+        let frame = first_frame(&ntsc, 1500.0, true);
+        assert_eq!(format(frame, ntsc.rate), "00:24:58:16");
+        let start = frame_start(&ntsc, frame, 1500.0);
+        assert!((start - (44956.0 * 1001.0 / 30000.0 - 0.001)).abs() < 1e-6);
+        // A start on a frame boundary stays.
+        assert_eq!(
+            frame_start(&ntsc, 3, 3.0 * 1001.0 / 30000.0),
+            3.0 * 1001.0 / 30000.0
+        );
+        // In a muxed file's timeline (video 0.1 s after the file start).
+        let muxed = Probe {
+            rate: 25.0,
+            video_start: 0.1,
+            file_start: 0.0,
+            first: None,
+        };
+        assert_eq!(first_frame(&muxed, 4.0, true), 98);
+        assert_eq!(frame_start(&muxed, 98, 4.0), 4.019);
     }
 }
