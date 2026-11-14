@@ -12,6 +12,18 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://trojka.polskieradio.pl/artykul/2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2589163\", \"title\": \"Czy wci\\u0105\\u017c otrzymujemy zdj\\u0119cia z sond Voyager?\", \"description\": \"Ameryka\\u0144skie sondy Voyager 1 i Voyager 2 wystartowa\\u0142y w roku 1977. Obie ju\\u017c opu\\u015bci\\u0142y granice Uk\\u0142adu S\\u0142onecznego. Pan Marcin chce wiedzie\\u0107, czy wci\\u0105\\u017c przesy\\u0142aj\\u0105 zdj\\u0119cia na Ziemi\\u0119.\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Co obecnie dzieje si\\u0119 z sondami Voyager? (Pytania z kosmosu/Tr\\u00f3jka)\", \"id\": \"2577880\", \"url\": \"https://static.prsa.pl/76f46ea8-57a1-4dfe-82b0-a729fe361487.mp3\", \"duration\": 321, \"vcodec\": \"none\", \"playlist_count\": 1, \"playlist\": \"Czy wci\\u0105\\u017c otrzymujemy zdj\\u0119cia z sond Voyager?\", \"playlist_id\": \"2589163\", \"playlist_title\": \"Czy wci\\u0105\\u017c otrzymujemy zdj\\u0119cia z sond Voyager?\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://trojka.polskieradio.pl/artykul/2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager\", \"n_entries\": 1, \"webpage_url\": \"https://trojka.polskieradio.pl/artykul/2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager\", \"webpage_url_basename\": \"2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager\", \"webpage_url_domain\": \"trojka.polskieradio.pl\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"PolskieRadio\", \"extractor_key\": \"PolskieRadio\", \"playlist_autonumber\": 1, \"display_id\": \"2577880\", \"fulltitle\": \"Co obecnie dzieje si\\u0119 z sondami Voyager? (Pytania z kosmosu/Tr\\u00f3jka)\", \"duration_string\": \"5:21\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Co obecnie dzieje si\\u0119 z sondami Voyager\\uff1f (Pytania z kosmosu\\u29f8Tr\\u00f3jka) [2577880].mp3\", \"filename\": \"Co obecnie dzieje si\\u0119 z sondami Voyager\\uff1f (Pytania z kosmosu\\u29f8Tr\\u00f3jka) [2577880].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://trojka.polskieradio.pl/artykul/2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager\", \"original_url\": \"https://trojka.polskieradio.pl/artykul/2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager\", \"webpage_url_basename\": \"2589163,Czy-wciaz-otrzymujemy-zdjecia-z-sond-Voyager\", \"webpage_url_domain\": \"trojka.polskieradio.pl\", \"extractor\": \"PolskieRadio\", \"extractor_key\": \"PolskieRadio\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

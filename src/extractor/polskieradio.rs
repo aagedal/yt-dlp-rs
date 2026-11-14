@@ -88,13 +88,14 @@ fn cleaned(found: Option<regex::Captures<'_>>) -> Option<String> {
 }
 
 /// `_search_json`-free `__NEXT_DATA__`-based article data: the first of
-/// `pageProps.data.articleData`, `pageProps.post.data` and `pageProps.data`
-/// that is not `None` (`traverse_obj(..., get_all=False)`).
+/// `pageProps.data.articleData`, `pageProps.post` and `pageProps.data`
+/// that is not `None` (`traverse_obj(..., get_all=False)` over the branches
+/// `(('data', 'articleData'), 'post', 'data')`).
 fn article_data(next_data: &Value) -> Option<&Value> {
     let props = next_data.get("props")?.get("pageProps")?;
     let candidates = [
         props.get("data").and_then(|data| data.get("articleData")),
-        props.get("post").and_then(|post| post.get("data")),
+        props.get("post"),
         props.get("data"),
     ];
     candidates
