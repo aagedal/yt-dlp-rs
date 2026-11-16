@@ -1490,6 +1490,33 @@ queries ignored); `tests/fixtures/sites/bbc-co-uk/` and
 `tests/fixtures/sites/bbc-pages/` (constructed responses modeled on those
 pages) are compared with pinned upstream output.
 
+BBC programme listings (`bbc.co.uk/programmes/PID/episodes|broadcasts|clips`)
+follow upstream `BBCCoUkPlaylistIE`: each page's `data-pid` programmes as
+`BBCCoUk` `url` results, following `pagination_next` links unless the URL has
+a `page` parameter. BBC iPlayer episode lists
+(`bbc.co.uk/iplayer/episodes/PID`) and groups (`bbc.co.uk/iplayer/group/PID`)
+follow `BBCCoUkIPlayerEpisodesIE` and `BBCCoUkIPlayerGroupIE`: the playlist
+title and largest truthy synopsis come from a one-item request (the iBL
+GraphQL POST for episodes, with the URL's `seriesId` as `sliceId` for the
+entries; `ibl/v1/groups/PID/episodes` for groups), and the entries are an
+`OnDemandPagedList` of 100 (episodes) or 200 (groups) per page, only the
+pages holding requested items fetched. A `page` parameter reads that one page
+of 36 instead, as a generator after extraction (Python `int()` errors for a
+non-number; non-ASCII page numbers are an explicit native error). Each
+episode is a `BBCCoUk` `url` result with its subtitle as `title`, the
+`{recipe}` image as `raw` `thumbnail`, synopsis, category and series. Missing
+keys are upstream's `KeyError`s (in extraction, or reported while reading
+entries), a `null` programme is upstream's `'NoneType' object has no
+attribute 'get'`, and other unexpected shapes are explicit native errors.
+BBC programme articles (`bbc.co.uk/programmes/articles/ID`) follow
+`BBCCoUkArticleIE`: the OpenGraph title (non-fatal) and stripped description
+(missing is upstream's `'NoneType' object has no attribute 'strip'`), and the
+`<div ... typeof="Clip" ... resource="URL">` resources as untyped `url`
+results, followed by `BBCCoUkIE` (above).
+`tests/fixtures/sites/bbc-clips-playlist/`, `bbc-iplayer-episodes/`,
+`bbc-iplayer-episodes-paged/`, `bbc-iplayer-group/` and `bbc-article/` are
+compared with pinned upstream output.
+
 Beatport tracks (`[www.|pro.]beatport.com/track/SLUG/ID`) follow upstream
 `BeatportIE`: the page's `window.Playables` JSON (fatal) and its track with
 the URL's numeric ID (none is upstream's `StopIteration` error; missing keys

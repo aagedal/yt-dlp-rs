@@ -1,0 +1,84 @@
+[
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m6nv",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m5t9-structural-2-b094m6nv",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove",
+  "args": [
+   "--flat-playlist",
+   "--print",
+   "%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(playlist_count)s"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "-I",
+   "99:102"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "-I",
+   "1:2"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=3",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=two",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://www.bbc.co.uk/iplayer/episodes/b05rcz9v",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/p0000001",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

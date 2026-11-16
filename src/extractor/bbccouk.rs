@@ -75,13 +75,6 @@ static BBC_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
         r"^https?://(?:www\.)?(?:bbc\.(?:com|co\.uk)|bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd\.onion|bbcweb3hytmzhn5d532owbu6oqadra5z3ar726vq5kgwwn6aucdccrad\.onion)/(?:[^/]+/)+(?P<id>[^/#?]+)",
     )
 });
-/// `BBCCoUkArticleIE`, `BBCCoUkIPlayerEpisodesIE`/`GroupIE` and
-/// `BBCCoUkPlaylistIE`'s `_VALID_URL`s (`BBCIE.suitable` excludes them).
-static BBC_EXCLUDED: LazyLock<UrlRegex> = LazyLock::new(|| {
-    UrlRegex::new(format!(
-        r"^https?://(?:www\.)?bbc\.co\.uk/(?:programmes/articles/[a-zA-Z0-9]+|iplayer/(?:episodes|group)/{ID_REGEX}|programmes/{ID_REGEX}/(?:episodes|broadcasts|clips))"
-    ))
-});
 /// `_EMBED_REGEX`.
 static EMBED: LazyLock<[Regex; 1]> =
     LazyLock::new(|| {
@@ -202,7 +195,12 @@ pub fn couk_suitable(url: &str) -> bool {
 /// `BBCIE.suitable`: not a `BBCCoUkIE`, article, iPlayer playlist or
 /// programme playlist URL.
 pub fn bbc_suitable(url: &str) -> bool {
-    BBC_URL.is_match(url) && !couk_suitable(url) && !BBC_EXCLUDED.is_match(url)
+    BBC_URL.is_match(url)
+        && !couk_suitable(url)
+        && !super::bbc::article_suitable(url)
+        && !super::bbc::iplayer_episodes_suitable(url)
+        && !super::bbc::iplayer_group_suitable(url)
+        && !super::bbc::suitable(url)
 }
 
 /// `BBCCoUkIE._extract_embed_urls`.

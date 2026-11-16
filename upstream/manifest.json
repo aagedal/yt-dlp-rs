@@ -7801,9 +7801,13 @@
         "src/extractor/bbccouk.rs",
         "tests/fixtures/sites/bbc-clips-playlist/",
         "tests/fixtures/sites/bbc-co-uk/",
-        "tests/fixtures/sites/bbc-pages/"
+        "tests/fixtures/sites/bbc-pages/",
+        "tests/fixtures/sites/bbc-iplayer-episodes/",
+        "tests/fixtures/sites/bbc-iplayer-episodes-paged/",
+        "tests/fixtures/sites/bbc-iplayer-group/",
+        "tests/fixtures/sites/bbc-article/"
       ],
-      "scope": "BBCCoUkPlaylistIE clip listings (page 2 404 error); BBCCoUkIE (the media selector's media sets, retried error IDs, HLS/DASH/HDS/ASX/HTTP/RTMP connections and TTML captions, programme pages, playlist.json versions, legacy EMP playlists, the sign-in form login and _EMBED_REGEX) and BBCIE (playlist.sxml, data-playable, data-pid, page vpid, Reel, Morph, PRELOADED_STATE, BBC Three, INITIAL_DATA, SIMORGH_DATA, Next.js, SMP/setPlaylist and media-meta/mediaAssetPage/vxp layouts in upstream order); a Morph lead media duration (a list upstream) and Python TypeError paths are explicit native errors; BBCCoUkArticleIE and the iPlayer episodes/group playlists not ported. Compared with pinned upstream output through the fixture proxy"
+      "scope": "BBCCoUkPlaylistIE clip listings (page 2 404 error); BBCCoUkIE (the media selector's media sets, retried error IDs, HLS/DASH/HDS/ASX/HTTP/RTMP connections and TTML captions, programme pages, playlist.json versions, legacy EMP playlists, the sign-in form login and _EMBED_REGEX) and BBCIE (playlist.sxml, data-playable, data-pid, page vpid, Reel, Morph, PRELOADED_STATE, BBC Three, INITIAL_DATA, SIMORGH_DATA, Next.js, SMP/setPlaylist and media-meta/mediaAssetPage/vxp layouts in upstream order); a Morph lead media duration (a list upstream) and Python TypeError paths are explicit native errors; BBCCoUkIPlayerEpisodesIE and BBCCoUkIPlayerGroupIE (OnDemandPagedList, explicit page, seriesId, KeyError/NoneType/int() errors) and BBCCoUkArticleIE clip resources as url results. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rai",

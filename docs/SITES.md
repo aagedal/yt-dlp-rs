@@ -922,4 +922,4 @@ another extractor.
 | zoom | 2 | 2 |  |
 | zoom:clips | 2 | 4 |  |
 | Zype | 2 | 5 |  |
-| generic | 2 | 215 |  |
+| generic | 2 | 234 |  |

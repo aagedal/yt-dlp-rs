@@ -1,0 +1,273 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b094m5t9\", \"title\": \"Doctor Foster\", \"description\": \"Gemma appears to have it all  - the job, the husband, the family. But can you ever really know someone, including yourself? The explosive, obsessive, smash-hit drama.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"p02z7zv4\", \"title\": \"Series 1: Episode 1\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/p02z7zv4\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05d6bdb.jpg\", \"description\": \"Dr Gemma Foster has her life torn apart when she investigates her husband's secrets.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b06cjy63\", \"title\": \"Series 1: Episode 2\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b06cjy63\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p03233ml.jpg\", \"description\": \"Still reeling from the secrets she has uncovered, Gemma faces a professional dilemma.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b06ds22h\", \"title\": \"Series 1: Episode 3\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b06ds22h\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p032nll3.jpg\", \"description\": \"Gemma plays the perfect wife, while concocting a plan to ensure she comes out on top.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b06g0cfl\", \"title\": \"Series 1: Episode 4\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b06g0cfl\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p033888c.jpg\", \"description\": \"Gemma decides on a new start with Simon, but her medical career begins to fall apart.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b06h3mhl\", \"title\": \"Series 1: Episode 5\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b06h3mhl\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0341qtm.jpg\", \"description\": \"Gemma is determined to expose Simon at last. But how far will she go to achieve her goal?\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b094m49d\", \"title\": \"Series 2: Episode 1\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b094m49d\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05fdxqf.jpg\", \"description\": \"Dr Gemma Foster's life is destabilised again when her husband Simon returns.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b0957cxz\", \"title\": \"Series 2: Episode 2\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b0957cxz\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05f74jp.jpg\", \"description\": \"Gemma attempts to fight back after the fallout from Simon's return.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b0960dlf\", \"title\": \"Series 2: Episode 3\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b0960dlf\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05fvxvt.jpg\", \"description\": \"Can Gemma and Simon put their own feelings aside in order to help Tom?\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b096s1g6\", \"title\": \"Series 2: Episode 4\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b096s1g6\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05gl81d.jpg\", \"description\": \"Simon feels confident he's beaten Gemma. But now Kate has doubts.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b097rmx5\", \"title\": \"Series 2: Episode 5\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b097rmx5\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05hdvfw.jpg\", \"description\": \"Gemma goes to extreme lengths in order to win back her old life.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster\", \"webpage_url_basename\": \"doctor-foster\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"playlist_count\": 10, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m6nv",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b094m5t9\", \"title\": \"Doctor Foster\", \"description\": \"Gemma appears to have it all  - the job, the husband, the family. But can you ever really know someone, including yourself? The explosive, obsessive, smash-hit drama.\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m6nv\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m6nv\", \"webpage_url_basename\": \"doctor-foster\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m5t9-structural-2-b094m6nv",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"b094m5t9\", \"title\": \"Doctor Foster\", \"description\": \"Gemma appears to have it all  - the job, the husband, the family. But can you ever really know someone, including yourself? The explosive, obsessive, smash-hit drama.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"b094m49d\", \"title\": \"Series 2: Episode 1\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b094m49d\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05fdxqf.jpg\", \"description\": \"Dr Gemma Foster's life is destabilised again when her husband Simon returns.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b0957cxz\", \"title\": \"Series 2: Episode 2\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b0957cxz\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05f74jp.jpg\", \"description\": \"Gemma attempts to fight back after the fallout from Simon's return.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b0960dlf\", \"title\": \"Series 2: Episode 3\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b0960dlf\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05fvxvt.jpg\", \"description\": \"Can Gemma and Simon put their own feelings aside in order to help Tom?\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b096s1g6\", \"title\": \"Series 2: Episode 4\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b096s1g6\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05gl81d.jpg\", \"description\": \"Simon feels confident he's beaten Gemma. But now Kate has doubts.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"b097rmx5\", \"title\": \"Series 2: Episode 5\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/b097rmx5\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p05hdvfw.jpg\", \"description\": \"Gemma goes to extreme lengths in order to win back her old life.\", \"categories\": [\"Drama\"], \"series\": \"Doctor Foster\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m5t9-structural-2-b094m6nv\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster?seriesId=b094m5t9-structural-2-b094m6nv\", \"webpage_url_basename\": \"doctor-foster\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"playlist_count\": 5, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(series)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "001|m0031zhn|2026: Episode 26|Beechgrove Garden|113",
+    "002|m0031n6h|2026: Episode 25|Beechgrove Garden|113",
+    "003|m0031djn|2026: Episode 24|Beechgrove Garden|113",
+    "004|m00311v4|2026: Episode 23|Beechgrove Garden|113",
+    "005|m0030vtz|2026: Episode 22|Beechgrove Garden|113",
+    "006|m0030jw5|2026: Episode 21|Beechgrove Garden|113",
+    "007|m003069t|2026: Episode 20|Beechgrove Garden|113",
+    "008|m002zwfm|2026: Episode 19|Beechgrove Garden|113",
+    "009|m002zm8y|2026: Episode 18|Beechgrove Garden|113",
+    "010|m002zbsx|2026: Episode 17|Beechgrove Garden|113",
+    "011|m002z2kc|2026: Episode 16|Beechgrove Garden|113",
+    "012|m002yqzc|2026: Episode 15|Beechgrove Garden|113",
+    "013|m002yfw3|2026: Episode 14|Beechgrove Garden|113",
+    "014|m002y753|2026: Episode 13|Beechgrove Garden|113",
+    "015|m002xxks|2026: Episode 12|Beechgrove Garden|113",
+    "016|m002xkw2|2026: Episode 11|Beechgrove Garden|113",
+    "017|m002x9z6|2026: Episode 10|Beechgrove Garden|113",
+    "018|m002wzhn|2026: Episode 9|Beechgrove Garden|113",
+    "019|m002wnfz|2026: Episode 8|Beechgrove Garden|113",
+    "020|m002wbv6|2026: Episode 7|Beechgrove Garden|113",
+    "021|m002w1xf|2026: Episode 6|Beechgrove Garden|113",
+    "022|m002vsm0|2026: Episode 5|Beechgrove Garden|113",
+    "023|m002vgff|2026: Episode 4|Beechgrove Garden|113",
+    "024|m002v47v|2026: Episode 3|Beechgrove Garden|113",
+    "025|m002ttqw|2026: Episode 2|Beechgrove Garden|113",
+    "026|m002thts|2026: Episode 1|Beechgrove Garden|113",
+    "027|m0028hmb|Beechgrove Repotted: Episode 18|Beechgrove Garden|113",
+    "028|m0023b2t|2024: Episode 26|Beechgrove Garden|113",
+    "029|m002364f|2024: Episode 25|Beechgrove Garden|113",
+    "030|m0022yvv|2024: Episode 24|Beechgrove Garden|113",
+    "031|m0022qj0|2024: Episode 23|Beechgrove Garden|113",
+    "032|m0022hy8|2024: Episode 22|Beechgrove Garden|113",
+    "033|m00229j9|2024: Episode 21|Beechgrove Garden|113",
+    "034|m00220fv|2024: Episode 20|Beechgrove Garden|113",
+    "035|m0021sct|2024: Episode 19|Beechgrove Garden|113",
+    "036|m0021lsh|2024: Episode 18|Beechgrove Garden|113",
+    "037|m0021dvy|2024: Episode 17|Beechgrove Garden|113",
+    "038|m002178b|2024: Episode 16|Beechgrove Garden|113",
+    "039|m002125h|2024: Episode 15|Beechgrove Garden|113",
+    "040|m0020v1m|2024: Episode 14|Beechgrove Garden|113",
+    "041|m0020ltv|2024: Episode 13|Beechgrove Garden|113",
+    "042|m0020cvk|2024: Episode 12|Beechgrove Garden|113",
+    "043|m00205fh|2024: Episode 11|Beechgrove Garden|113",
+    "044|m001zywb|2024: Episode 10|Beechgrove Garden|113",
+    "045|m001zrcv|2024: Episode 9|Beechgrove Garden|113",
+    "046|m001zjnr|2024: Episode 8|Beechgrove Garden|113",
+    "047|m001z9sm|2024: Episode 7|Beechgrove Garden|113",
+    "048|m001z2gb|2024: Episode 6|Beechgrove Garden|113",
+    "049|m001yw6c|2024: Episode 5|Beechgrove Garden|113",
+    "050|m001ym18|2024: Episode 4|Beechgrove Garden|113",
+    "051|m001yd28|2024: Episode 3|Beechgrove Garden|113",
+    "052|m001y5pc|2024: Episode 2|Beechgrove Garden|113",
+    "053|m001xz78|2024: Episode 1|Beechgrove Garden|113",
+    "054|m001qwzf|2023: Episode 26|Beechgrove Garden|113",
+    "055|m001qsb6|2023: Episode 25|Beechgrove Garden|113",
+    "056|m001qj1t|2023: Episode 24|Beechgrove Garden|113",
+    "057|m001q9yr|2023: Episode 23|Beechgrove Garden|113",
+    "058|m001q3lb|2023: Episode 22|Beechgrove Garden|113",
+    "059|m001pvz1|2023: Episode 21|Beechgrove Garden|113",
+    "060|m001pplg|2023: Episode 20|Beechgrove Garden|113",
+    "061|m001pk7g|2023: Episode 19|Beechgrove Garden|113",
+    "062|m001p9hm|2023: Episode 18|Beechgrove Garden|113",
+    "063|m001p4lh|2023: Episode 17|Beechgrove Garden|113",
+    "064|m001nyvk|2023: Episode 16|Beechgrove Garden|113",
+    "065|m001nrj9|2023: Episode 15|Beechgrove Garden|113",
+    "066|m001nkhh|2023: Episode 14|Beechgrove Garden|113",
+    "067|m001nd5j|2023: Episode 13|Beechgrove Garden|113",
+    "068|m001n4lf|2023: Episode 12|Beechgrove Garden|113",
+    "069|m001mykv|2023: Episode 11|Beechgrove Garden|113",
+    "070|m001mqfl|2023: Episode 10|Beechgrove Garden|113",
+    "071|m001mrm8|Beechgrove Repotted: Episode 22|Beechgrove Garden|113",
+    "072|m001mhdd|2023: Episode 9|Beechgrove Garden|113",
+    "073|m001m885|2023: Episode 8|Beechgrove Garden|113",
+    "074|m001m0xf|2023: Episode 7|Beechgrove Garden|113",
+    "075|m001lttb|2023: Episode 6|Beechgrove Garden|113",
+    "076|m001llrs|2023: Episode 5|Beechgrove Garden|113",
+    "077|m001lgkh|2023: Episode 4|Beechgrove Garden|113",
+    "078|m001l6c6|2023: Episode 3|Beechgrove Garden|113",
+    "079|m001l0ht|2023: Episode 2|Beechgrove Garden|113",
+    "080|m001ksbl|2023: Episode 1|Beechgrove Garden|113",
+    "081|m001fkq5|Beechgrove Gardens in Winter: Episode 4|Beechgrove Garden|113",
+    "082|m001fbsg|Beechgrove Gardens in Winter: Episode 3|Beechgrove Garden|113",
+    "083|m001f32q|Beechgrove Gardens in Winter: Episode 2|Beechgrove Garden|113",
+    "084|m001dvbh|Beechgrove Gardens in Winter: Episode 1|Beechgrove Garden|113",
+    "085|m001cln9|2022: Episode 26|Beechgrove Garden|113",
+    "086|m001cc46|2022: Episode 25|Beechgrove Garden|113",
+    "087|m001c2q2|2022: Episode 24|Beechgrove Garden|113",
+    "088|m001bwt1|2022: Episode 23|Beechgrove Garden|113",
+    "089|m001bnnv|2022: Episode 22|Beechgrove Garden|113",
+    "090|m001bg54|2022: Episode 21|Beechgrove Garden|113",
+    "091|m001b8js|2022: Episode 20|Beechgrove Garden|113",
+    "092|m001b0nv|2022: Episode 19|Beechgrove Garden|113",
+    "093|m0019v85|2022: Episode 18|Beechgrove Garden|113",
+    "094|m0019mkx|2022: Episode 17|Beechgrove Garden|113",
+    "095|m0019g5p|2022: Episode 16|Beechgrove Garden|113",
+    "096|m0019864|2022: Episode 15|Beechgrove Garden|113",
+    "097|m00191rv|2022: Episode 14|Beechgrove Garden|113",
+    "098|m0018vl2|2022: Episode 13|Beechgrove Garden|113",
+    "099|m0018lq7|2022: Episode 12|Beechgrove Garden|113",
+    "100|m0018ccx|2022: Episode 11|Beechgrove Garden|113",
+    "101|m00185fq|2022: Episode 10|Beechgrove Garden|113",
+    "102|m0017yz5|2022: Episode 9|Beechgrove Garden|113",
+    "103|m0017p0v|2022: Episode 8|Beechgrove Garden|113",
+    "104|m0017h9n|2022: Episode 7|Beechgrove Garden|113",
+    "105|m00177cl|2022: Episode 6|Beechgrove Garden|113",
+    "106|m00170rk|2022: Episode 5|Beechgrove Garden|113",
+    "107|m0016w1m|2022: Episode 4|Beechgrove Garden|113",
+    "108|m0016mqz|2022: Episode 3|Beechgrove Garden|113",
+    "109|m0016nkn|Beechgrove Repotted: Episode 20|Beechgrove Garden|113",
+    "110|m0016drc|2022: Episode 2|Beechgrove Garden|113",
+    "111|m00165gn|2022: Episode 1|Beechgrove Garden|113",
+    "112|m000gzfv|Beechgrove Repotted: 18. Back to Flower School|Beechgrove Garden|113",
+    "113|m000cy18|Beechgrove Repotted: Chris Beardshaw Garden Makeover|Beechgrove Garden|113"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "99:102"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"m0004c4v\", \"title\": \"Beechgrove Garden\", \"description\": \"Celebrating the great Scottish garden. Tips and advice to get the most out of your garden, with inspirational ideas from Scotland's most beautiful green spaces.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"m0018lq7\", \"title\": \"2022: Episode 12\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0018lq7\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0cf8frn.jpg\", \"description\": \"Calum is designing and building a garden modest in both size and budget.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0018ccx\", \"title\": \"2022: Episode 11\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0018ccx\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0cdsrjd.jpg\", \"description\": \"Carole and Calum are working on the vegetable plot.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m00185fq\", \"title\": \"2022: Episode 10\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m00185fq\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0cc8n7t.jpg\", \"description\": \"George Anderson is thinning out the seedlings at his allotment in Joppa.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0017yz5\", \"title\": \"2022: Episode 9\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0017yz5\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0c9zcbp.jpg\", \"description\": \"George Anderson is planting runner beans on his allotment in Joppa.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove\", \"webpage_url_basename\": \"beechgrove\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"requested_entries\": [99, 100, 101, 102], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"m0004c4v\", \"title\": \"Beechgrove Garden\", \"description\": \"Celebrating the great Scottish garden. Tips and advice to get the most out of your garden, with inspirational ideas from Scotland's most beautiful green spaces.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"m0021dvy\", \"title\": \"2024: Episode 17\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0021dvy\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0jcw56m.jpg\", \"description\": \"George and Lizzie start cherry-picking the best of the summer produce from the plot.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m002178b\", \"title\": \"2024: Episode 16\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m002178b\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0jbx6jl.jpg\", \"description\": \"Kirsty and Calum trim, prune and cut to encourage new growth for the rest of the season.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m002125h\", \"title\": \"2024: Episode 15\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m002125h\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j8mnny.jpg\", \"description\": \"It's the taste of summer, so Beechgrove's own strawberry crop gets some attention.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0020v1m\", \"title\": \"2024: Episode 14\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0020v1m\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j7pllj.jpg\", \"description\": \"How to have the scents and flavours of a herb garden when space is limited.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0020ltv\", \"title\": \"2024: Episode 13\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0020ltv\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j65ylg.jpg\", \"description\": \"George and Calum are tending vines, fig plants and fruit bushes.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0020cvk\", \"title\": \"2024: Episode 12\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0020cvk\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j4pjlm.jpg\", \"description\": \"Brian Cunningham and Carole Baxter offer tips on alpine plants.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m00205fh\", \"title\": \"2024: Episode 11\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m00205fh\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j3jgmv.jpg\", \"description\": \"Kirsty Wilson discusses what to sow and plant in order to attract birds to the area.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001zywb\", \"title\": \"2024: Episode 10\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001zywb\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j1g4dk.jpg\", \"description\": \"It\\u2019s time to check in and enjoy the results of the spring planting and sowing.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001zrcv\", \"title\": \"2024: Episode 9\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001zrcv\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0j0s921.jpg\", \"description\": \"Carole looks at bedding plants that are safe to plant out now the risk of frost has gone.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001zjnr\", \"title\": \"2024: Episode 8\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001zjnr\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0nc0zx5.jpg\", \"description\": \"Kirsty and Lizzie look at plants that are specifically suited to extremely wet conditions.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001z9sm\", \"title\": \"2024: Episode 7\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001z9sm\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hxprzy.jpg\", \"description\": \"Ideas on what to plant in a shaded area of woodland.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001z2gb\", \"title\": \"2024: Episode 6\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001z2gb\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hvdqbr.jpg\", \"description\": \"Carole is joined by James Silvey to answer questions on how to attract wildlife.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001yw6c\", \"title\": \"2024: Episode 5\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001yw6c\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hv2k8l.jpg\", \"description\": \"With the start of a new month, George and Lizzie turn their attention to the herb garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001ym18\", \"title\": \"2024: Episode 4\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001ym18\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hsdnqk.jpg\", \"description\": \"Kirsty and Calum are busy tackling a revamp of the roses in the picket fence garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001yd28\", \"title\": \"2024: Episode 3\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001yd28\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hqyt4k.jpg\", \"description\": \"Calum Clunie and Lizzie Schofield unwrap dahlias after a winter in the dark.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001y5pc\", \"title\": \"2024: Episode 2\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001y5pc\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hp1cyy.jpg\", \"description\": \"George and Carole plant some blight-resistant varieties of potato in the garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001xz78\", \"title\": \"2024: Episode 1\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001xz78\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0hm8n3f.jpg\", \"description\": \"Carole and George are at Beechgrove to review how the winter has affected the garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001qwzf\", \"title\": \"2023: Episode 26\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001qwzf\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0gfv9mc.jpg\", \"description\": \"Carole Baxter and George Anderson look back at how the 2023 growing season has been.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001qsb6\", \"title\": \"2023: Episode 25\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001qsb6\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0gff0q8.jpg\", \"description\": \"It\\u2019s time to review the season\\u2019s growing successes.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001qj1t\", \"title\": \"2023: Episode 24\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001qj1t\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0gchkb7.jpg\", \"description\": \"Carole Baxter reviews the success of Beechgrove's wildlife-friendly planting project.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001q9yr\", \"title\": \"2023: Episode 23\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001q9yr\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g9lqtg.jpg\", \"description\": \"With autumn looming, there is still plenty to do for Kirsty Wilson and Calum Clunie.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001q3lb\", \"title\": \"2023: Episode 22\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001q3lb\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g8nf83.jpg\", \"description\": \"Carole checks in on the sweet peas, planted to mark Beechgrove's sapphire anniversary.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001pvz1\", \"title\": \"2023: Episode 21\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001pvz1\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g83wmk.jpg\", \"description\": \"Carole Baxter talks about the many bugs, blights and diseases that can attack your plants\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001pplg\", \"title\": \"2023: Episode 20\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001pplg\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g6npgc.jpg\", \"description\": \"Calum is sowing winter vegetables, and Carole harvests the blooms planted in the spring.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001pk7g\", \"title\": \"2023: Episode 19\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001pk7g\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g5hczk.jpg\", \"description\": \"Kirsty checks on her hot border, and Scott demonstrates how to prune a rambling rose.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001p9hm\", \"title\": \"2023: Episode 18\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001p9hm\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g3zm7f.jpg\", \"description\": \"George Anderson and Carole Baxter harvest the first of the year\\u2019s potatoes.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001p4lh\", \"title\": \"2023: Episode 17\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001p4lh\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g2n499.jpg\", \"description\": \"Head gardener Scott Smith heads for the Picket Fence Garden to check on the roses.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001nyvk\", \"title\": \"2023: Episode 16\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001nyvk\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g1dj52.jpg\", \"description\": \"Kirsty and Carole thin out the bamboo next to the pond.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001nrj9\", \"title\": \"2023: Episode 15\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001nrj9\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0g07yjj.jpg\", \"description\": \"Scott and Calum harvest the garlic varieties planted last November.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001nkhh\", \"title\": \"2023: Episode 14\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001nkhh\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0fywrtc.jpg\", \"description\": \"It\\u2019s viewer question time at Beechgrove Garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001nd5j\", \"title\": \"2023: Episode 13\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001nd5j\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0fymtwy.jpg\", \"description\": \"There is a visit to Culzean Castle to find out what's growing in their walled garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001n4lf\", \"title\": \"2023: Episode 12\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001n4lf\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0fw17db.jpg\", \"description\": \"Carole visits a wildflower specialist, and Kirsty continues her houseplant care series.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001mykv\", \"title\": \"2023: Episode 11\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001mykv\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0ftwrhr.jpg\", \"description\": \"There\\u2019s a focus on productive gardening in small spaces this week at Beechgrove Garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001mqfl\", \"title\": \"2023: Episode 10\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001mqfl\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0fskl0d.jpg\", \"description\": \"Scott is in the picket garden taking away an ornamental arch.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001mrm8\", \"title\": \"Beechgrove Repotted: Episode 22\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001mrm8\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0nc0zx5.jpg\", \"description\": \"Calum hosts his own homegrown show in his grandparents' back garden.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m001mhdd\", \"title\": \"2023: Episode 9\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m001mhdd\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0frnxwk.jpg\", \"description\": \"Lizzie Schofield and Calum Clunie provide expert advice on some common garden tasks.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2\", \"webpage_url_basename\": \"beechgrove\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"playlist_count\": 36, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "1:2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"m0004c4v\", \"title\": \"Beechgrove Garden\", \"description\": \"Celebrating the great Scottish garden. Tips and advice to get the most out of your garden, with inspirational ideas from Scotland's most beautiful green spaces.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"m0021dvy\", \"title\": \"2024: Episode 17\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0021dvy\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0jcw56m.jpg\", \"description\": \"George and Lizzie start cherry-picking the best of the summer produce from the plot.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m002178b\", \"title\": \"2024: Episode 16\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m002178b\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0jbx6jl.jpg\", \"description\": \"Kirsty and Calum trim, prune and cut to encourage new growth for the rest of the season.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2\", \"webpage_url_basename\": \"beechgrove\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"requested_entries\": [1, 2], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=3",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"m0004c4v\", \"title\": \"Beechgrove Garden\", \"description\": \"Celebrating the great Scottish garden. Tips and advice to get the most out of your garden, with inspirational ideas from Scotland's most beautiful green spaces.\", \"_type\": \"playlist\", \"entries\": [null], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=3\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=3\", \"webpage_url_basename\": \"beechgrove\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: m0004c4v: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=two",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: invalid literal for int() with base 10: 'two'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.bbc.co.uk/iplayer/episodes/b05rcz9v",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: 'NoneType' object has no attribute 'get'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/p0000001",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"p0000001\", \"title\": \"Broken\", \"description\": \"A programme whose episode list has no entities.\", \"_type\": \"playlist\", \"entries\": [null], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/p0000001\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/p0000001\", \"webpage_url_basename\": \"p0000001\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: 'entities'"
+   ],
+   "files": {}
+  }
+ ]
+}

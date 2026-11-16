@@ -691,7 +691,17 @@ pub use bandcamp::{
     user_suitable as bandcamp_user_suitable, weekly_suitable as bandcamp_weekly_suitable,
 };
 pub use bandlab::{Bandlab, suitable as bandlab_suitable};
-pub use bbc::{BbcCoUkPlaylist, suitable as bbc_couk_playlist_suitable};
+pub use bbc::{
+    BbcCoUkArticle, BbcCoUkIPlayerEpisodes, BbcCoUkIPlayerGroup, BbcCoUkPlaylist,
+    article_suitable as bbc_couk_article_suitable,
+    iplayer_episodes_suitable as bbc_couk_iplayer_episodes_suitable,
+    iplayer_group_suitable as bbc_couk_iplayer_group_suitable,
+    suitable as bbc_couk_playlist_suitable,
+};
+pub(crate) use bbc::{
+    fetch_iplayer_pages as fetch_bbc_iplayer_pages,
+    is_iplayer_pending_state as bbc_iplayer_pending_state,
+};
 pub use bbccouk::{Bbc, BbcCoUk, bbc_suitable, couk_suitable as bbc_couk_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use beatport::{Beatport, suitable as beatport_suitable};
