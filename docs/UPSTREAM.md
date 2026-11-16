@@ -89,8 +89,24 @@ For each update, the agent should:
    manifest entry, and the descriptions must match
    ([extractor tiers](../upstream/notes/extractor-tiers.md)). Regenerate
    `docs/SITES.md` with `tools/extractor_tiers.py --write`.
+   A site fixture's `upstream.patch` that no longer applies has been merged
+   upstream (see below).
 
 Before enabling unattended updates, add PR/review integration and release
 rollback. The report, the coverage ledger, the update notes and the
 differential tools (`tools/capture_sites.py`, `tools/compare_*.py`) are the
 input layer for that system.
+
+## Fixes ported ahead of upstream
+
+An unmerged upstream fix for a site that is broken at the baseline may be
+ported when users have confirmed it. Its diff is saved as the site fixture's
+`upstream.patch`; `tools/capture_sites.py` applies it to a temporary copy of
+the checkout's `yt_dlp` package, so the fixture is still compared with
+upstream's own code. Once a baseline advance includes the fix, the patch no
+longer applies and the capture fails: delete the patch, recapture, and drop
+the entry below.
+
+| Site fixture | Upstream PR | Reason |
+| --- | --- | --- |
+| `drtv` | [#17980](https://github.com/yt-dlp/yt-dlp/pull/17980) | DR TV page items' `id` became a GUID that the videos API rejects (HTTP 400 for every program); the item and season IDs come from their `path`'s numeric suffix. |

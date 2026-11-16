@@ -1,0 +1,19 @@
+{
+ "media": [
+  {
+   "kind": "video",
+   "bitrate": "543",
+   "encoding": "h264",
+   "width": "512",
+   "height": "288",
+   "connection": [
+    {
+     "href": "https://vod.bbc.test/p0000001/mobile_543.mp4",
+     "protocol": "https",
+     "supplier": "mf_akamai",
+     "transferFormat": "plain"
+    }
+   ]
+  }
+ ]
+}

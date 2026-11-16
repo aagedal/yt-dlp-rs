@@ -1,0 +1,52 @@
+{
+ "routes": [
+  {
+   "url": "http://ibl.api.bbc.co.uk/ibl/v1/groups/p081d7j7/episodes?page=1&per_page=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "music-in-scotland-1.json"
+  },
+  {
+   "url": "http://ibl.api.bbc.co.uk/ibl/v1/groups/p081d7j7/episodes?page=1&per_page=200",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "music-in-scotland-200.json"
+  },
+  {
+   "url": "http://ibl.api.bbc.co.uk/ibl/v1/groups/p081d7j7/episodes?page=2&per_page=36",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "music-in-scotland-36-page-2.json"
+  },
+  {
+   "url": "http://ibl.api.bbc.co.uk/ibl/v1/groups/p02tcc32/episodes?page=1&per_page=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "bohemian-icons-1.json"
+  },
+  {
+   "url": "http://ibl.api.bbc.co.uk/ibl/v1/groups/p02tcc32/episodes?page=1&per_page=200",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "bohemian-icons-200.json"
+  },
+  {
+   "url": "http://ibl.api.bbc.co.uk/ibl/v1/groups/p0000002/episodes?page=1&per_page=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broken-1.json"
+  }
+ ]
+}

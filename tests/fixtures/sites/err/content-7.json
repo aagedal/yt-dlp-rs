@@ -1,0 +1,30 @@
+{
+ "data": {
+  "mainContent": {
+   "id": 7,
+   "type": "movie",
+   "heading": "Protokollita",
+   "subHeading": "",
+   "lead": "",
+   "body": "<p>Komöödia <b>1978</b></p>",
+   "created": 1608210000,
+   "updated": "1608220800",
+   "scheduleStart": null,
+   "publicStart": 1703577600,
+   "year": 1978,
+   "medias": [
+    {
+     "src": {
+      "hls": "//vod.err.test/7/master.m3u8",
+      "hlsNew": "//vod.err.test/7/master.m3u8",
+      "dash": "//vod.err.test/7/manifest.mpd",
+      "file": "//vod.err.test/7/file.mp4"
+     },
+     "restrictions": {
+      "drm": false
+     }
+    }
+   ]
+  }
+ }
+}

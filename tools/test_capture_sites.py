@@ -1,10 +1,11 @@
 import json
 import os
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 
-from capture_sites import PINNED_UPSTREAM, SITES, normalize, prepare
+from capture_sites import PINNED_UPSTREAM, SITES, normalize, patched, prepare
 from site_proxy import load_routes, match_route, strip_query
 
 
@@ -33,6 +34,21 @@ class SiteCaptureTests(unittest.TestCase):
             self.assertEqual(prepare(Path(site), {'copy': ['cookies.txt']}, work), {'cookies.txt'})
             self.assertEqual(os.listdir(work), ['cookies.txt'])
             self.assertEqual(prepare(Path(site), {}, work), set())
+
+    def test_site_patches_apply_to_a_copy_and_fail_once_merged(self):
+        with tempfile.TemporaryDirectory() as upstream, tempfile.TemporaryDirectory() as site:
+            Path(upstream, 'yt_dlp').mkdir()
+            Path(upstream, 'yt_dlp', 'x.py').write_text('a = 1\n')
+            patch = Path(site, 'upstream.patch')
+            patch.write_text('--- a/yt_dlp/x.py\n+++ b/yt_dlp/x.py\n@@ -1 +1 @@\n-a = 1\n+a = 2\n')
+            copy = patched(upstream, patch)
+            try:
+                self.assertEqual(Path(copy, 'yt_dlp', 'x.py').read_text(), 'a = 2\n')
+                self.assertEqual(Path(upstream, 'yt_dlp', 'x.py').read_text(), 'a = 1\n')
+                with self.assertRaises(SystemExit):
+                    patched(copy, patch)
+            finally:
+                shutil.rmtree(copy)
 
     def test_every_site_has_routes_and_saved_cases(self):
         for site in SITES.iterdir():

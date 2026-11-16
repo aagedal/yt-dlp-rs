@@ -45,6 +45,7 @@ mod baidu;
 mod bandcamp;
 mod bandlab;
 mod bbc;
+mod bbccouk;
 mod beacon;
 mod beatport;
 mod beeg;
@@ -690,7 +691,18 @@ pub use bandcamp::{
     user_suitable as bandcamp_user_suitable, weekly_suitable as bandcamp_weekly_suitable,
 };
 pub use bandlab::{Bandlab, suitable as bandlab_suitable};
-pub use bbc::{BbcCoUkPlaylist, suitable as bbc_couk_playlist_suitable};
+pub use bbc::{
+    BbcCoUkArticle, BbcCoUkIPlayerEpisodes, BbcCoUkIPlayerGroup, BbcCoUkPlaylist,
+    article_suitable as bbc_couk_article_suitable,
+    iplayer_episodes_suitable as bbc_couk_iplayer_episodes_suitable,
+    iplayer_group_suitable as bbc_couk_iplayer_group_suitable,
+    suitable as bbc_couk_playlist_suitable,
+};
+pub(crate) use bbc::{
+    fetch_iplayer_pages as fetch_bbc_iplayer_pages,
+    is_iplayer_pending_state as bbc_iplayer_pending_state,
+};
+pub use bbccouk::{Bbc, BbcCoUk, bbc_suitable, couk_suitable as bbc_couk_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use beatport::{Beatport, suitable as beatport_suitable};
 pub use beeg::{Beeg, suitable as beeg_suitable};
@@ -4018,6 +4030,12 @@ pub(crate) fn dict_format(
             map.insert(key.to_owned(), value);
         }
     }
+    // Processing's `sanitize_url`: a protocol-relative `//host/...` gets `http:`.
+    if let Some(serde_json::Value::String(url)) = map.get_mut("url")
+        && url.starts_with("//")
+    {
+        *url = crate::info::sanitize_url(url);
+    }
     let has_quality = map.get("quality").is_some_and(serde_json::Value::is_i64);
     if !map.contains_key("ext") {
         let ext = map
@@ -4111,6 +4129,33 @@ pub(crate) fn dict_info(
 mod tests {
     use super::*;
     use reqwest::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderMap, HeaderValue};
+
+    #[test]
+    fn extractors_keep_upstreams_geo_attributes() {
+        // Inherited `_GEO_*` attributes that these ports once missed (3sat's
+        // DACH-only HLS needs ZDFBaseIE's fake German address).
+        for (extractor, bypass, countries) in [
+            (&cbc::CBCPlayer as &dyn Extractor, true, &["CA"][..]),
+            (&dreisat::DreiSat, true, &["DE"]),
+            (&hrfensehen::HrFernsehen, true, &["DE"]),
+            (&ninenow::NineNow, false, &[]),
+            (&ondemandkorea::OnDemandKorea, true, &["US", "CA"]),
+            (&ondemandkorea::OnDemandKoreaProgram, true, &["US", "CA"]),
+            (&streaks::Streaks, false, &["JP"]),
+            (&tvp::TVPEmbed, false, &[]),
+            (&wdr::Wdr, true, &["DE"]),
+            (&ximalaya::Ximalaya, true, &["CN"]),
+            (&ximalaya::XimalayaAlbum, true, &["CN"]),
+        ] {
+            let geo = extractor.geo();
+            assert_eq!(
+                (geo.bypass, geo.countries, geo.ip_blocks),
+                (bypass, countries, &[][..]),
+                "{}",
+                extractor.key()
+            );
+        }
+    }
 
     #[test]
     fn url_regexes_use_ascii_digit_and_word_classes() {

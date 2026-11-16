@@ -742,6 +742,11 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Bandcamp:user",
     "Bandcamp:weekly",
     "Bandlab",
+    "bbc",
+    "bbc.co.uk",
+    "bbc.co.uk:article",
+    "bbc.co.uk:iplayer:episodes",
+    "bbc.co.uk:iplayer:group",
     "bbc.co.uk:playlist",
     "BeaconTv",
     "Beatport",
@@ -2223,7 +2228,12 @@ impl YoutubeDl {
                 Box::new(extractor::Clipchamp),
                 Box::new(extractor::Ccc),
                 Box::new(extractor::CccPlaylist),
+                Box::new(extractor::BbcCoUk),
+                Box::new(extractor::BbcCoUkArticle),
+                Box::new(extractor::BbcCoUkIPlayerEpisodes),
+                Box::new(extractor::BbcCoUkIPlayerGroup),
                 Box::new(extractor::BbcCoUkPlaylist),
+                Box::new(extractor::Bbc),
                 Box::new(extractor::DaystarClip),
                 Box::new(extractor::Newsy),
                 Box::new(extractor::NhkVod),
@@ -3680,6 +3690,8 @@ impl YoutubeDl {
                 extractor::fetch_lefigaro_pages
             } else if extractor::hollywoodreporter_pending_state(&pending.state) {
                 extractor::fetch_hollywoodreporter_pages
+            } else if extractor::bbc_iplayer_pending_state(&pending.state) {
+                extractor::fetch_bbc_iplayer_pages
             } else if extractor::redgifs_pending_state(&pending.state) {
                 extractor::fetch_redgifs_list_pages
             } else if extractor::lbry_pending_state(&pending.state) {

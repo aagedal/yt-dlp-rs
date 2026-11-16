@@ -1,0 +1,262 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000002",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p0000002\", \"title\": \"Fox &amp; hounds\", \"description\": \"A clip description\", \"thumbnail\": \"https://ichef.bbc.test/p0000002.jpg\", \"formats\": [{\"format_id\": \"mf_cloudfront-audio=96000\", \"manifest_url\": \"https://vod.bbc.test/p0000002/dash/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 96.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://vod.bbc.test/p0000002/dash/audio.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_cloudfront-audio=96000 - audio only (DASH audio)\"}, {\"format_id\": \"https-128\", \"filesize\": null, \"abr\": 128, \"acodec\": \"aac\", \"vcodec\": \"none\", \"url\": \"https://vod.bbc.test/p0000002/audio_128.m4a\", \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-128 - audio only\"}, {\"format_id\": \"limelight\", \"filesize\": 4800000, \"width\": 640, \"height\": 360, \"tbr\": 800, \"vcodec\": \"h264\", \"url\": \"rtmp://rtmp.bbc.test/ondemand?auth=1\", \"play_path\": \"mp4:p0000002.mp4\", \"app\": \"ondemand?auth=1\", \"page_url\": \"http://www.bbc.co.uk\", \"player_url\": \"http://www.bbc.co.uk/emp/releases/iplayer/revisions/617463_618125_4/617463_618125_4_emp.swf\", \"rtmp_live\": false, \"ext\": \"flv\", \"protocol\": \"rtmp\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"limelight - 640x360\"}, {\"format_id\": \"cdn-800\", \"filesize\": 4800000, \"width\": 640, \"height\": 360, \"tbr\": 800, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000002/video_800_cf.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"cdn-800 - 640x360\"}, {\"format_id\": \"mf_akamai\", \"filesize\": 4800000, \"width\": 640, \"height\": 360, \"tbr\": 800, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000002/video_800.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 640x360\"}, {\"format_id\": \"mf_akamai-1200\", \"format_index\": null, \"url\": \"https://vod.bbc.test/p0000002/hls/low.m3u8\", \"manifest_url\": \"https://vod.bbc.test/p0000002/hls/master.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-1200 - 640x360\"}, {\"format_id\": \"mf_cloudfront-video=1500000\", \"manifest_url\": \"https://vod.bbc.test/p0000002/dash/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1500.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://vod.bbc.test/p0000002/dash/video.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_cloudfront-video=1500000 - 1280x720 (DASH video)\"}, {\"format_id\": \"mf_akamai-3500\", \"format_index\": null, \"url\": \"https://vod.bbc.test/p0000002/hls/high.m3u8\", \"manifest_url\": \"https://vod.bbc.test/p0000002/hls/master.m3u8\", \"tbr\": 3500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-3500 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.bbc.co.uk/programmes/p0000002\", \"original_url\": \"https://www.bbc.co.uk/programmes/p0000002\", \"webpage_url_basename\": \"p0000002\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk\", \"extractor_key\": \"BBCCoUk\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ichef.bbc.test/p0000002.jpg\", \"id\": \"0\"}], \"display_id\": \"p0000002\", \"fulltitle\": \"Fox &amp; hounds\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mf_akamai-3500\", \"url\": \"https://vod.bbc.test/p0000002/hls/high.m3u8\", \"manifest_url\": \"https://vod.bbc.test/p0000002/hls/master.m3u8\", \"tbr\": 3500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-3500 - 1280x720\", \"_filename\": \"Fox &amp; hounds [p0000002].mp4\", \"filename\": \"Fox &amp; hounds [p0000002].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mf_akamai-3500\", \"format_index\": null, \"url\": \"https://vod.bbc.test/p0000002/hls/high.m3u8\", \"manifest_url\": \"https://vod.bbc.test/p0000002/hls/master.m3u8\", \"tbr\": 3500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-3500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: geolocation"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000002",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[bbc.co.uk] Extracting URL: https://www.bbc.co.uk/programmes/p0000002",
+    "[bbc.co.uk] p0000002: Downloading video page",
+    "[bbc.co.uk] p0000002: Downloading media selection JSON",
+    "[bbc.co.uk] p0000002: Downloading media selection JSON",
+    "[bbc.co.uk] p0000002: Downloading m3u8 information",
+    "[bbc.co.uk] p0000002: Downloading MPD manifest",
+    "[info] Available formats for p0000002:",
+    "ID                          EXT RESOLUTION | FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------------------------------",
+    "mf_cloudfront-audio=96000   m4a audio only |            96k https | audio only        mp4a.40.2   96k 48k [en] DASH audio, m4a_dash",
+    "https-128                   m4a audio only |           128k https | audio only        aac        128k",
+    "limelight                   flv 640x360    |  4.58MiB  800k rtmp  | h264              unknown",
+    "cdn-800                     mp4 640x360    |  4.58MiB  800k https | h264              unknown",
+    "mf_akamai                   mp4 640x360    |  4.58MiB  800k https | h264              unknown",
+    "mf_akamai-1200              mp4 640x360    |          1200k m3u8  | avc1.4d401e       mp4a.40.2",
+    "mf_cloudfront-video=1500000 mp4 1280x720   |          1500k https | avc1.64001f 1500k video only          DASH video, mp4_dash",
+    "mf_akamai-3500              mp4 1280x720   |          3500k m3u8  | avc1.64001f       mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: geolocation"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000002",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[bbc.co.uk] Extracting URL: https://www.bbc.co.uk/programmes/p0000002",
+    "[bbc.co.uk] p0000002: Downloading video page",
+    "[bbc.co.uk] p0000002: Downloading media selection JSON",
+    "[bbc.co.uk] p0000002: Downloading media selection JSON",
+    "[bbc.co.uk] p0000002: Downloading m3u8 information",
+    "[bbc.co.uk] p0000002: Downloading MPD manifest",
+    "[bbc.co.uk] p0000002: Downloading captions",
+    "[bbc.co.uk] p0000002: Downloading captions",
+    "[info] Available subtitles for p0000002:",
+    "Language Formats",
+    "en       ttml"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] p0000002: Unable to download XML: HTTP Error 404: Not Found",
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: geolocation"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000002",
+   "args": [
+    "--write-subs",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[bbc.co.uk] Extracting URL: https://www.bbc.co.uk/programmes/p0000002",
+    "[bbc.co.uk] p0000002: Downloading video page",
+    "[bbc.co.uk] p0000002: Downloading media selection JSON",
+    "[bbc.co.uk] p0000002: Downloading media selection JSON",
+    "[bbc.co.uk] p0000002: Downloading m3u8 information",
+    "[bbc.co.uk] p0000002: Downloading MPD manifest",
+    "[bbc.co.uk] p0000002: Downloading captions",
+    "[bbc.co.uk] p0000002: Downloading captions",
+    "[info] p0000002: Downloading subtitles: en",
+    "[info] p0000002: Downloading 1 format(s): mf_akamai-3500",
+    "[info] Writing video subtitles to: p0000002.en.ttml",
+    "[download] Destination: p0000002.en.ttml",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] p0000002: Unable to download XML: HTTP Error 404: Not Found",
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: geolocation"
+   ],
+   "files": {
+    "p0000002.en.ttml": 159
+   }
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000005",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p0000001\", \"title\": \"Parent title\", \"description\": \"Meta description\", \"thumbnail\": null, \"duration\": 120, \"formats\": [{\"format_id\": \"mf_akamai\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 8145000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.bbc.co.uk/programmes/b0000005\", \"original_url\": \"https://www.bbc.co.uk/programmes/b0000005\", \"webpage_url_basename\": \"b0000005\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk\", \"extractor_key\": \"BBCCoUk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"p0000001\", \"fulltitle\": \"Parent title\", \"duration_string\": \"2:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mf_akamai\", \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 8145000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\", \"_filename\": \"Parent title [p0000001].mp4\", \"filename\": \"Parent title [p0000001].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mf_akamai\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 8145000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: selectionunavailable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000006",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p0000007\", \"title\": \"AD title\", \"description\": \"AD summary\", \"thumbnail\": null, \"duration\": 1790, \"formats\": [{\"format_id\": \"mf_akamai-0\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000007/mobile_543.mp4\", \"format_note\": \"AudioDescribed, Signed\", \"language_preference\": -10, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 121496250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-0 - 512x288 (AudioDescribed, Signed)\"}, {\"format_id\": \"mf_akamai-1\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"format_note\": \"Original\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 121496250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-1 - 512x288 (Original)\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.bbc.co.uk/programmes/b0000006\", \"original_url\": \"https://www.bbc.co.uk/programmes/b0000006\", \"webpage_url_basename\": \"b0000006\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk\", \"extractor_key\": \"BBCCoUk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"p0000007\", \"fulltitle\": \"AD title\", \"duration_string\": \"29:50\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mf_akamai-1\", \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"format_note\": \"Original\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 121496250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-1 - 512x288 (Original)\", \"_filename\": \"AD title [p0000007].mp4\", \"filename\": \"AD title [p0000007].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mf_akamai-1\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"format_note\": \"Original\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 121496250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai-1 - 512x288 (Original)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: selectionunavailable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000008",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p0000001\", \"title\": \"Legacy title\", \"description\": \"Legacy summary\", \"thumbnail\": null, \"duration\": 600, \"formats\": [{\"format_id\": \"mf_akamai\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 40725000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.bbc.co.uk/programmes/b0000008\", \"original_url\": \"https://www.bbc.co.uk/programmes/b0000008\", \"webpage_url_basename\": \"b0000008\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk\", \"extractor_key\": \"BBCCoUk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"p0000001\", \"fulltitle\": \"Legacy title\", \"duration_string\": \"10:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mf_akamai\", \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 40725000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\", \"_filename\": \"Legacy title [p0000001].mp4\", \"filename\": \"Legacy title [p0000001].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mf_akamai\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 40725000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: selectionunavailable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000009",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [bbc.co.uk] b0000009: Episode b0000009 is no longer available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000011",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: cannot access local variable 'programme_id' where it is not associated with a value"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episode/b0000010/x",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [bbc.co.uk] b0000010: Sorry, this episode is not currently available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000003",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [bbc.co.uk] p0000003: bbc.co.uk returned error: geolocation"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000004",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [bbc.co.uk] p0000004: bbc.co.uk returned error: blocked"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000012",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p0000012\", \"title\": \"ASX\", \"description\": null, \"thumbnail\": null, \"formats\": [{\"url\": \"mms://wm.bbc.test/a.wma\", \"format_id\": \"ref0_asx\", \"protocol\": \"mms\", \"ext\": \"wma\", \"video_ext\": \"wma\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ref0_asx - unknown\"}, {\"url\": \"http://wm.bbc.test/b.wma\", \"format_id\": \"ref1_asx\", \"protocol\": \"http\", \"ext\": \"wma\", \"video_ext\": \"wma\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ref1_asx - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.bbc.co.uk/programmes/p0000012\", \"original_url\": \"https://www.bbc.co.uk/programmes/p0000012\", \"webpage_url_basename\": \"p0000012\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk\", \"extractor_key\": \"BBCCoUk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"p0000012\", \"fulltitle\": \"ASX\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"http://wm.bbc.test/b.wma\", \"format_id\": \"ref1_asx\", \"protocol\": \"http\", \"ext\": \"wma\", \"video_ext\": \"wma\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ref1_asx - unknown\", \"_filename\": \"ASX [p0000012].wma\", \"filename\": \"ASX [p0000012].wma\", \"__write_download_archive\": false}], \"url\": \"http://wm.bbc.test/b.wma\", \"format_id\": \"ref1_asx\", \"protocol\": \"http\", \"ext\": \"wma\", \"video_ext\": \"wma\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ref1_asx - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000018",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [bbc.co.uk] p0000018: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.example.test/embed.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"p0000001\", \"title\": \"Embedded title\", \"description\": \"Meta description\", \"thumbnail\": null, \"duration\": 120, \"formats\": [{\"format_id\": \"mf_akamai\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 8145000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\"}], \"subtitles\": {}, \"original_url\": \"https://news.example.test/embed.html\", \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episode/b0000005\", \"webpage_url_basename\": \"b0000005\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk\", \"extractor_key\": \"BBCCoUk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"p0000001\", \"fulltitle\": \"Embedded title\", \"duration_string\": \"2:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"mf_akamai\", \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 8145000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\", \"_filename\": \"Embedded title [p0000001].mp4\", \"filename\": \"Embedded title [p0000001].mp4\", \"__write_download_archive\": false}], \"format_id\": \"mf_akamai\", \"filesize\": null, \"width\": 512, \"height\": 288, \"tbr\": 543, \"vcodec\": \"h264\", \"url\": \"https://vod.bbc.test/p0000001/mobile_543.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"512x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 8145000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mf_akamai - 512x288\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [bbc.co.uk] bbc.co.uk returned error: selectionunavailable"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "101:103"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"m0004c4v\", \"title\": \"Beechgrove Garden\", \"description\": \"Celebrating the great Scottish garden. Tips and advice to get the most out of your garden, with inspirational ideas from Scotland's most beautiful green spaces.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"id\": \"m00185fq\", \"title\": \"2022: Episode 10\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m00185fq\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0cc8n7t.jpg\", \"description\": \"George Anderson is thinning out the seedlings at his allotment in Joppa.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0017yz5\", \"title\": \"2022: Episode 9\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0017yz5\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0c9zcbp.jpg\", \"description\": \"George Anderson is planting runner beans on his allotment in Joppa.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"id\": \"m0017p0v\", \"title\": \"2022: Episode 8\", \"url\": \"https://www.bbc.co.uk/iplayer/episode/m0017p0v\", \"thumbnail\": \"https://ichef.bbci.co.uk/images/ic/raw/p0c8njx9.jpg\", \"description\": \"Everyone is learning at Beechgrove this week with Calum Clunie and Carole Baxter.\", \"categories\": [\"Lifestyle\"], \"series\": \"Beechgrove Garden\", \"ie_key\": \"BBCCoUk\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove\", \"original_url\": \"https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove\", \"webpage_url_basename\": \"beechgrove\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:iplayer:episodes\", \"extractor_key\": \"BBCCoUkIPlayerEpisodes\", \"release_year\": null, \"requested_entries\": [101, 102, 103], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

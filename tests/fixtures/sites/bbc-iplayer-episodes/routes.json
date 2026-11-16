@@ -1,0 +1,125 @@
+{
+ "routes": [
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "doctor-foster-1.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"b094m5t9\", \"page\": 1, \"perPage\": 1}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "doctor-foster-100.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"b094m5t9\", \"page\": 1, \"perPage\": 100}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "doctor-foster-slice-b094m6nv.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"b094m5t9\", \"page\": 1, \"perPage\": 100, \"sliceId\": \"b094m6nv\"}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "doctor-foster-slice-structural-2.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"b094m5t9\", \"page\": 1, \"perPage\": 100, \"sliceId\": \"b094m5t9-structural-2-b094m6nv\"}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "beechgrove-1.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"m0004c4v\", \"page\": 1, \"perPage\": 1}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "beechgrove-100-page-1.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"m0004c4v\", \"page\": 1, \"perPage\": 100}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "beechgrove-100-page-2.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"m0004c4v\", \"page\": 2, \"perPage\": 100}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "beechgrove-36-page-2.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"m0004c4v\", \"page\": 2, \"perPage\": 36}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "disappearance-1.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"b05rcz9v\", \"page\": 1, \"perPage\": 1}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broken-1.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"p0000001\", \"page\": 1, \"perPage\": 1}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broken-100.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"p0000001\", \"page\": 1, \"perPage\": 100}"
+   ]
+  }
+ ]
+}

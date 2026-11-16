@@ -246,7 +246,7 @@ fn embed(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let manifest = Url::parse(&video_url)?;
         let ext = super::direct::determine_ext(&video_url).unwrap_or_default();
         if ext == "m3u8" {
-            if let Some(stream) = extract_m3u8_master_optional(
+            if let Some(mut stream) = extract_m3u8_master_optional(
                 client,
                 &manifest,
                 EMBED_NAME,
@@ -255,6 +255,8 @@ fn embed(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
                 false,
                 is_live,
             ) {
+                // `_extract_m3u8_formats(..., m3u8_id='hls')` passes no ext.
+                super::hls::without_ext(&mut stream);
                 formats.extend(stream.formats);
             }
         } else if ext == "mpd" {
@@ -341,12 +343,11 @@ fn embed(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         if thumb_url.contains("{width}") || thumb_url.contains("{height}") {
             continue;
         }
-        // `_sanitize_thumbnails` numbers the posters that have no ID.
+        // Processing's `_sanitize_thumbnails` sorts them, then numbers them.
         thumbnails.push(json!({
             "url": thumb_url,
             "width": thumb.get("width").cloned().unwrap_or(Value::Null),
             "height": thumb.get("height").cloned().unwrap_or(Value::Null),
-            "id": thumbnails.len().to_string(),
         }));
     }
     fields.push(("thumbnails", Value::Array(thumbnails)));
@@ -397,7 +398,8 @@ fn embed(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
             continue;
         };
         let lang = str_or_none(sub.get("lang")).unwrap_or_default();
-        let parsed = Url::parse(sub_url).map_err(|_| {
+        // Processing's `sanitize_url`: the API's `//s.tvp.pl/...` gets `http:`.
+        let parsed = Url::parse(&crate::info::sanitize_url(sub_url)).map_err(|_| {
             Error::UnsupportedHtml5(
                 "TVP subtitle URLs that are not absolute are not supported natively".into(),
             )
@@ -471,9 +473,10 @@ fn vod_video(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
     let mut formats = Vec::new();
     for manifest_url in hls_sources(&playlist) {
         let manifest = Url::parse(&manifest_url)?;
-        if let Some(stream) = super::extract_m3u8_master_optional(
+        if let Some(mut stream) = super::extract_m3u8_master_optional(
             client, &manifest, VIDEO_NAME, &video_id, None, false, false,
         ) {
+            super::hls::without_ext(&mut stream);
             formats.extend(stream.formats);
         }
     }
@@ -668,6 +671,10 @@ fn vod_series(client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
 impl Extractor for TVPEmbed {
     fn key(&self) -> &'static str {
         EMBED_KEY
+    }
+
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {

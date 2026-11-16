@@ -58,6 +58,13 @@
    "body_file": "none.html"
   },
   {
+   "url": "https://www.dr.dk/drtv/episode/frank-and-kastaniegaarden_53167",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "frank.html"
+  },
+  {
    "url": "https://production-cdn.dr-massive.com/api/items/klassen-darlig-taber-10?device=web_browser&expand=all&ff=idp%2Cldp%2Crpt&geoLocation=dk&isDeviceAbroad=false&lang=da&segments=drtv%2Coptedout&sub=Anonymous",
    "headers": {
     "Content-Type": "application/json"
@@ -113,6 +120,16 @@
     "Content-Type": "application/json"
    },
    "body_file": "none_videos.json"
+  },
+  {
+   "url": "https://production.dr-massive.com/api/account/items/53167/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous",
+   "request_headers": {
+    "authorization": "Bearer fixture-token"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "bonde_videos.json"
   },
   {
    "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8",

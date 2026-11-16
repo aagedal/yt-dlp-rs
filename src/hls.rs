@@ -503,14 +503,6 @@ fn parse_with(text: &str, base: &Url, mode: Mode) -> Result<Playlist> {
                 return Err(invalid("HLS variant/rendition limit exceeded"));
             }
             if *kind == "AUDIO" {
-                if groups
-                    .get(&(*kind, *group))
-                    .is_some_and(|previous| *previous != external)
-                {
-                    return Err(invalid(
-                        "mixed external and inband HLS audio group is unsupported",
-                    ));
-                }
                 let name = attrs
                     .get("NAME")
                     .filter(|name| !name.is_empty())
@@ -566,10 +558,10 @@ fn parse_with(text: &str, base: &Url, mode: Mode) -> Result<Playlist> {
                     alternate: false,
                 });
             }
-            groups
-                .entry((*kind, *group))
-                .and_modify(|value| *value |= external)
-                .or_insert(external);
+            // Upstream `audio_group[0].get('URI')`: the group's first
+            // rendition decides whether its variants' audio is external
+            // (RTVE muxes its main language and adds an external one).
+            groups.entry((*kind, *group)).or_insert(external);
         }
     }
     let mut variants = Vec::new();
@@ -991,6 +983,32 @@ mod tests {
     }
 
     #[test]
+    fn mixed_audio_groups_follow_their_first_rendition() {
+        // RTVE's live channels: the main language is muxed into the
+        // variants and an alternative one is external.
+        let inband =
+            "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Castellano\",DEFAULT=YES,AUTOSELECT=YES";
+        let external = "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Original\",URI=\"qaa.m3u8\"";
+        let variant =
+            "#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4,mp4a.40.2\",AUDIO=\"a\"\nv.m3u8";
+        for (first, second, kind) in [
+            (inband, external, StreamKind::Standalone),
+            (external, inband, StreamKind::VideoOnly),
+        ] {
+            let text = format!("#EXTM3U\n{first}\n{second}\n{variant}");
+            let Playlist::Master {
+                variants, audio, ..
+            } = parse(&text, &base()).unwrap()
+            else {
+                panic!()
+            };
+            assert_eq!(variants[0].stream_kind, kind);
+            assert_eq!(audio.len(), 1);
+            assert_eq!(audio[0].name, "Original");
+        }
+    }
+
+    #[test]
     fn audio_groups_reject_ambiguous_metadata_and_keep_unpaired_variants() {
         let rendition = "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"a.m3u8\"";
         for extra in [
@@ -1003,11 +1021,7 @@ mod tests {
                 "{extra}"
             );
         }
-        for second in [
-            rendition.to_owned(),
-            "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Other\"".into(),
-            format!("{rendition},DEFAULT=YES"),
-        ] {
+        for second in [rendition.to_owned(), format!("{rendition},DEFAULT=YES")] {
             let first = format!("{rendition},DEFAULT=YES");
             assert!(parse(&format!("#EXTM3U\n{first}\n{second}"), &base()).is_err());
         }

@@ -217,6 +217,10 @@ impl Extractor for CBCPlayer {
         PLAYER_KEY
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["CA"])
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some(found) = PLAYER_VALID_URL.captures(url.as_str()) else {
             return Ok(None);

@@ -52,5 +52,21 @@
   "args": [
    "-j"
   ]
+ },
+ {
+  "url": "https://jupiter.err.ee/7/protokollita",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://jupiter.err.ee/7/protokollita",
+  "args": [
+   "--no-progress",
+   "-f",
+   "http",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
  }
 ]

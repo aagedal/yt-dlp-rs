@@ -2222,7 +2222,7 @@ enum Embed {
     Info(WebpageEntry),
 }
 
-static EMBED_SITES: [EmbedSite; 53] = [
+static EMBED_SITES: [EmbedSite; 55] = [
     EmbedSite {
         name: "youtube",
         key: "Youtube",
@@ -2256,6 +2256,24 @@ static EMBED_SITES: [EmbedSite; 53] = [
         extractor: Some(&super::arcpublishing::ArcPublishing),
         embed_urls: super::arcpublishing::embed_urls,
         temp_id: super::arcpublishing::temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::bbccouk::COUK_NAME,
+        key: super::bbccouk::COUK_KEY,
+        extractor: Some(&super::bbccouk::BbcCoUk),
+        embed_urls: super::bbccouk::couk_embed_urls,
+        temp_id: super::bbccouk::couk_temp_id,
+        webpage: None,
+        fields: None,
+    },
+    EmbedSite {
+        name: super::bbccouk::BBC_NAME,
+        key: super::bbccouk::BBC_KEY,
+        extractor: Some(&super::bbccouk::Bbc),
+        embed_urls: super::bbccouk::bbc_embed_urls,
+        temp_id: super::bbccouk::bbc_temp_id,
         webpage: None,
         fields: None,
     },

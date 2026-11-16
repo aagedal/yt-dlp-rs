@@ -1,0 +1,96 @@
+[
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000002",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000002",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000002",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000002",
+  "args": [
+   "--write-subs",
+   "--skip-download",
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/b0000005",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/b0000006",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/b0000008",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/b0000009",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/b0000011",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/episode/b0000010/x",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000003",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000004",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000012",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/programmes/p0000018",
+  "args": [
+   "-J"
+  ]
+ },
+ {
+  "url": "https://news.example.test/embed.html",
+  "args": [
+   "-J"
+  ]
+ }
+]

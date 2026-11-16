@@ -5,7 +5,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 
 ## Supported sites
 
-904 of upstream's 1754 extractors are ported (`--list-extractors`). Every
+909 of upstream's 1754 extractors are ported (`--list-extractors`). Every
 one is listed with its tier in [SITES.md](SITES.md), generated from the
 registry, the saved fixtures and the canary list by
 `tools/extractor_tiers.py` and checked in CI.
@@ -13,7 +13,7 @@ registry, the saved fixtures and the canary list by
 | Tier | Extractors | What it means |
 | --- | ---: | --- |
 | 1 | 12 | The live canary sites of `tools/canary_sites.json`: YouTube, Instagram, TikTok, X/Twitter, Facebook, Reddit, Vimeo, Twitch (VODs and clips), Bluesky, SoundCloud, Bandcamp. Checked daily against the live site and the pinned upstream; breakage opens a `canary` issue |
-| 2 | 890 | Compared with pinned upstream on saved responses (`tests/fixtures/sites/`) for the cases those responses cover. Best effort: nothing checks the live site, which may have changed since the responses were saved |
+| 2 | 895 | Compared with pinned upstream on saved responses (`tests/fixtures/sites/`) for the cases those responses cover. Best effort: nothing checks the live site, which may have changed since the responses were saved |
 | untested | 2 | No saved case: GettrStreaming and ximalaya:album, registered only to report that they are not ported |
 
 Tier 1 covers the canary URLs' extractors, not every extractor of the site
@@ -123,7 +123,7 @@ print stages, exit codes, signals) is specified in
 | `--check-formats`, `--check-all-formats`, `--no-check-formats` | Upstream `_check_formats`: a quiet test download (10241 HTTP bytes or the first fragment, no retries) per format, cached per ID. `--check-formats` tests each selector atom's candidates in preference order until one works (`[info] Testing format ID`, `WARNING: Unable to download format ID. Skipping...`); `--check-all-formats` tests every format best-first before listing and selection (`[info] Unable to download format ID. Skipping...`). The test downloader's error line uses this port's error text |
 | Option abbreviations and errors | optparse's `_match_long_opt`: an unambiguous prefix of a long option (including deprecated options and defined `--alias` names, also inside alias expansions) stands for it (`--match-filter`, `--restrict`); an ambiguous one is `ambiguous option: --no-ch (--no-check-certificates, --no-check-formats?)`, an unknown one `no such option: X`, and a switch given `=VALUE` `--X option does not take a value` (usage errors, exit 2); a short option's attached value is kept verbatim (`-f=best` selects `=best`). This port's own `--youtube-js-runtime` also takes part in matching |
 | `--alias ALIASES OPTIONS` | Upstream option aliases: each name (prefixed with `--` unless it starts with `-`) takes as many arguments as the `str.format` fields in OPTIONS, which are shell-quoted into the template, shlex-split and parsed in place (aliases may chain, at most 100 triggers each); templates without fields are used as-is. Aliases are expanded before parsing, so they are not listed in `--help` |
-| `-t NAME`, `--preset-alias NAME` | Upstream `_PRESET_ALIASES` (`mp3`, `aac`, `mp4`, `mkv`, `sleep`), expanded in place before parsing; `Unknown preset alias: NAME` usage error. Like optparse, every option that takes a value now accepts one starting with `-` |
+| `-t NAME`, `--preset-alias NAME` | Upstream `_PRESET_ALIASES` (`mp3`, `aac`, `mp4`, `mkv`, `sleep`), expanded in place before parsing (also after switches in a short-option cluster, `-xt mp3`, like optparse); `Unknown preset alias: NAME` usage error. Like optparse, every option that takes a value now accepts one starting with `-` |
 | Format filter fields | Besides the original fields, `[...]` filters accept upstream's `acodec`, `vcodec`, `container`, `protocol`, `dynamic_range`, `resolution`, `video_ext`, `audio_ext`, `format` (string operators, `!`, `?`) and numeric `fps`, `vbr`, `asr`, `audio_channels`; like upstream, any other key is looked up too, and a format without it matches only with `?` (see Format selection) |
 | `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (with upstream's descriptions); command-line URLs are listed under every suitable extractor (`generic` takes the rest). Extractors upstream marks `_WORKING = False` carry its `(CURRENTLY BROKEN)` suffix and have no description line. Upstream lists 1754 extractors; [SITES.md](SITES.md) has this port's list with tiers |
 | `--color [STREAM:]POLICY`, `--no-colors`, `--no-colours` | Upstream's per-stream dict (`stdout`/`stderr` keys, comma-separated, both by default; `--no-colors` replaces it with `no_color`) in command-line order, with only the final values validated (`"X" is not a valid color policy`). `process_color_policy`: `auto` (default) colors a terminal stream when `TERM` is set and not `dumb` (Windows: VT mode) unless `NO_COLOR` is set (then `no_color`); `auto-tty`/`no_color-tty` ignore `NO_COLOR`; `always`, `never`, `no_color`; `-o -` gives the output stream stderr's policy and quiet modes move screen lines there. `minicurses.format_text` and `YoutubeDL.Styles` color the `ERROR:`/`WARNING:`/`Deprecated Feature:` prefixes, the `-F`/`--list-subs`/`--list-thumbnails` headers and `-F`'s IDs, `│`/`─` delimiters (when stdout's encoding has them), suppressed `audio only`/`video only`/`~` sizes and DRM/UNSUPPORTED/Untested notes, unavailable impersonate targets, `Downloading item N of M`, archive skips, the `--wait-for-video` countdown and the unplayable-formats warning; `ProgressStyles` color the progress fields (also in `--progress-template` values), and a stream allowing sequences (`always`, `no_color`) erases progress lines with `\r\x1b[K` like `MultilinePrinter`'s `_HAVE_FULLCAP`. `_search_regex`/`_search_json`'s `Unable to extract NAME` (and the `unable to extract NAME` warning) style the name in error and warning lines, except for the messages upstream raises literally (`Unable to extract video URL`, `JSON-LD`, …, matched by their pinned texts). Not styled: update/plugin warnings this port does not have |
@@ -175,7 +175,7 @@ print stages, exit codes, signals) is specified in
 | `--break-per-input`, `--no-break-per-input` | `--max-downloads`/`--break-on-existing` only end the current input and reset the count |
 | `--force-write-archive`, `--force-write-download-archive`, `--force-download-archive` | Record archive entries for successfully simulated or skip-download videos too |
 | `--extractor-retries RETRIES` | Upstream `extractor_retries` (default 3, or `infinite`; `parse_retries`' usage errors): the count of the ported extractors' `RetryManager`s (YouTube's webpage, InnerTube and tab requests, live-from-start feeds and TikTok user pages) and SponsorBlock's API requests. Extractions are not re-run, as upstream never does (the library's `ExtractionOptions::retries` still offers that) |
-| `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
+| `-h`, `--help`, `-V`, `--version` | Clap help and crate version. `--help` lists the options upstream lists (with upstream's listed aliases as clap `[alias: ...]` notes, `--alias` and `-t`/`--preset-alias` included) plus this port's own options, and hides upstream's `SUPPRESS_HELP` options (`--user-agent`, `--referer`, `--playlist-start`/`-end`/`-reverse`, `--all-formats`, `--get-*`, ...), which are still accepted; the layout is clap's, not optparse's option groups |
 | `--all-formats` | Upstream's hidden `-f all`, sharing `--format`'s destination: the last of the two given wins |
 | All other flags | Every upstream option is accepted except the hidden debug option `--load-pages`; options documented here as unsupported are explicit errors or warnings |
 
@@ -1450,6 +1450,73 @@ absent). Non-object responses and non-string or relative media URLs remain
 explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
 pinned upstream output.
 
+BBC programmes (`bbc.co.uk/programmes|iplayer[/...]/episode|playlist|music/clips|radio/player|events/.../play/.../ID`)
+follow upstream `BBCCoUkIE` and other BBC pages (`bbc.com|bbc.co.uk` and the
+BBC News onion addresses, except the programme, article, iPlayer and
+programme-playlist URLs) follow `BBCIE`. Both resolve version IDs through the
+media selector (`iptv-all` then `pc` for `bbc.co.uk`, `pc` then
+`mobile-tablet-main` for `bbc`; 403/404 answers are read): its
+`notukerror`/`geolocation`/`selectionunavailable` IDs try the next media set
+and end in upstream's `NAME returned error: ID` warning or error (other IDs
+fail at once, without a geo hint, like upstream); video and audio connections
+become non-fatal HLS (`ext` mp4), DASH and HDS formats, ASX playlist
+references (`refN_ID`), direct HTTP formats (`SUPPLIER`, else `KIND-BITRATE`
+or `PROTOCOL-BITRATE`, int `tbr`/`abr`) and RTMP formats (repeated hrefs
+skipped), and a captions connection whose XML parses becomes English TTML
+when subtitles are requested. Programme pages give the page error message, the
+`mediator.bind` player or page `vpid` with the OpenGraph or parent title and
+description, else `playlist.json`'s programme versions (types as
+`format_note`, audio-described versions with `language_preference` -10),
+else (HTTP 404) the legacy EMP playlist XML (availability errors, an item's or
+its mediator's programme ID); upstream's `UnboundLocalError` for a playlist
+without programmes is kept. `BBCIE` tries upstream's page layouts in order
+(`playlist.sxml` players and `data-playable` settings with their HTTP 500
+fallback, a `data-pid` video `div` handed to `BBCCoUkIE`, page `vpid`s with
+`digitalData`, BBC Reel's `initial-data`, Morph payloads, `__PRELOADED_STATE__`
+programmes with tracklist chapters and article assets, BBC Three's config,
+`__INITIAL_DATA__` article videos, media experiences and article media,
+`SIMORGH_DATA`, Next.js pages, SMP embeds and `setPlaylist` calls as
+`BBCCoUk` url results, then `data-media-meta`, `mediaAssetPage` and
+`vxp-playlist-data` media, else `Unable to extract playlist data`) with the
+JSON-LD or page title (without ` - BBC...`), description and publication
+time as playlist metadata. `_EMBED_REGEX` iPlayer players embed on other
+pages. The BBC login (`--username`, netrc machine `bbc`) posts the sign-in
+form like upstream. Not supported natively: a Morph lead media `duration`
+(a list upstream, which then fails processing) and Python `TypeError`s on
+values of unexpected types (explicit native errors). Checked live on
+2026-11-16 against upstream (news, Next.js, Reel, BBC Three, learningenglish,
+programme clips and geo-blocked iPlayer episodes, compared with volatile URL
+queries ignored); `tests/fixtures/sites/bbc-co-uk/` and
+`tests/fixtures/sites/bbc-pages/` (constructed responses modeled on those
+pages) are compared with pinned upstream output.
+
+BBC programme listings (`bbc.co.uk/programmes/PID/episodes|broadcasts|clips`)
+follow upstream `BBCCoUkPlaylistIE`: each page's `data-pid` programmes as
+`BBCCoUk` `url` results, following `pagination_next` links unless the URL has
+a `page` parameter. BBC iPlayer episode lists
+(`bbc.co.uk/iplayer/episodes/PID`) and groups (`bbc.co.uk/iplayer/group/PID`)
+follow `BBCCoUkIPlayerEpisodesIE` and `BBCCoUkIPlayerGroupIE`: the playlist
+title and largest truthy synopsis come from a one-item request (the iBL
+GraphQL POST for episodes, with the URL's `seriesId` as `sliceId` for the
+entries; `ibl/v1/groups/PID/episodes` for groups), and the entries are an
+`OnDemandPagedList` of 100 (episodes) or 200 (groups) per page, only the
+pages holding requested items fetched. A `page` parameter reads that one page
+of 36 instead, as a generator after extraction (Python `int()` errors for a
+non-number; non-ASCII page numbers are an explicit native error). Each
+episode is a `BBCCoUk` `url` result with its subtitle as `title`, the
+`{recipe}` image as `raw` `thumbnail`, synopsis, category and series. Missing
+keys are upstream's `KeyError`s (in extraction, or reported while reading
+entries), a `null` programme is upstream's `'NoneType' object has no
+attribute 'get'`, and other unexpected shapes are explicit native errors.
+BBC programme articles (`bbc.co.uk/programmes/articles/ID`) follow
+`BBCCoUkArticleIE`: the OpenGraph title (non-fatal) and stripped description
+(missing is upstream's `'NoneType' object has no attribute 'strip'`), and the
+`<div ... typeof="Clip" ... resource="URL">` resources as untyped `url`
+results, followed by `BBCCoUkIE` (above).
+`tests/fixtures/sites/bbc-clips-playlist/`, `bbc-iplayer-episodes/`,
+`bbc-iplayer-episodes-paged/`, `bbc-iplayer-group/` and `bbc-article/` are
+compared with pinned upstream output.
+
 Beatport tracks (`[www.|pro.]beatport.com/track/SLUG/ID`) follow upstream
 `BeatportIE`: the page's `window.Playables` JSON (fatal) and its track with
 the URL's numeric ID (none is upstream's `StopIteration` error; missing keys
@@ -1652,16 +1719,22 @@ JSON POST to `isl.dr-massive.com`; the first `UserAccount` value, else
 `cache.page` value's `item`, else its first entry's `item`; without one the
 `unable to extract data` warning and the backup `production-cdn` items API
 for the slug's last `_` part), the `customId`'s last `:` part as the ID, and
-the bearer-authorized `account/items/ID/videos` stream list: every stream
+the bearer-authorized `account/items/ID/videos` stream list (for a page item
+the numeric `_ID` suffix of its `path`, else its `id`: the page's GUID IDs
+make the videos API answer HTTP 400): every stream
 with a URL as non-fatal HLS (master playlist only, `FORMAT[-SERVICE]` IDs,
 preference 1 for `StandardVideo` and -1 for spoken-subtitle, sign-language
 and visually-interpreted streams), its API subtitle links (`SUBTITLE_LANGS`
 names with the service suffix, `mimetype2ext` or `vtt`) or else the
 manifest's deduplicated subtitles; the Denmark-only geo error (no bypass)
 when nothing is found and the season is marked geo-restricted; title,
-contextual title, description, wallpaper thumbnail, `BroadcastTimeDK`
-release timestamp, duration, series, season (title, number, ID), episode
-(name, number) and release year as upstream's `traverse_obj`. DR TV live
+the season ID (the numeric `_ID` suffix of the season's `path`, else the
+item's `seasonId`), then title, contextual title, description, wallpaper
+thumbnail, `BroadcastTimeDK` release timestamp, duration, series, season
+(title, number), episode (name, number) and release year as upstream's
+`traverse_obj`. The path IDs are the unmerged upstream fix
+[yt-dlp/yt-dlp#17980](https://github.com/yt-dlp/yt-dlp/pull/17980), ported
+ahead of the baseline (see [UPSTREAM.md](UPSTREAM.md#fixes-ported-ahead-of-upstream)). DR TV live
 channels (`dr.dk/tv/live/ID`) follow `DRTVLiveIE`: the `mu-online` channel
 JSON (`Title` required), each HLS streaming server's stream paths with a
 `b=` query as live master-playlist formats (`HLS-N`) and each HDS server's
@@ -1677,7 +1750,8 @@ is marked `_WORKING = False` upstream. Non-string IDs, titles and paths
 errors; a malformed `window.__data` JSON warns with upstream's text
 (Python's `JSONDecodeError` included). `tests/fixtures/sites/drtv/` (constructed responses:
 the live API is geo-restricted and the old channel API retired) is compared
-with pinned upstream output.
+with pinned upstream output with the fixture's `upstream.patch` (#17980)
+applied.
 
 Toronto Star pages (`thestar.com/.../SLUG.html`) follow upstream `TheStarIE`:
 the page's `mainartBrightcoveVideoId` (else upstream's error) as a `url`
@@ -6175,7 +6249,9 @@ Direct HLS playlist URLs and HTML5 HLS sources support a finite VOD
 subset, including identity AES-128 encryption. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
 HLS type hints. A conflicting media MIME must not cause a manifest to be saved as
 one media file. Read at most 32 MiB of uncompressed UTF-8/ASCII manifest text;
-ambiguous encoding/content-type headers fail. URLs resolve against each final
+repeated Content-Encoding headers fail, and every Content-Type value (CDNs such
+as Yle Areena's and DR's repeat the header, DR with differing MPEGURL types) must
+declare no charset or a UTF-8/ASCII one. URLs resolve against each final
 redirected manifest URL. HTML5 page referrers propagate to manifests and segments.
 
 Format IDs follow upstream `_parse_m3u8_formats_and_subtitles`: a media

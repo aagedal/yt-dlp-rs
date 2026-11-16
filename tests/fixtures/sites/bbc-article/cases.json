@@ -1,0 +1,16 @@
+[
+ {
+  "url": "http://www.bbc.co.uk/programmes/articles/3jNQLTMrPlYGTBn0WV6M2MS/not-your-typical-role-model-ada-lovelace-the-19th-century-programmer",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://www.bbc.co.uk/programmes/articles/0aBrokenArticle0000000/no-metadata",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

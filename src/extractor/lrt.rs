@@ -297,8 +297,9 @@ impl Extractor for LrtRadio {
             ));
         };
         let manifest = Url::parse(file)?;
-        let stream =
+        let mut stream =
             super::extract_m3u8_fatal_master(client, &manifest, RADIO_NAME, &id, None, false)?;
+        super::hls::without_ext(&mut stream);
         // `('playlist_item', 'category', {str}, filter, all, filter)`.
         let categories = item
             .get("category")

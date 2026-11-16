@@ -71,6 +71,10 @@ impl Extractor for Ximalaya {
         KEY
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["CN"])
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some(found) = VALID_URL.captures(url.as_str()) else {
             return Ok(None);
@@ -230,6 +234,10 @@ fn json_text(value: &Value) -> String {
 impl Extractor for XimalayaAlbum {
     fn key(&self) -> &'static str {
         ALBUM_KEY
+    }
+
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["CN"])
     }
 
     fn extract(&self, _client: &Client, url: &Url) -> Result<Option<VideoInfo>> {

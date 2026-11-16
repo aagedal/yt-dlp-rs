@@ -1665,7 +1665,7 @@
         "src/extractor/drtv.rs",
         "tests/fixtures/sites/drtv/"
       ],
-      "scope": "DRTVIE (dr.dk/tv/se and dr.dk|dr-massive.com/drtv/se|episode|program URLs: the anonymous-sso token POST once per run with the Unable to get anonymous token error, the window.__data page item (each cache.page value's item, else its first entry's item) or the backup items API with the data warning, the customId video ID, the bearer-authorized account videos API, each stream with a URL as a non-fatal master-only HLS extraction with access-service format IDs, preferences and subtitle suffixes, API subtitle tracks with SUBTITLE_LANGS names and mimetype2ext extensions or else the manifests' deduplicated subtitles, the Denmark geo error (no bypass) and traverse_obj metadata), DRTVLiveIE (mu-online channel API HLS streaming servers as live master-only formats with the b= query, the Title KeyError) and DRTVSeasonIE/DRTVSeriesIE (dr-massive page API episodes/seasons as raw url results with their fields, the path KeyError and upstream's drtvNone URL for a missing season path). non-string IDs/titles/paths and Python TypeError paths are explicit native errors; a malformed window.__data JSON warns with upstream's JSONDecodeError text. None of the four is marked _WORKING = False upstream. Compared with pinned upstream output through the fixture proxy"
+      "scope": "DRTVIE (dr.dk/tv/se and dr.dk|dr-massive.com/drtv/se|episode|program URLs: the anonymous-sso token POST once per run with the Unable to get anonymous token error, the window.__data page item (each cache.page value's item, else its first entry's item) or the backup items API with the data warning, the customId video ID, the bearer-authorized account videos API for the item path's numeric _ID suffix (else its id) and the season path's suffix (else seasonId) as season_id ahead of the traverse_obj fields (unmerged upstream PR #17980, ported ahead of the baseline; the fixture's upstream.patch), each stream with a URL as a non-fatal master-only HLS extraction with access-service format IDs, preferences and subtitle suffixes, API subtitle tracks with SUBTITLE_LANGS names and mimetype2ext extensions or else the manifests' deduplicated subtitles, the Denmark geo error (no bypass) and traverse_obj metadata), DRTVLiveIE (mu-online channel API HLS streaming servers as live master-only formats with the b= query, the Title KeyError) and DRTVSeasonIE/DRTVSeriesIE (dr-massive page API episodes/seasons as raw url results with their fields, the path KeyError and upstream's drtvNone URL for a missing season path). non-string IDs/titles/paths and Python TypeError paths are explicit native errors; a malformed window.__data JSON warns with upstream's JSONDecodeError text. None of the four is marked _WORKING = False upstream. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "duoplay",
@@ -6591,7 +6591,7 @@
         "src/extractor/ccma.rs",
         "tests/fixtures/sites/ccma/"
       ],
-      "scope": "CCMAIE video, audio and MPD media (subtitles unsupported), compared with pinned upstream output through the fixture proxy"
+      "scope": "CCMAIE video, audio and MPD media with subtitols tracks, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "dacast",
@@ -7798,9 +7798,16 @@
       ],
       "rust": [
         "src/extractor/bbc.rs",
-        "tests/fixtures/sites/bbc-clips-playlist/"
+        "src/extractor/bbccouk.rs",
+        "tests/fixtures/sites/bbc-clips-playlist/",
+        "tests/fixtures/sites/bbc-co-uk/",
+        "tests/fixtures/sites/bbc-pages/",
+        "tests/fixtures/sites/bbc-iplayer-episodes/",
+        "tests/fixtures/sites/bbc-iplayer-episodes-paged/",
+        "tests/fixtures/sites/bbc-iplayer-group/",
+        "tests/fixtures/sites/bbc-article/"
       ],
-      "scope": "BBCCoUkPlaylistIE clip listings (page 2 404 error); BBCIE, BBCCoUkIE and other classes not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "BBCCoUkPlaylistIE clip listings (page 2 404 error); BBCCoUkIE (the media selector's media sets, retried error IDs, HLS/DASH/HDS/ASX/HTTP/RTMP connections and TTML captions, programme pages, playlist.json versions, legacy EMP playlists, the sign-in form login and _EMBED_REGEX) and BBCIE (playlist.sxml, data-playable, data-pid, page vpid, Reel, Morph, PRELOADED_STATE, BBC Three, INITIAL_DATA, SIMORGH_DATA, Next.js, SMP/setPlaylist and media-meta/mediaAssetPage/vxp layouts in upstream order); a Morph lead media duration (a list upstream) and Python TypeError paths are explicit native errors; BBCCoUkIPlayerEpisodesIE and BBCCoUkIPlayerGroupIE (OnDemandPagedList, explicit page, seriesId, KeyError/NoneType/int() errors) and BBCCoUkArticleIE clip resources as url results. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rai",
@@ -7885,7 +7892,7 @@
         "tests/fixtures/sites/tvp-vod/",
         "tests/fixtures/sites/tvp-vod-series/"
       ],
-      "scope": "TVPEmbedIE (protocol-relative subtitle URLs error as unsupported), TVPVODVideoIE (metadata via --print; HLS audio ext differs) and TVPVODSeriesIE; TVPIE, stream and website classes not ported, compared with pinned upstream output through the fixture proxy"
+      "scope": "TVPEmbedIE (with protocol-relative subtitle URLs), TVPVODVideoIE (metadata via --print) and TVPVODSeriesIE; TVPIE, stream and website classes not ported, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "cbc",

@@ -57,6 +57,8 @@ static SERIES_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     )
 });
 static DATA: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"window\.__data\s*=").unwrap());
+/// `r'_(\d+)$'` (Python's `$` also matches before a final newline).
+static PATH_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"_(\d+)\n?\z").unwrap());
 
 /// `DRTVIE._TOKEN` (class-wide, like upstream).
 static TOKEN: Mutex<Option<String>> = Mutex::new(None);
@@ -327,6 +329,15 @@ fn stream_formats(
     Ok((formats, subtitles))
 }
 
+/// `_search_regex(r'_(\d+)$', path, ..., default=None)`.
+fn path_id(path: Option<&Value>) -> Result<Option<String>> {
+    match path {
+        None | Some(Value::Null) => Ok(None),
+        Some(Value::String(path)) => Ok(PATH_ID.captures(path).map(|found| found[1].to_owned())),
+        Some(_) => Err(unsupported("non-string item paths")),
+    }
+}
+
 /// `traverse_obj(item, {...})`'s metadata fields in upstream order.
 fn item_fields(item: &Value) -> Result<Vec<(&'static str, Value)>> {
     let mut fields = Vec::new();
@@ -350,7 +361,6 @@ fn item_fields(item: &Value) -> Result<Vec<(&'static str, Value)>> {
     raw("series", path(item, &["season", "show", "title"]));
     raw("season", path(item, &["season", "title"]));
     raw("season_number", int(&["season", "seasonNumber"]).as_ref());
-    raw("season_id", path(item, &["seasonId"]));
     raw("episode", path(item, &["episodeName"]));
     raw("episode_number", int(&["episodeNumber"]).as_ref());
     raw("release_year", int(&["releaseYear"]).as_ref());
@@ -435,11 +445,20 @@ impl Extractor for Drtv {
             }
         };
         let (item, item_id) = match page_item(&json_data) {
+            // yt-dlp/yt-dlp#17980 (unmerged, ported ahead of upstream): the
+            // page's `id` became a GUID the videos API rejects (HTTP 400), so
+            // the numeric suffix of the item's `path` is preferred.
             Some(item) => {
-                let Some(Value::String(item_id)) = item.get("id") else {
-                    return Err(unsupported("page items without a string ID"));
+                let item_id = match path_id(item.get("path"))? {
+                    Some(item_id) => item_id,
+                    None => {
+                        let Some(Value::String(item_id)) = item.get("id") else {
+                            return Err(unsupported("page items without a string ID"));
+                        };
+                        item_id.clone()
+                    }
                 };
-                (item.clone(), item_id.clone())
+                (item.clone(), item_id)
             }
             None => {
                 let item_id = url_slug
@@ -525,6 +544,15 @@ impl Extractor for Drtv {
             ("formats", Value::Null),
             ("subtitles", Value::Null),
         ];
+        // yt-dlp/yt-dlp#17980: `season_id` from the season's path, ahead of
+        // the `traverse_obj` fields.
+        let season_id = match path_id(path(&item, &["season", "path"]))? {
+            Some(season_id) => Some(Value::from(season_id)),
+            None => item.get("seasonId").filter(|id| !id.is_null()).cloned(),
+        };
+        if let Some(season_id) = season_id {
+            fields.push(("season_id", season_id));
+        }
         fields.extend(item_fields(&item)?);
         let mut info = dict_info(url, (NAME, KEY), fields, formats);
         info.subtitles = subtitles;

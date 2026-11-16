@@ -1,0 +1,39 @@
+[
+ {
+  "url": "https://www.bbc.co.uk/iplayer/group/p081d7j7",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/group/p081d7j7",
+  "args": [
+   "-J",
+   "--flat-playlist",
+   "-I",
+   "2:3"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/group/p081d7j7?page=2",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "http://www.bbc.co.uk/iplayer/group/p02tcc32",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.bbc.co.uk/iplayer/group/p0000002",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ }
+]

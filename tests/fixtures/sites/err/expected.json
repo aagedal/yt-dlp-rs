@@ -114,6 +114,42 @@
     "ERROR: [ERRArhiiv] tuhi: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://jupiter.err.ee/7/protokollita",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7\", \"formats\": [{\"format_id\": \"dash-audio=128000\", \"manifest_url\": \"http://vod.err.test/7/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"sv\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"http://vod.err.test/7/manifest.mpd\", \"fragment_base_url\": \"http://vod.err.test/7/\", \"fragments\": [{\"path\": \"dash/audio=128000/init.mp4\"}, {\"path\": \"dash/audio=128000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/audio=128000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-audio=128000 - audio only (DASH audio)\"}, {\"url\": \"http://vod.err.test/7/file.mp4\", \"format_id\": \"http\", \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}, {\"format_id\": \"hls-921\", \"format_index\": null, \"url\": \"http://vod.err.test/7/360/index.m3u8\", \"manifest_url\": \"http://vod.err.test/7/master.m3u8\", \"tbr\": 921.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-921 - 640x360\"}, {\"format_id\": \"dash-video=1300000\", \"manifest_url\": \"http://vod.err.test/7/manifest.mpd\", \"ext\": \"mp4\", \"width\": 960, \"height\": 540, \"tbr\": 1300.0, \"asr\": null, \"fps\": 25, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"http://vod.err.test/7/manifest.mpd\", \"fragment_base_url\": \"http://vod.err.test/7/\", \"fragments\": [{\"path\": \"dash/video=1300000/init.mp4\"}, {\"path\": \"dash/video=1300000/1.m4s\", \"duration\": 4.0}, {\"path\": \"dash/video=1300000/2.m4s\", \"duration\": 4.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1300.0, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-video=1300000 - 960x540 (DASH video)\"}, {\"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"http://vod.err.test/7/720/index.m3u8\", \"manifest_url\": \"http://vod.err.test/7/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\"}], \"subtitles\": {\"sv\": [{\"url\": \"http://vod.err.test/7/subs/sv.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"title\": \"Protokollita\", \"alt_title\": \"\", \"description\": \"Kom\\u00f6\\u00f6dia 1978\", \"timestamp\": 1608210000, \"modified_timestamp\": 1608220800, \"release_timestamp\": 1703577600, \"release_year\": 1978, \"webpage_url\": \"https://jupiter.err.ee/7/protokollita\", \"original_url\": \"https://jupiter.err.ee/7/protokollita\", \"webpage_url_basename\": \"protokollita\", \"webpage_url_domain\": \"jupiter.err.ee\", \"extractor\": \"ERRJupiter\", \"extractor_key\": \"ERRJupiter\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"7\", \"fulltitle\": \"Protokollita\", \"upload_date\": \"20201217\", \"release_date\": \"20231226\", \"modified_date\": \"20201217\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-3121\", \"format_index\": null, \"url\": \"http://vod.err.test/7/720/index.m3u8\", \"manifest_url\": \"http://vod.err.test/7/master.m3u8\", \"tbr\": 3121.0, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-3121 - 1280x720\", \"_filename\": \"Protokollita [7].mp4\", \"filename\": \"Protokollita [7].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://jupiter.err.ee/7/protokollita",
+   "args": [
+    "--no-progress",
+    "-f",
+    "http",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ERRJupiter] Extracting URL: https://jupiter.err.ee/7/protokollita",
+    "[ERRJupiter] 7: Downloading JSON metadata",
+    "[ERRJupiter] 7: Downloading m3u8 information",
+    "[ERRJupiter] 7: Downloading MPD manifest",
+    "[info] 7: Downloading 1 format(s): http",
+    "[download] Destination: 7.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "7.mp4": 17
+   }
   }
  ]
 }

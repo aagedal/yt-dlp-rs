@@ -76,6 +76,34 @@
     "Content-Type": "application/json"
    },
    "body": "{\"info\": {\"title\": \"Tühi\"}}"
+  },
+  {
+   "url": "https://services.err.ee/api/v2/vodContent/getContentPageData?contentId=7",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "content-7.json"
+  },
+  {
+   "url": "http://vod.err.test/7/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://vod.err.test/7/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "http://vod.err.test/7/file.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "err-relative-file"
   }
  ]
 }

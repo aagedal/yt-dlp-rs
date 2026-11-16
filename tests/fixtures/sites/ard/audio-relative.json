@@ -1,0 +1,1 @@
+{"data": {"item": {"audioList": [{"href": "//media.example/ard/relative.mp3", "distributionType": "download", "audioBitrate": 128, "audioCodec": "mp3"}], "show": {"title": "Weltweit"}, "image": null, "programSet": {"publicationService": {"organizationName": "WDR"}}, "title": "Protocol-relative audio", "duration": 60, "startDate": "2026-11-01T07:25:00Z", "episodeNumber": null}}}

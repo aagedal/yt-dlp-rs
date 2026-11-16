@@ -184,6 +184,10 @@ impl Extractor for Wdr {
         NAME
     }
 
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["DE"])
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some(found) = VALID_URL.captures(url.as_str()) else {
             return Ok(None);

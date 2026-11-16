@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MPD id="681febec-032d-4717-9674-b44081ee5559" profiles="urn:mpeg:dash:profile:isoff-live:2011,urn:com:dashif:dash264" type="static" mediaPresentationDuration="P0Y0M0DT0H53M23.960S" minBufferTime="P0Y0M0DT0H0M2.000S" xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:ns2="http://www.w3.org/1999/xlink">
+    <Period id="7b98f720-dac0-46c4-baa4-52a9bf986247">
+        <AdaptationSet segmentAlignment="true" mimeType="video/mp4">
+            <Representation id="ad382be4-e8f1-40a4-8ecc-2d3b09bca412" bandwidth="4000000" width="1920" height="1080" frameRate="25" codecs="avc1.640032">
+                <SegmentTemplate media="video/1080p/segment_$Number$.m4s" initialization="video/1080p/init.mp4" duration="100000" startNumber="0" timescale="25000"/>
+            </Representation>
+            <Representation id="45b5d151-7ae3-4cd5-af52-3c1ab1d3c020" bandwidth="2000000" width="1280" height="720" frameRate="25" codecs="avc1.4D401F">
+                <SegmentTemplate media="video/720p/segment_$Number$.m4s" initialization="video/720p/init.mp4" duration="100000" startNumber="0" timescale="25000"/>
+            </Representation>
+            <Representation id="698cc239-532a-441e-9b55-ac75ee8226c8" bandwidth="1600000" width="1024" height="576" frameRate="25" codecs="avc1.4D401F">
+                <SegmentTemplate media="video/576p/segment_$Number$.m4s" initialization="video/576p/init.mp4" duration="100000" startNumber="0" timescale="25000"/>
+            </Representation>
+        </AdaptationSet>
+        <AdaptationSet lang="ca" segmentAlignment="true" mimeType="audio/mp4">
+            <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+            <Representation id="49d75175-03f8-474d-9539-db707efa7a86" bandwidth="128000" audioSamplingRate="48000" codecs="mp4a.40.2">
+                <SegmentTemplate media="audio/ca/segment_$Number$.m4s" initialization="audio/ca/init.mp4" duration="192000" startNumber="0" timescale="48000"/>
+            </Representation>
+        </AdaptationSet>
+    </Period>
+</MPD>

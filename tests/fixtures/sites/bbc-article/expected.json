@@ -1,0 +1,35 @@
+{
+ "upstream_commit": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+ "cases": [
+  {
+   "url": "http://www.bbc.co.uk/programmes/articles/3jNQLTMrPlYGTBn0WV6M2MS/not-your-typical-role-model-ada-lovelace-the-19th-century-programmer",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3jNQLTMrPlYGTBn0WV6M2MS\", \"title\": \"BBC Four - Calculating Ada: The Countess of Computing - Not your typical role model: Ada Lovelace the 19th century programmer\", \"description\": \"Hannah Fry reveals some of her surprising discoveries about Ada Lovelace during filming.\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03b5v5v\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03b5vb7\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"http://www.bbc.co.uk/programmes/p03b5wfy\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"http://www.bbc.co.uk/programmes/articles/3jNQLTMrPlYGTBn0WV6M2MS/not-your-typical-role-model-ada-lovelace-the-19th-century-programmer\", \"original_url\": \"http://www.bbc.co.uk/programmes/articles/3jNQLTMrPlYGTBn0WV6M2MS/not-your-typical-role-model-ada-lovelace-the-19th-century-programmer\", \"webpage_url_basename\": \"not-your-typical-role-model-ada-lovelace-the-19th-century-programmer\", \"webpage_url_domain\": \"bbc.co.uk\", \"extractor\": \"bbc.co.uk:article\", \"extractor_key\": \"BBCCoUkArticle\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/articles/0aBrokenArticle0000000/no-metadata",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [bbc.co.uk:article] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [bbc.co.uk:article] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: 'NoneType' object has no attribute 'strip'"
+   ],
+   "files": {}
+  }
+ ]
+}

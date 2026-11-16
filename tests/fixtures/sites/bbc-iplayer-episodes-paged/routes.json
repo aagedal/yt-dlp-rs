@@ -1,0 +1,26 @@
+{
+ "routes": [
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "beechgrove-1.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"m0004c4v\", \"page\": 1, \"perPage\": 1}"
+   ]
+  },
+  {
+   "url": "https://graph.ibl.api.bbc.co.uk/",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "beechgrove-100-page-2.json",
+   "request_body": [
+    "\"id\": \"5692d93d5aac8d796a0305e895e61551\", \"variables\": {\"id\": \"m0004c4v\", \"page\": 2, \"perPage\": 100}"
+   ]
+  }
+ ]
+}

@@ -33,6 +33,8 @@
  {"url": "https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/", "args": ["-F"]},
  {"url": "https://www.ardaudiothek.de/episode/urn:ard:episode:eabead1add170e93/", "args": ["-f", "download", "--no-progress", "-o", "episode.%(ext)s"]},
  {"url": "https://www.ardaudiothek.de/episode/urn:ard:section:855c7a53dac72e0a/", "args": ["-j"]},
+ {"url": "https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/", "args": ["-j"]},
+ {"url": "https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/", "args": ["--no-progress", "-o", "relative.%(ext)s"]},
  {"url": "https://www.ardsounds.de/episode/urn:ard:extra:0000000000000000/", "args": ["-J"]},
  {"url": "https://www.ardsounds.de/episode/urn:ard:extra:1111111111111111/", "args": ["-J"]},
  {"url": "https://www.ardaudiothek.de/sendung/mia-insomnia/urn:ard:show:c405aa26d9a4060a/", "args": ["-J", "--flat-playlist"]},

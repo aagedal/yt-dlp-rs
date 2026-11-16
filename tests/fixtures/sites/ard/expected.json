@@ -639,6 +639,38 @@
    "files": {}
   },
   {
+   "url": "https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"urn:ard:episode:2222222222222222\", \"formats\": [{\"url\": \"http://media.example/ard/relative.mp3\", \"format_id\": \"download\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"http\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 960000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download - audio only\"}], \"channel\": \"WDR\", \"duration\": 60, \"series\": \"Weltweit\", \"timestamp\": 1793517900, \"title\": \"Protocol-relative audio\", \"webpage_url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/\", \"original_url\": \"https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/\", \"webpage_url_basename\": \"urn:ard:episode:2222222222222222\", \"webpage_url_domain\": \"ardaudiothek.de\", \"extractor\": \"ARDAudiothek\", \"extractor_key\": \"ARDAudiothek\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"urn:ard:episode:2222222222222222\", \"fulltitle\": \"Protocol-relative audio\", \"duration_string\": \"1:00\", \"upload_date\": \"20261101\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://media.example/ard/relative.mp3\", \"format_id\": \"download\", \"abr\": 128, \"acodec\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"http\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"tbr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 960000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download - audio only\", \"_filename\": \"Protocol-relative audio [urn\\uff1aard\\uff1aepisode\\uff1a2222222222222222].mp3\", \"filename\": \"Protocol-relative audio [urn\\uff1aard\\uff1aepisode\\uff1a2222222222222222].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/",
+   "args": [
+    "--no-progress",
+    "-o",
+    "relative.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ARDAudiothek] Extracting URL: https://www.ardaudiothek.de/episode/urn:ard:episode:2222222222222222/",
+    "[ARDAudiothek] urn:ard:episode:2222222222222222: Downloading JSON metadata",
+    "[info] urn:ard:episode:2222222222222222: Downloading 1 format(s): download",
+    "[download] Destination: relative.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "relative.mp3": 18
+   }
+  },
+  {
    "url": "https://www.ardsounds.de/episode/urn:ard:extra:0000000000000000/",
    "args": [
     "-J"

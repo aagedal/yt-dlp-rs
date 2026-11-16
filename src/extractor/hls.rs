@@ -109,13 +109,10 @@ fn read_text(response: Response) -> Result<(Url, String)> {
     {
         return Err(unsupported("compressed HLS playlists are not supported"));
     }
-    let content_types = response.headers().get_all(CONTENT_TYPE);
-    if content_types.iter().count() > 1 {
-        return Err(unsupported(
-            "duplicate HLS Content-Type headers are not supported",
-        ));
-    }
-    if let Some(value) = content_types.iter().next() {
+    // Upstream only reads a charset from the (first) Content-Type. CDNs repeat
+    // the header (Yle Areena identically, DR as `application/vnd.apple.mpegurl`
+    // then `application/x-mpegURL`), so every value's charset is checked.
+    for value in response.headers().get_all(CONTENT_TYPE) {
         let content_type = value
             .to_str()
             .map_err(|_| unsupported("invalid HLS Content-Type header"))?;

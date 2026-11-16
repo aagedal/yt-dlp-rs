@@ -1,0 +1,90 @@
+{
+ "media": [
+  {
+   "kind": "thumbnails",
+   "connection": [
+    {
+     "href": "https://vod.bbc.test/p0000013/thumb.jpg",
+     "protocol": "https",
+     "supplier": "mf_akamai",
+     "transferFormat": "plain"
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "bitrate": "3500",
+   "encoding": "h264",
+   "width": "1280",
+   "height": "720",
+   "connection": [
+    {
+     "href": "https://vod.bbc.test/p0000013/hls/master.m3u8",
+     "protocol": "https",
+     "supplier": "mf_akamai",
+     "transferFormat": "hls"
+    },
+    {
+     "href": "https://vod.bbc.test/p0000013/dash/manifest.mpd",
+     "protocol": "https",
+     "supplier": "mf_cloudfront",
+     "transferFormat": "dash"
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "bitrate": "800",
+   "encoding": "h264",
+   "width": "640",
+   "height": "360",
+   "media_file_size": "4800000",
+   "connection": [
+    {
+     "href": "https://vod.bbc.test/p0000013/video_800.mp4",
+     "protocol": "https",
+     "supplier": "mf_akamai",
+     "transferFormat": "plain"
+    },
+    {
+     "href": "https://vod.bbc.test/p0000013/video_800.mp4",
+     "protocol": "https",
+     "supplier": "mf_cloudfront",
+     "transferFormat": "plain"
+    },
+    {
+     "href": "https://vod.bbc.test/p0000013/video_800_cf.mp4",
+     "protocol": "https",
+     "kind": "cdn",
+     "transferFormat": "plain"
+    },
+    {
+     "protocol": "rtmp",
+     "supplier": "limelight",
+     "server": "rtmp.bbc.test",
+     "application": "ondemand",
+     "authString": "auth=1",
+     "identifier": "mp4:p0000013.mp4"
+    },
+    {
+     "href": "https://vod.bbc.test/p0000013/video_800.f4m",
+     "protocol": "ftp",
+     "supplier": "other",
+     "transferFormat": "plain"
+    }
+   ]
+  },
+  {
+   "kind": "audio",
+   "bitrate": "128",
+   "encoding": "aac",
+   "connection": [
+    {
+     "href": "https://vod.bbc.test/p0000013/audio_128.m4a",
+     "protocol": "https",
+     "transferFormat": "plain"
+    }
+   ]
+  }
+ ]
+}
