@@ -102,8 +102,8 @@ impl Server {
                     "/drm-all.mpd" => (MPD.replace("<Representation ", "<ContentProtection schemeIdUri=\"urn:mpeg:dash:mp4protection:2011\"/><Representation "), "application/dash+xml", ""),
                     "/multi.mpd" => (MPD.replace("</Period></MPD>", "</Period><Period duration=\"PT1S\"/></MPD>"), "application/dash+xml", ""),
                     "/dtd.mpd" => (MPD.replace("<MPD ", "<!DOCTYPE MPD [<!ENTITY injected 'value'>]><MPD "), "application/dash+xml", ""),
-                    "/duplicate-type.mpd" => (MPD.into(), "application/dash+xml", "Content-Type: text/plain\r\n"),
-                    "/repeated-type.mpd" => (MPD.into(), "application/dash+xml", "Content-Type: application/dash+xml\r\n"),
+                    "/duplicate-type.mpd" => (MPD.into(), "application/dash+xml", "Content-Type: text/plain; charset=utf-16\r\n"),
+                    "/repeated-type.mpd" => (MPD.into(), "application/dash+xml", "Content-Type: application/xml\r\n"),
                     "/duplicate-encoding.mpd" => (MPD.into(), "application/dash+xml", "Content-Encoding: identity\r\nContent-Encoding: identity\r\n"),
                     "/encoding.mpd" => (MPD.into(), "application/dash+xml", "Content-Encoding: identity\r\nContent-Encoding: gzip\r\n"),
                     "/invalid-type.mpd" => (MPD.into(), "application/dash+xml; x=\u{0080}", ""),
@@ -412,7 +412,7 @@ fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
             "{path}"
         );
     }
-    // A repeated identical Content-Type (Yle Areena's CDN) is one value.
+    // Repeated Content-Types without a foreign charset are accepted.
     assert!(
         YoutubeDl::new()
             .unwrap()

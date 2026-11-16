@@ -41,17 +41,10 @@ fn read_manifest(response: Response) -> Result<(Url, crate::dash::Manifest)> {
     {
         return Err(unsupported("compressed DASH playlists are not supported"));
     }
-    // Repeated identical values (Yle Areena's CDN) are one Content-Type.
-    let content_types = response.headers().get_all(CONTENT_TYPE);
-    if content_types
-        .iter()
-        .any(|value| Some(value) != content_types.iter().next())
-    {
-        return Err(unsupported(
-            "conflicting DASH Content-Type headers are not supported",
-        ));
-    }
-    if let Some(value) = content_types.iter().next() {
+    // Upstream only reads a charset from the (first) Content-Type. CDNs repeat
+    // the header (Yle Areena identically, DR as `application/vnd.apple.mpegurl`
+    // then `application/x-mpegURL`), so every value's charset is checked.
+    for value in response.headers().get_all(CONTENT_TYPE) {
         let content_type = value
             .to_str()
             .map_err(|_| unsupported("invalid DASH Content-Type header"))?;

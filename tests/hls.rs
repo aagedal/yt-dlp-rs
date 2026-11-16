@@ -143,12 +143,12 @@ impl Server {
                     "/duplicate-type.m3u8" => (
                         MEDIA,
                         "application/x-mpegurl",
-                        "Content-Type: text/plain\r\n",
+                        "Content-Type: text/plain; charset=utf-16\r\n",
                     ),
                     "/repeated-type.m3u8" => (
                         MEDIA,
                         "application/vnd.apple.mpegurl",
-                        "Content-Type: application/vnd.apple.mpegurl\r\n",
+                        "Content-Type: application/x-mpegURL\r\n",
                     ),
                     "/duplicate-encoding.m3u8" => (
                         MEDIA,
@@ -524,7 +524,7 @@ fn ambiguous_manifest_headers_are_rejected() {
             "{path}"
         );
     }
-    // A repeated identical Content-Type (Yle Areena's CDN) is one value.
+    // Repeated Content-Types without a foreign charset (DR's CDN) are accepted.
     assert!(
         YoutubeDl::new()
             .unwrap()

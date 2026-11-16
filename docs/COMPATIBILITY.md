@@ -6175,7 +6175,9 @@ Direct HLS playlist URLs and HTML5 HLS sources support a finite VOD
 subset, including identity AES-128 encryption. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
 HLS type hints. A conflicting media MIME must not cause a manifest to be saved as
 one media file. Read at most 32 MiB of uncompressed UTF-8/ASCII manifest text;
-ambiguous encoding/content-type headers fail. URLs resolve against each final
+repeated Content-Encoding headers fail, and every Content-Type value (CDNs such
+as Yle Areena's and DR's repeat the header, DR with differing MPEGURL types) must
+declare no charset or a UTF-8/ASCII one. URLs resolve against each final
 redirected manifest URL. HTML5 page referrers propagate to manifests and segments.
 
 Format IDs follow upstream `_parse_m3u8_formats_and_subtitles`: a media
