@@ -1,0 +1,41 @@
+{
+ "allAvailableVersions": [
+  {
+   "types": [
+    "Original"
+   ],
+   "smpConfig": {
+    "title": "Version title",
+    "summary": "Version summary",
+    "items": [
+     {
+      "kind": "programme",
+      "vpid": "p0000001",
+      "duration": 1800
+     }
+    ]
+   }
+  },
+  {
+   "types": [
+    "AudioDescribed",
+    "Signed"
+   ],
+   "smpConfig": {
+    "title": "AD title",
+    "summary": "AD summary",
+    "items": [
+     {
+      "kind": "trailer",
+      "vpid": "p0000009"
+     },
+     {
+      "kind": "radioProgramme",
+      "vpid": "p0000007",
+      "duration": "1790"
+     }
+    ]
+   }
+  }
+ ]
+}

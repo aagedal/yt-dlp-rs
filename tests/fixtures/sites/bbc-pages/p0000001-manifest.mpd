@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT1M0S" minBufferTime="PT2S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
+ <Period>
+  <AdaptationSet mimeType="video/mp4" segmentAlignment="true">
+   <Representation id="video=1500000" bandwidth="1500000" codecs="avc1.64001f" width="1280" height="720">
+    <BaseURL>video.mp4</BaseURL>
+    <SegmentBase indexRange="0-99"><Initialization range="0-49"/></SegmentBase>
+   </Representation>
+  </AdaptationSet>
+  <AdaptationSet mimeType="audio/mp4" lang="en">
+   <Representation id="audio=96000" bandwidth="96000" codecs="mp4a.40.2" audioSamplingRate="48000">
+    <BaseURL>audio.mp4</BaseURL>
+    <SegmentBase indexRange="0-99"><Initialization range="0-49"/></SegmentBase>
+   </Representation>
+  </AdaptationSet>
+ </Period>
+</MPD>

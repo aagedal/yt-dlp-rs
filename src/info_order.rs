@@ -2308,7 +2308,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let mut subtitle_keys = None;
         let mut chapter_keys = None;
         let mut chapter_all_set = false;
+        // `;subtitles=list`: the extractor's `subtitles` is an (empty) list.
+        let mut subtitles_list = false;
         for part in parts {
+            if part == "subtitles=list" {
+                subtitles_list = true;
+            }
             if let Some(found) = part.strip_prefix("chapter=") {
                 chapter_keys = Some(found);
             } else if let Some(found) = part.strip_prefix("chapter!=") {
@@ -2331,6 +2336,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 key,
                 match key {
                     "formats" => Take,
+                    "subtitles" if subtitles_list => List,
                     "subtitles" | "automatic_captions" => Dict,
                     _ => Assign,
                 },

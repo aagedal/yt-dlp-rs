@@ -45,6 +45,7 @@ mod baidu;
 mod bandcamp;
 mod bandlab;
 mod bbc;
+mod bbccouk;
 mod beacon;
 mod beatport;
 mod beeg;
@@ -691,6 +692,7 @@ pub use bandcamp::{
 };
 pub use bandlab::{Bandlab, suitable as bandlab_suitable};
 pub use bbc::{BbcCoUkPlaylist, suitable as bbc_couk_playlist_suitable};
+pub use bbccouk::{Bbc, BbcCoUk, bbc_suitable, couk_suitable as bbc_couk_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use beatport::{Beatport, suitable as beatport_suitable};
 pub use beeg::{Beeg, suitable as beeg_suitable};

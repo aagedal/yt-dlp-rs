@@ -1,0 +1,16 @@
+{
+ "media": [
+  {
+   "kind": "audio",
+   "bitrate": "96",
+   "encoding": "wma",
+   "connection": [
+    {
+     "href": "https://vod.bbc.test/p0000012/stream.asx",
+     "protocol": "http",
+     "supplier": "asx"
+    }
+   ]
+  }
+ ]
+}

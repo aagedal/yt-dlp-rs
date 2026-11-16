@@ -1,0 +1,231 @@
+{
+ "routes": [
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-pc-p0000001.json"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000001/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "p0000001-master.m3u8"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000001/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "p0000001-manifest.mpd"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000001/captions.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "p0000001-captions.xml"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000001/missing.xml",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "Not found"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000013",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-pc-p0000013.json"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000013/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "p0000013-master.m3u8"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000013/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "p0000013-manifest.mpd"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/mobile-tablet-main/vpid/p0000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-mobile-tablet-main-p0000001.json"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/mobile-tablet-main/vpid/p0000013",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-mobile-tablet-main-p0000013.json"
+  },
+  {
+   "url": "https://www.bbc.com/news/av/test-next",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "next.html"
+  },
+  {
+   "url": "https://www.bbc.com/news/world-test-initial",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "initial.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/sport/football/test-stores",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "stores.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/learningenglish/features/test-group",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "group.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000002",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p0000002.html"
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/p0000002/playlist.json",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "Not found"
+  },
+  {
+   "url": "http://www.bbc.co.uk/iplayer/playlist/p0000002",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<playlist xmlns=\"http://bbc.co.uk/2008/emp/playlist\"><noItems reason=\"noMedia\"/></playlist>\n"
+  },
+  {
+   "url": "https://www.bbc.com/reel/video/p0000001/test-reel",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "reel.html"
+  },
+  {
+   "url": "https://www.bbc.com/news/test-playable",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playable.html"
+  },
+  {
+   "url": "http://www.bbc.co.uk/test/param.sxml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "param.sxml"
+  },
+  {
+   "url": "http://www.bbc.co.uk/test/fail.sxml",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 500,
+   "body": "Server error"
+  },
+  {
+   "url": "http://www.bbc.co.uk/test/progressive.sxml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "progressive.sxml"
+  },
+  {
+   "url": "https://www.bbc.com/travel/story/test-vpid",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "vpid.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/sport/live/test-morph-lead",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "morph-lead.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/sport/live/test-morph",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "morph.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/sounds/play/test-preloaded",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "preloaded.html"
+  },
+  {
+   "url": "https://www.bbc.com/news/a/test-pwa",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "pwa.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/bbcthree/clip/test-three",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "three.html"
+  },
+  {
+   "url": "https://www.bbc.com/mundo/test-simorgh",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "simorgh.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/blogs/test-smp",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "smp.html"
+  },
+  {
+   "url": "https://www.bbc.com/news/test-media-meta",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "media-meta.html"
+  },
+  {
+   "url": "https://www.bbc.com/news/test-nothing",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nothing.html"
+  }
+ ]
+}

@@ -1,8 +1,8 @@
 //! Upstream `BBCCoUkPlaylistIE` (`yt_dlp/extractor/bbc.py`): a programme's
 //! clips, episodes or broadcasts page: its `data-pid` programmes as `BBCCoUk`
 //! url entries, following the `pagination_next` links (a `page` query
-//! parameter stops after that page). `BBCIE`, `BBCCoUkIE` and the other BBC
-//! classes are not ported.
+//! parameter stops after that page). `BBCIE` and `BBCCoUkIE` are in
+//! `bbccouk.rs`.
 use super::{Extractor, download_webpage, download_webpage_note, search_warning};
 use crate::extractor::UrlRegex;
 use crate::{ExtractResult, PlaylistInfo, Result, VideoInfo};

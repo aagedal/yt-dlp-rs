@@ -1450,6 +1450,46 @@ absent). Non-object responses and non-string or relative media URLs remain
 explicit native errors. `tests/fixtures/sites/audiomack/` is compared with
 pinned upstream output.
 
+BBC programmes (`bbc.co.uk/programmes|iplayer[/...]/episode|playlist|music/clips|radio/player|events/.../play/.../ID`)
+follow upstream `BBCCoUkIE` and other BBC pages (`bbc.com|bbc.co.uk` and the
+BBC News onion addresses, except the programme, article, iPlayer and
+programme-playlist URLs) follow `BBCIE`. Both resolve version IDs through the
+media selector (`iptv-all` then `pc` for `bbc.co.uk`, `pc` then
+`mobile-tablet-main` for `bbc`; 403/404 answers are read): its
+`notukerror`/`geolocation`/`selectionunavailable` IDs try the next media set
+and end in upstream's `NAME returned error: ID` warning or error (other IDs
+fail at once, without a geo hint, like upstream); video and audio connections
+become non-fatal HLS (`ext` mp4), DASH and HDS formats, ASX playlist
+references (`refN_ID`), direct HTTP formats (`SUPPLIER`, else `KIND-BITRATE`
+or `PROTOCOL-BITRATE`, int `tbr`/`abr`) and RTMP formats (repeated hrefs
+skipped), and a captions connection whose XML parses becomes English TTML
+when subtitles are requested. Programme pages give the page error message, the
+`mediator.bind` player or page `vpid` with the OpenGraph or parent title and
+description, else `playlist.json`'s programme versions (types as
+`format_note`, audio-described versions with `language_preference` -10),
+else (HTTP 404) the legacy EMP playlist XML (availability errors, an item's or
+its mediator's programme ID); upstream's `UnboundLocalError` for a playlist
+without programmes is kept. `BBCIE` tries upstream's page layouts in order
+(`playlist.sxml` players and `data-playable` settings with their HTTP 500
+fallback, a `data-pid` video `div` handed to `BBCCoUkIE`, page `vpid`s with
+`digitalData`, BBC Reel's `initial-data`, Morph payloads, `__PRELOADED_STATE__`
+programmes with tracklist chapters and article assets, BBC Three's config,
+`__INITIAL_DATA__` article videos, media experiences and article media,
+`SIMORGH_DATA`, Next.js pages, SMP embeds and `setPlaylist` calls as
+`BBCCoUk` url results, then `data-media-meta`, `mediaAssetPage` and
+`vxp-playlist-data` media, else `Unable to extract playlist data`) with the
+JSON-LD or page title (without ` - BBC...`), description and publication
+time as playlist metadata. `_EMBED_REGEX` iPlayer players embed on other
+pages. The BBC login (`--username`, netrc machine `bbc`) posts the sign-in
+form like upstream. Not supported natively: a Morph lead media `duration`
+(a list upstream, which then fails processing) and Python `TypeError`s on
+values of unexpected types (explicit native errors). Checked live on
+2026-11-16 against upstream (news, Next.js, Reel, BBC Three, learningenglish,
+programme clips and geo-blocked iPlayer episodes, compared with volatile URL
+queries ignored); `tests/fixtures/sites/bbc-co-uk/` and
+`tests/fixtures/sites/bbc-pages/` (constructed responses modeled on those
+pages) are compared with pinned upstream output.
+
 Beatport tracks (`[www.|pro.]beatport.com/track/SLUG/ID`) follow upstream
 `BeatportIE`: the page's `window.Playables` JSON (fatal) and its track with
 the URL's numeric ID (none is upstream's `StopIteration` error; missing keys

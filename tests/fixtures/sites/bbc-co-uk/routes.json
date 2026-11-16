@@ -1,0 +1,256 @@
+{
+ "routes": [
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000002",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p0000002.html"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/iptv-all/vpid/p0000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "status": 403,
+   "body_file": "ms-iptv-all-p0000002.json"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-pc-p0000002.json"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000002/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "p0000002-master.m3u8"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000002/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "p0000002-manifest.mpd"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000002/captions.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "p0000002-captions.xml"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000002/missing.xml",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "Not found"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000005",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000005.html"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/iptv-all/vpid/p0000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-iptv-all-p0000001.json"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-pc-p0000001.json"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000006",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000006.html"
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/b0000006/playlist.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "b0000006-playlist.json"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/iptv-all/vpid/p0000007",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-iptv-all-p0000007.json"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000007",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-pc-p0000007.json"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000008",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000008.html"
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/b0000008/playlist.json",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "Not found"
+  },
+  {
+   "url": "http://www.bbc.co.uk/iplayer/playlist/b0000008",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "b0000008-legacy.xml"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000009",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000009.html"
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/b0000009/playlist.json",
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "status": 404,
+   "body": "Not found"
+  },
+  {
+   "url": "http://www.bbc.co.uk/iplayer/playlist/b0000009",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body_file": "b0000009-legacy.xml"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/b0000011",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000011.html"
+  },
+  {
+   "url": "http://www.bbc.co.uk/programmes/b0000011/playlist.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\n \"allAvailableVersions\": []\n}\n"
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episode/b0000010/x",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000010.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000003",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p0000003.html"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/iptv-all/vpid/p0000003",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "status": 403,
+   "body_file": "ms-iptv-all-p0000003.json"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000003",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "status": 403,
+   "body_file": "ms-pc-p0000003.json"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000004",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p0000004.html"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/iptv-all/vpid/p0000004",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "status": 404,
+   "body_file": "ms-iptv-all-p0000004.json"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000012",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p0000012.html"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/iptv-all/vpid/p0000012",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-iptv-all-p0000012.json"
+  },
+  {
+   "url": "https://vod.bbc.test/p0000012/stream.asx",
+   "headers": {
+    "Content-Type": "video/x-ms-asf"
+   },
+   "body_file": "p0000012.asx"
+  },
+  {
+   "url": "https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/p0000012",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "ms-pc-p0000012.json"
+  },
+  {
+   "url": "https://www.bbc.co.uk/programmes/p0000018",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p0000018.html"
+  },
+  {
+   "url": "https://news.example.test/embed.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://www.bbc.co.uk/iplayer/episode/b0000005",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "b0000005-iplayer.html"
+  }
+ ]
+}
