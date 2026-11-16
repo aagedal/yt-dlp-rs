@@ -5,7 +5,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 
 ## Supported sites
 
-904 of upstream's 1754 extractors are ported (`--list-extractors`). Every
+909 of upstream's 1754 extractors are ported (`--list-extractors`). Every
 one is listed with its tier in [SITES.md](SITES.md), generated from the
 registry, the saved fixtures and the canary list by
 `tools/extractor_tiers.py` and checked in CI.
@@ -13,7 +13,7 @@ registry, the saved fixtures and the canary list by
 | Tier | Extractors | What it means |
 | --- | ---: | --- |
 | 1 | 12 | The live canary sites of `tools/canary_sites.json`: YouTube, Instagram, TikTok, X/Twitter, Facebook, Reddit, Vimeo, Twitch (VODs and clips), Bluesky, SoundCloud, Bandcamp. Checked daily against the live site and the pinned upstream; breakage opens a `canary` issue |
-| 2 | 890 | Compared with pinned upstream on saved responses (`tests/fixtures/sites/`) for the cases those responses cover. Best effort: nothing checks the live site, which may have changed since the responses were saved |
+| 2 | 895 | Compared with pinned upstream on saved responses (`tests/fixtures/sites/`) for the cases those responses cover. Best effort: nothing checks the live site, which may have changed since the responses were saved |
 | untested | 2 | No saved case: GettrStreaming and ximalaya:album, registered only to report that they are not ported |
 
 Tier 1 covers the canary URLs' extractors, not every extractor of the site
