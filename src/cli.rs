@@ -307,6 +307,7 @@ struct Args {
     /// Present the list of formats in the older layout
     #[arg(
         long,
+        hide = true,
         alias = "no-list-formats-as-table",
         overrides_with = "list_formats_as_table"
     )]
@@ -333,29 +334,29 @@ struct Args {
     #[arg(long)]
     list_thumbnails: bool,
     /// Write selected subtitle sidecars before downloading media
-    #[arg(long, alias = "write-srt", overrides_with = "no_write_subs")]
+    #[arg(long, visible_alias = "write-srt", overrides_with = "no_write_subs")]
     write_subs: bool,
     /// Disable subtitle sidecar writing
-    #[arg(long, alias = "no-write-srt", overrides_with = "write_subs")]
+    #[arg(long, visible_alias = "no-write-srt", overrides_with = "write_subs")]
     no_write_subs: bool,
     /// Write selected automatically generated caption sidecars
     #[arg(
         long,
-        alias = "write-automatic-subs",
+        visible_alias = "write-automatic-subs",
         overrides_with = "no_write_auto_subs"
     )]
     write_auto_subs: bool,
     /// Disable automatic caption sidecar writing
     #[arg(
         long,
-        alias = "no-write-automatic-subs",
+        visible_alias = "no-write-automatic-subs",
         overrides_with = "write_auto_subs"
     )]
     no_write_auto_subs: bool,
     /// Comma-separated literal subtitle languages, all and -exclusions (no regex)
     #[arg(
         long,
-        alias = "srt-langs",
+        visible_alias = "srt-langs",
         value_name = "LANGS",
         allow_hyphen_values = true
     )]
@@ -374,16 +375,16 @@ struct Args {
     #[arg(long, hide = true, action = clap::ArgAction::Count)]
     no_exec_before_download: u8,
     /// Embed metadata (title, date, description, URL, artist, genre, languages) with ffmpeg
-    #[arg(long, alias = "add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
+    #[arg(long, visible_alias = "add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
     embed_metadata: bool,
     /// Do not embed metadata (default)
-    #[arg(long, alias = "no-add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
+    #[arg(long, visible_alias = "no-add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
     no_embed_metadata: bool,
     /// Add chapter markers to the video file (implied by --embed-metadata)
-    #[arg(long, alias = "add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
+    #[arg(long, visible_alias = "add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
     embed_chapters: bool,
     /// Do not add chapter markers
-    #[arg(long, alias = "no-add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
+    #[arg(long, visible_alias = "no-add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
     no_embed_chapters: bool,
     /// Parse additional metadata like title/artist from other fields (default WHEN: pre_process)
     #[arg(long, value_name = "[WHEN:]FROM:TO", allow_hyphen_values = true)]
@@ -400,7 +401,7 @@ struct Args {
     #[arg(long, overrides_with = "embed_info_json")]
     no_embed_info_json: bool,
     /// Write metadata to the video file's xattrs (using Dublin Core and XDG standards)
-    #[arg(long, alias = "xattr")]
+    #[arg(long, visible_alias = "xattr")]
     xattrs: bool,
     /// SponsorBlock categories to create chapters for, separated by commas (all, default (=all), -CATEGORY to exclude)
     #[arg(long, value_name = "CATS")]
@@ -437,10 +438,10 @@ struct Args {
     #[arg(long, value_name = "POLICY", default_value = "multi_video", value_parser = ["never", "always", "multi_video"])]
     concat_playlist: String,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
-    #[arg(long, alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
+    #[arg(long, visible_alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
     split_chapters: bool,
     /// Do not split video based on chapters (default)
-    #[arg(long, alias = "no-split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
+    #[arg(long, visible_alias = "no-split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
     no_split_chapters: bool,
     /// Embed the best written thumbnail as cover art (mp3, mkv/mka, mp4/m4a/m4v/mov; implies writing it)
     #[arg(long, overrides_with_all = ["embed_thumbnail", "no_embed_thumbnail"])]
@@ -458,10 +459,10 @@ struct Args {
     #[arg(long, overrides_with = "embed_subs")]
     no_embed_subs: bool,
     /// Convert written subtitles to srt, vtt, ass or lrc; none disables conversion
-    #[arg(long, aliases = ["convert-sub", "convert-subtitles"], value_name = "FORMAT", overrides_with = "convert_subs")]
+    #[arg(long, visible_aliases = ["convert-sub", "convert-subtitles"], value_name = "FORMAT", overrides_with = "convert_subs")]
     convert_subs: Option<String>,
     /// Skip media downloads while allowing requested subtitle and info JSON sidecars
-    #[arg(long, alias = "no-download")]
+    #[arg(long, visible_alias = "no-download")]
     skip_download: bool,
     /// Process the video or playlist information in FILE (written with --write-info-json) instead of URLs
     #[arg(long, alias = "load-info", value_name = "FILE")]
@@ -497,10 +498,18 @@ struct Args {
     #[arg(long, overrides_with = "write_info_json")]
     no_write_info_json: bool,
     /// Retrieve video comments to be placed in the infojson (implies --write-info-json unless JSON is printed)
-    #[arg(long, alias = "get-comments", overrides_with = "no_write_comments")]
+    #[arg(
+        long,
+        visible_alias = "get-comments",
+        overrides_with = "no_write_comments"
+    )]
     write_comments: bool,
     /// Do not retrieve video comments unless the extraction is known to be quick (default)
-    #[arg(long, alias = "no-get-comments", overrides_with = "write_comments")]
+    #[arg(
+        long,
+        visible_alias = "no-get-comments",
+        overrides_with = "write_comments"
+    )]
     no_write_comments: bool,
     /// Format ID or indexed/grouped selector with filters, + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
@@ -526,10 +535,10 @@ struct Args {
     #[arg(long, value_name = "[TYPE:]EXPR", allow_hyphen_values = true)]
     retry_sleep: Vec<String>,
     /// Skip unavailable fragments for DASH and hlsnative downloads (default)
-    #[arg(long, alias = "no-abort-on-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
+    #[arg(long, visible_alias = "no-abort-on-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
     skip_unavailable_fragments: bool,
     /// Abort download if a fragment is unavailable
-    #[arg(long, alias = "no-skip-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
+    #[arg(long, visible_alias = "no-skip-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
     abort_on_unavailable_fragments: bool,
     /// Number of retries for known extractor errors (default is 3), or "infinite"
     #[arg(
@@ -577,10 +586,10 @@ struct Args {
     #[arg(long, alias = "add-header", value_name = "FIELD:VALUE")]
     add_headers: Vec<String>,
     /// Override the HTTP User-Agent
-    #[arg(long, value_name = "UA", overrides_with = "user_agent")]
+    #[arg(long, hide = true, value_name = "UA", overrides_with = "user_agent")]
     user_agent: Option<String>,
     /// Default HTTP Referer (extractor request headers can override it)
-    #[arg(long, value_name = "URL", overrides_with = "referer")]
+    #[arg(long, hide = true, value_name = "URL", overrides_with = "referer")]
     referer: Option<String>,
     /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges, replacing --js-runtimes
     #[arg(long, value_name = "PATH")]
@@ -725,7 +734,7 @@ struct Args {
     #[arg(long, overrides_with_all = ["break_per_input", "no_break_per_input"])]
     no_break_per_input: bool,
     /// Record archive entries even when simulating or skipping downloads
-    #[arg(long, aliases = ["force-write-download-archive", "force-download-archive"])]
+    #[arg(long, visible_aliases = ["force-write-download-archive", "force-download-archive"])]
     force_write_archive: bool,
     /// Comma-separated playlist indices or inclusive START:STOP:STEP ranges
     #[arg(
@@ -736,13 +745,13 @@ struct Args {
     )]
     playlist_items: Option<String>,
     /// First playlist item (one-based, default 1; overridden by --playlist-items)
-    #[arg(long, default_value_t = 1, allow_hyphen_values = true)]
+    #[arg(long, hide = true, default_value_t = 1, allow_hyphen_values = true)]
     playlist_start: i64,
     /// Last playlist item, inclusive (-1 means through the end)
-    #[arg(long, allow_hyphen_values = true)]
+    #[arg(long, hide = true, allow_hyphen_values = true)]
     playlist_end: Option<i64>,
     /// Reverse the selected playlist item order
-    #[arg(long, overrides_with = "no_playlist_reverse")]
+    #[arg(long, hide = true, overrides_with = "no_playlist_reverse")]
     playlist_reverse: bool,
     #[arg(long, hide = true, overrides_with = "playlist_reverse")]
     no_playlist_reverse: bool,
@@ -791,7 +800,7 @@ struct Args {
     #[arg(short = 'w', long, overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
     no_overwrites: bool,
     /// Overwrite all video and metadata files
-    #[arg(long, alias = "yes-overwrites", overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
+    #[arg(long, visible_alias = "yes-overwrites", overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
     force_overwrites: bool,
     /// Do not overwrite the video, but overwrite related files (default)
     #[arg(long, overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
@@ -884,10 +893,10 @@ struct Args {
     #[arg(long, action = clap::ArgAction::Count)]
     no_abort_on_error: u8,
     /// Abort downloading of further videos if an error occurs
-    #[arg(long, alias = "no-ignore-errors", action = clap::ArgAction::Count)]
+    #[arg(long, visible_alias = "no-ignore-errors", action = clap::ArgAction::Count)]
     abort_on_error: u8,
     /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
-    #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
+    #[arg(short = 'r', long, visible_aliases = ["rate-limit"], value_name = "RATE")]
     limit_rate: Option<String>,
     /// Whether to emit color codes ([STREAM:]POLICY): always, auto (default), never, no_color, auto-tty or no_color-tty
     #[arg(long, value_name = "[STREAM:]POLICY")]
@@ -895,13 +904,21 @@ struct Args {
     #[arg(long, alias = "no-colours", hide = true)]
     no_colors: bool,
     /// Remove some internal metadata such as filenames from the infojson (default)
-    #[arg(long, alias = "clean-infojson", overrides_with = "no_clean_info_json")]
+    #[arg(
+        long,
+        visible_alias = "clean-infojson",
+        overrides_with = "no_clean_info_json"
+    )]
     clean_info_json: bool,
     /// Write all fields to the infojson
-    #[arg(long, alias = "no-clean-infojson", overrides_with = "clean_info_json")]
+    #[arg(
+        long,
+        visible_alias = "no-clean-infojson",
+        overrides_with = "clean_info_json"
+    )]
     no_clean_info_json: bool,
     /// Extractor names to use separated by commas (regexes, "all", "default", "end", "-" to exclude)
-    #[arg(long, alias = "ies", value_name = "NAMES")]
+    #[arg(long, visible_alias = "ies", value_name = "NAMES")]
     use_extractors: Vec<String>,
     #[arg(long, hide = true)]
     force_generic_extractor: bool,
@@ -939,10 +956,18 @@ struct Args {
     #[arg(long, overrides_with = "keep_fragments")]
     no_keep_fragments: bool,
     /// Downloader to use, optionally prefixed by protocols (http, ftp, m3u8, dash, rtmp): native, aria2c, axel, curl, ffmpeg, httpie or wget
-    #[arg(long, alias = "external-downloader", value_name = "[PROTO:]NAME")]
+    #[arg(
+        long,
+        visible_alias = "external-downloader",
+        value_name = "[PROTO:]NAME"
+    )]
     downloader: Vec<String>,
     /// Arguments for the downloader (NAME:ARGS; ffmpeg, ffmpeg_i[N], ffmpeg_o[N])
-    #[arg(long, alias = "external-downloader-args", value_name = "NAME:ARGS")]
+    #[arg(
+        long,
+        visible_alias = "external-downloader-args",
+        value_name = "NAME:ARGS"
+    )]
     downloader_args: Vec<String>,
     /// Give these arguments to the postprocessors (PP[+EXE][_i|_o[N]]:ARGS; Merger, ExtractAudio, VideoRemuxer, VideoConvertor, Metadata, EmbedSubtitle, EmbedThumbnail, SubtitlesConvertor, ThumbnailsConvertor, SplitChapters, FixupM4a, FixupM3u8) (Alias: --ppa)
     #[arg(long, visible_alias = "ppa", value_name = "NAME:ARGS")]
@@ -957,9 +982,11 @@ struct Args {
     /// Size of the download buffer, e.g. 1024 or 16K (default is 1024)
     #[arg(long, value_name = "SIZE")]
     buffer_size: Option<String>,
-    #[arg(long, hide = true, overrides_with = "no_resize_buffer")]
+    /// The buffer size is automatically resized from an initial value of --buffer-size (default)
+    #[arg(long, overrides_with = "no_resize_buffer")]
     resize_buffer: bool,
-    #[arg(long, hide = true, overrides_with = "resize_buffer")]
+    /// Do not automatically adjust the buffer size
+    #[arg(long, overrides_with = "resize_buffer")]
     no_resize_buffer: bool,
     /// Number of times to retry on a file access error (accepted; not retried natively)
     #[arg(long, value_name = "RETRIES", default_value = "3")]
@@ -970,22 +997,29 @@ struct Args {
     /// Wait for scheduled streams to become available, retrying after MIN[-MAX] seconds
     #[arg(long, value_name = "MIN[-MAX]")]
     wait_for_video: Option<String>,
-    #[arg(long, hide = true)]
+    /// Do not wait for scheduled streams (default)
+    #[arg(long)]
     no_wait_for_video: bool,
-    #[arg(long, hide = true, overrides_with = "no_live_from_start")]
+    /// Download livestreams from the start. Currently experimental and only supported for YouTube and Twitch
+    #[arg(long, overrides_with = "no_live_from_start")]
     live_from_start: bool,
-    #[arg(long, hide = true, overrides_with = "live_from_start")]
+    /// Download livestreams from the current time (default)
+    #[arg(long, overrides_with = "live_from_start")]
     no_live_from_start: bool,
-    #[arg(long, hide = true, overrides_with = "no_mark_watched")]
+    /// Mark videos watched (even with --simulate; YouTube with cookies)
+    #[arg(long, overrides_with = "no_mark_watched")]
     mark_watched: bool,
-    #[arg(long, hide = true, overrides_with = "mark_watched")]
+    /// Do not mark videos watched (default)
+    #[arg(long, overrides_with = "mark_watched")]
     no_mark_watched: bool,
     /// Self-updating is not supported; reinstall yt-dlp-rs instead
     #[arg(short = 'U', long)]
     update: bool,
-    #[arg(long, hide = true)]
+    /// Do not check for updates (default)
+    #[arg(long)]
     no_update: bool,
-    #[arg(long, hide = true, value_name = "[CHANNEL]@[TAG]")]
+    /// Self-updating is not supported; reinstall yt-dlp-rs instead
+    #[arg(long, value_name = "[CHANNEL]@[TAG]")]
     update_to: Option<String>,
     /// Location in the filesystem where some downloaded information (such as client ids and signatures) is stored permanently. By default ${XDG_CACHE_HOME}/yt-dlp-rs
     #[arg(long, value_name = "DIR", overrides_with = "no_cache_dir")]
@@ -999,15 +1033,20 @@ struct Args {
     /// Additional JavaScript runtime to enable, with an optional location (the binary or its directory); deno, node, quickjs, bun in order of priority, only deno by default
     #[arg(long, value_name = "RUNTIME[:PATH]")]
     js_runtimes: Vec<String>,
-    #[arg(long, hide = true)]
+    /// Clear JavaScript runtimes to enable, including defaults and those provided by previous --js-runtimes
+    #[arg(long)]
     no_js_runtimes: bool,
-    #[arg(long, hide = true, value_name = "COMPONENT")]
+    /// Remote components to allow fetching (not supported natively and ignored; the EJS solver is built in)
+    #[arg(long, value_name = "COMPONENT")]
     remote_components: Vec<String>,
-    #[arg(long, hide = true)]
+    /// Disallow fetching of all remote components, including any previously allowed by --remote-components or defaults
+    #[arg(long)]
     no_remote_components: bool,
-    #[arg(long, hide = true, value_name = "PATH")]
+    /// Path to an additional directory to search for plugins (plugins are not supported natively; warns)
+    #[arg(long, value_name = "PATH")]
     plugin_dirs: Vec<String>,
-    #[arg(long, hide = true)]
+    /// Clear plugin directories to search, including defaults and those provided by previous --plugin-dirs
+    #[arg(long)]
     no_plugin_dirs: bool,
     /// Compatibility options (upstream's --compat-options values)
     #[arg(long, value_name = "OPTS")]
@@ -1022,41 +1061,54 @@ struct Args {
     /// List available clients to impersonate
     #[arg(long)]
     list_impersonate_targets: bool,
-    #[arg(long, hide = true, overrides_with = "no_video_multistreams")]
+    /// Allow multiple video streams to be merged into a single file
+    #[arg(long, overrides_with = "no_video_multistreams")]
     video_multistreams: bool,
-    #[arg(long, hide = true, overrides_with = "video_multistreams")]
+    /// Only one video stream is downloaded for each output file (default)
+    #[arg(long, overrides_with = "video_multistreams")]
     no_video_multistreams: bool,
-    #[arg(long, hide = true, overrides_with = "no_audio_multistreams")]
+    /// Allow multiple audio streams to be merged into a single file
+    #[arg(long, overrides_with = "no_audio_multistreams")]
     audio_multistreams: bool,
-    #[arg(long, hide = true, overrides_with = "audio_multistreams")]
+    /// Only one audio stream is downloaded for each output file (default)
+    #[arg(long, overrides_with = "audio_multistreams")]
     no_audio_multistreams: bool,
     #[arg(long, hide = true, overrides_with = "no_allow_unplayable_formats")]
     allow_unplayable_formats: bool,
     #[arg(long, hide = true, overrides_with = "allow_unplayable_formats")]
     no_allow_unplayable_formats: bool,
     /// Download all formats (equivalent to -f all)
-    #[arg(long)]
+    #[arg(long, hide = true)]
     all_formats: bool,
-    /// Account credentials (for the extractors supporting logins)
+    /// Login with this account ID (for the extractors supporting logins)
     #[arg(short = 'u', long, value_name = "USERNAME")]
     username: Option<String>,
+    /// Account password. If this option is left out, yt-dlp-rs will ask interactively
     #[arg(short = 'p', long, value_name = "PASSWORD")]
     password: Option<String>,
+    /// Two-factor authentication code
     #[arg(short = '2', long, value_name = "TWOFACTOR")]
     twofactor: Option<String>,
+    /// Use .netrc authentication data
     #[arg(short = 'n', long)]
     netrc: bool,
+    /// Location of .netrc authentication data; either the path or its containing directory. Defaults to ~/.netrc
     #[arg(long, value_name = "PATH")]
     netrc_location: Option<String>,
+    /// Command to execute to get the credentials for an extractor
     #[arg(long, value_name = "NETRC_CMD")]
     netrc_cmd: Option<String>,
+    /// Video-specific password
     #[arg(long, value_name = "PASSWORD")]
     video_password: Option<String>,
-    #[arg(long, hide = true, value_name = "MSO")]
+    /// Adobe Pass multiple-system operator (TV provider) identifier, use --ap-list-mso for a list of available MSOs
+    #[arg(long, value_name = "MSO")]
     ap_mso: Option<String>,
-    #[arg(long, hide = true, value_name = "USERNAME")]
+    /// Multiple-system operator account login
+    #[arg(long, value_name = "USERNAME")]
     ap_username: Option<String>,
-    #[arg(long, hide = true, value_name = "PASSWORD")]
+    /// Multiple-system operator account password. If this option is left out, yt-dlp-rs will ask interactively
+    #[arg(long, value_name = "PASSWORD")]
     ap_password: Option<String>,
     /// List all supported multiple-system operators
     #[arg(long)]
@@ -1090,12 +1142,14 @@ struct Args {
     /// Force the specified encoding (utf-8, ascii, latin-1, cp1252, utf-16 or utf-32; others warn and write UTF-8)
     #[arg(long, value_name = "ENCODING")]
     encoding: Option<String>,
-    #[arg(long, hide = true)]
+    /// Explicitly allow HTTPS connection to servers that do not support RFC 5746 secure renegotiation (also enables legacy TLS 1.2 CBC suites)
+    #[arg(long)]
     legacy_server_connect: bool,
     /// Use an unencrypted connection to retrieve information where an extractor supports it
-    #[arg(long, alias = "prefer-unsecure")]
+    #[arg(long, visible_alias = "prefer-unsecure")]
     prefer_insecure: bool,
-    #[arg(long, hide = true)]
+    /// Work around terminals that lack bidirectional text support. Requires bidiv or fribidi executable in PATH
+    #[arg(long)]
     bidi_workaround: bool,
     /// Ignore "No video formats" errors, to extract metadata of videos that cannot be downloaded
     #[arg(long, overrides_with = "no_ignore_no_formats_error")]
@@ -1103,17 +1157,17 @@ struct Args {
     /// Throw an error when no downloadable video formats are found (default)
     #[arg(long, overrides_with = "ignore_no_formats_error")]
     no_ignore_no_formats_error: bool,
+    /// Process dynamic DASH manifests (default)
     #[arg(
         long,
-        hide = true,
-        alias = "no-ignore-dynamic-mpd",
+        visible_alias = "no-ignore-dynamic-mpd",
         overrides_with = "ignore_dynamic_mpd"
     )]
     allow_dynamic_mpd: bool,
+    /// Do not process dynamic DASH manifests
     #[arg(
         long,
-        hide = true,
-        alias = "no-allow-dynamic-mpd",
+        visible_alias = "no-allow-dynamic-mpd",
         overrides_with = "allow_dynamic_mpd"
     )]
     ignore_dynamic_mpd: bool,
@@ -1167,7 +1221,7 @@ struct Args {
     /// Limit the filename length (excluding extension) to LENGTH characters
     #[arg(
         long,
-        alias = "trim-file-names",
+        visible_alias = "trim-file-names",
         value_name = "LENGTH",
         default_value_t = 0,
         allow_hyphen_values = true
@@ -6599,11 +6653,36 @@ fn resolve_long(
 
 /// The parser, with optparse's value handling: an option that takes a
 /// value consumes the next argument even when it starts with `-`.
+/// `--alias` and `-t`/`--preset-alias` are only listed in `--help`:
+/// `expand_preset_aliases` consumes them before the parser runs.
 fn command() -> clap::Command {
-    Args::command().mut_args(|argument| {
+    let command = Args::command().mut_args(|argument| {
         let takes_value = argument.get_action().takes_values() && !argument.is_positional();
         argument.allow_hyphen_values(takes_value)
-    })
+    });
+    let order = command
+        .get_arguments()
+        .find(|argument| argument.get_id() == "compat_options")
+        .map_or(0, clap::Arg::get_display_order);
+    command
+        .arg(
+            clap::Arg::new("alias")
+                .long("alias")
+                .value_names(["ALIASES", "OPTIONS"])
+                .num_args(2)
+                .action(clap::ArgAction::Append)
+                .display_order(order)
+                .help("Create aliases for an option string. Unless an alias starts with a dash \"-\", it is prefixed with \"--\". Arguments are parsed according to the Python string formatting mini-language. E.g. --alias get-audio,-X \"-S aext:{0},abr -x --audio-format {0}\" creates options \"--get-audio\" and \"-X\" that take an argument (ARG0) and expand to \"-S aext:ARG0,abr -x --audio-format ARG0\". Each alias may be triggered a maximum of 100 times. This option can be used multiple times"),
+        )
+        .arg(
+            clap::Arg::new("preset_alias")
+                .short('t')
+                .long("preset-alias")
+                .value_name("PRESET")
+                .action(clap::ArgAction::Append)
+                .display_order(order)
+                .help("Applies a predefined set of options, e.g. --preset-alias mp3. The following presets are available: mp3, aac, mp4, mkv, sleep. This option can be used multiple times"),
+        )
 }
 
 /// Upstream validation for options this port accepts without acting on
@@ -7091,6 +7170,25 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
         // verbatim (`-f=best` is `=best`).
         if !token.starts_with("--") && token.starts_with('-') && token.len() > 2 {
             let cluster = &token[1..];
+            // optparse's `-xt mp3`: a `-t` after switches in a cluster
+            // (not inside an earlier option's attached value).
+            let preset = cluster
+                .char_indices()
+                .find_map(|(index, short)| {
+                    if short == 't' {
+                        return Some(Some(index));
+                    }
+                    shorts
+                        .iter()
+                        .any(|(name, takes_value)| *name == short && *takes_value)
+                        .then_some(None)
+                })
+                .flatten();
+            if let Some(index) = preset {
+                output.push(format!("-{}", &cluster[..index]));
+                queue.push_front(format!("-{}", &cluster[index..]));
+                continue;
+            }
             let attached = cluster.char_indices().find_map(|(index, short)| {
                 shorts
                     .iter()
@@ -11260,6 +11358,73 @@ mod tests {
             expand(&["-t", "nope"]).unwrap_err(),
             "Unknown preset alias: nope"
         );
+        // optparse clusters: `-xt mp3` and `-qtmkv`, but `-ft` is `-f t`.
+        assert_eq!(
+            expand(&["-xt", "mp3"]).unwrap()[..3],
+            ["-x", "-f", "ba[acodec^=mp3]/ba/b"]
+        );
+        assert_eq!(
+            expand(&["-qtmkv"]).unwrap()[..3],
+            ["-q", "--merge-output-format", "mkv"]
+        );
+        assert_eq!(expand(&["-ft"]).unwrap(), ["-f", "t"]);
+    }
+
+    #[test]
+    fn help_lists_the_options_upstream_lists() {
+        let help = command().render_long_help().to_string();
+        // Option names and clap's `[alias: ...]`/`[aliases: ...]` notes.
+        let listed = |name: &str| {
+            help.lines().any(|line| {
+                let line = line.trim_start();
+                let aliases = line
+                    .split_once("[alias: ")
+                    .or_else(|| line.split_once("[aliases: "))
+                    .map_or("", |(_, aliases)| aliases.trim_end_matches(']'));
+                (line.starts_with('-') && line.split([',', ' ']).any(|word| word == name))
+                    || aliases.split(", ").any(|alias| alias == name)
+            })
+        };
+        for name in [
+            "--live-from-start",
+            "--no-live-from-start",
+            "--video-multistreams",
+            "--audio-multistreams",
+            "--mark-watched",
+            "--ap-mso",
+            "--legacy-server-connect",
+            "--allow-dynamic-mpd",
+            "--no-ignore-dynamic-mpd",
+            "--add-metadata",
+            "--alias",
+            "-t",
+            "--preset-alias",
+        ] {
+            assert!(listed(name), "{name} is not listed");
+        }
+        // Options upstream hides (SUPPRESS_HELP).
+        for name in [
+            "--user-agent",
+            "--referer",
+            "--playlist-start",
+            "--playlist-end",
+            "--all-formats",
+            "--list-formats-old",
+            "--get-title",
+        ] {
+            assert!(!listed(name), "{name} is listed");
+        }
+        // Every listed option is described.
+        let lines: Vec<&str> = help.lines().collect();
+        for (index, line) in lines.iter().enumerate() {
+            if line.trim_start().starts_with('-') && line.starts_with("  ") {
+                let next = lines.get(index + 1).copied().unwrap_or_default();
+                assert!(
+                    next.starts_with("          ") && !next.trim().is_empty(),
+                    "{line} has no description"
+                );
+            }
+        }
     }
 
     #[test]
