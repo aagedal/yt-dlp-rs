@@ -8,6 +8,10 @@ network) as `yt_dlp --ignore-config --proxy PROXY --no-check-certificate
 code, stdout, the `ERROR:`/`WARNING:` stderr lines and the written files in
 expected.json (`epoch` and `_version` removed). tests/sites.rs runs this port
 the same way through tests/helpers/site_proxy.rs and compares.
+
+A site directory's `upstream.patch` (an unmerged upstream fix ported ahead of
+the baseline) is applied to a temporary copy of the checkout's `yt_dlp`
+package first; once upstream contains the fix, the patch no longer applies.
 """
 import argparse
 import json
@@ -62,6 +66,18 @@ def prepare(site, case, directory):
     return set(copied)
 
 
+def patched(upstream, patch):
+    """A temporary copy of `upstream`'s `yt_dlp` package with `patch` applied."""
+    root = Path(tempfile.mkdtemp())
+    shutil.copytree(Path(upstream) / 'yt_dlp', root / 'yt_dlp')
+    result = subprocess.run(['git', 'apply', str(patch.resolve())],
+                            cwd=root, capture_output=True, text=True)
+    if result.returncode:
+        shutil.rmtree(root)
+        sys.exit(f'{patch}: does not apply to {upstream} (merged upstream?)\n{result.stderr}')
+    return root
+
+
 def run(upstream, proxy, case, site=None):
     directory = tempfile.mkdtemp()
     copied = prepare(site, case, directory) if site else set()
@@ -97,8 +113,12 @@ def main():
             continue
         proxy = SiteProxy(site)
         cases = json.loads((site / 'cases.json').read_text(encoding='utf-8'))
+        patch = site / 'upstream.patch'
+        upstream = patched(args.upstream, patch) if patch.is_file() else args.upstream
         expected = {'upstream_commit': PINNED_UPSTREAM,
-                    'cases': [{**case, **run(args.upstream, proxy, case, site)} for case in cases]}
+                    'cases': [{**case, **run(upstream, proxy, case, site)} for case in cases]}
+        if upstream is not args.upstream:
+            shutil.rmtree(upstream)
         text = json.dumps(expected, indent=1, ensure_ascii=False) + '\n'
         path = site / 'expected.json'
         if args.write:

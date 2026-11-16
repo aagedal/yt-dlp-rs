@@ -9,6 +9,8 @@
  {"url": "https://www.dr.dk/drtv/se/geo_111", "args": ["-j"]},
  {"url": "https://www.dr.dk/drtv/se/none_222", "args": ["-j"]},
  {"url": "https://www.dr.dk/drtv/se/none_222", "args": ["--ignore-no-formats-error", "--print", "%(id)s|%(title)s|%(formats)s"]},
+ {"url": "https://www.dr.dk/drtv/episode/frank-and-kastaniegaarden_53167", "args": ["-j"]},
+ {"url": "https://www.dr.dk/drtv/episode/frank-and-kastaniegaarden_53167", "args": ["--print", "%(id)s|%(season_id)s|%(format_id)s"]},
  {"url": "https://www.dr.dk/tv/live/dr1", "args": ["--no-geo-bypass", "--print", "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(thumbnail)s|%(extractor)s"]},
  {"url": "https://www.dr.dk/tv/live/dr1", "args": ["--no-geo-bypass", "-F"]},
  {"url": "https://www.dr.dk/tv/live/notitle", "args": ["--no-geo-bypass", "-j"]},

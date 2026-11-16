@@ -194,7 +194,7 @@ another extractor.
 | Douyin | 2 | 10 |  |
 | Dropbox | 2 | 5 |  |
 | DrTalks | 2 | 3 |  |
-| drtv | 2 | 11 |  |
+| drtv | 2 | 13 |  |
 | drtv:live | 2 | 3 |  |
 | drtv:season | 2 | 3 |  |
 | drtv:series | 2 | 2 |  |

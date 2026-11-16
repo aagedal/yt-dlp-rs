@@ -1652,16 +1652,22 @@ JSON POST to `isl.dr-massive.com`; the first `UserAccount` value, else
 `cache.page` value's `item`, else its first entry's `item`; without one the
 `unable to extract data` warning and the backup `production-cdn` items API
 for the slug's last `_` part), the `customId`'s last `:` part as the ID, and
-the bearer-authorized `account/items/ID/videos` stream list: every stream
+the bearer-authorized `account/items/ID/videos` stream list (for a page item
+the numeric `_ID` suffix of its `path`, else its `id`: the page's GUID IDs
+make the videos API answer HTTP 400): every stream
 with a URL as non-fatal HLS (master playlist only, `FORMAT[-SERVICE]` IDs,
 preference 1 for `StandardVideo` and -1 for spoken-subtitle, sign-language
 and visually-interpreted streams), its API subtitle links (`SUBTITLE_LANGS`
 names with the service suffix, `mimetype2ext` or `vtt`) or else the
 manifest's deduplicated subtitles; the Denmark-only geo error (no bypass)
 when nothing is found and the season is marked geo-restricted; title,
-contextual title, description, wallpaper thumbnail, `BroadcastTimeDK`
-release timestamp, duration, series, season (title, number, ID), episode
-(name, number) and release year as upstream's `traverse_obj`. DR TV live
+the season ID (the numeric `_ID` suffix of the season's `path`, else the
+item's `seasonId`), then title, contextual title, description, wallpaper
+thumbnail, `BroadcastTimeDK` release timestamp, duration, series, season
+(title, number), episode (name, number) and release year as upstream's
+`traverse_obj`. The path IDs are the unmerged upstream fix
+[yt-dlp/yt-dlp#17980](https://github.com/yt-dlp/yt-dlp/pull/17980), ported
+ahead of the baseline (see [UPSTREAM.md](UPSTREAM.md#fixes-ported-ahead-of-upstream)). DR TV live
 channels (`dr.dk/tv/live/ID`) follow `DRTVLiveIE`: the `mu-online` channel
 JSON (`Title` required), each HLS streaming server's stream paths with a
 `b=` query as live master-playlist formats (`HLS-N`) and each HDS server's
@@ -1677,7 +1683,8 @@ is marked `_WORKING = False` upstream. Non-string IDs, titles and paths
 errors; a malformed `window.__data` JSON warns with upstream's text
 (Python's `JSONDecodeError` included). `tests/fixtures/sites/drtv/` (constructed responses:
 the live API is geo-restricted and the old channel API retired) is compared
-with pinned upstream output.
+with pinned upstream output with the fixture's `upstream.patch` (#17980)
+applied.
 
 Toronto Star pages (`thestar.com/.../SLUG.html`) follow upstream `TheStarIE`:
 the page's `mainartBrightcoveVideoId` (else upstream's error) as a `url`
