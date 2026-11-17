@@ -94,7 +94,7 @@ another extractor.
 | bbc | 2 | 19 |  |
 | bbc.co.uk | 2 | 14 |  |
 | bbc.co.uk:article | 2 | 2 |  |
-| bbc.co.uk:iplayer:episodes | 2 | 12 |  |
+| bbc.co.uk:iplayer:episodes | 2 | 13 |  |
 | bbc.co.uk:iplayer:group | 2 | 5 |  |
 | bbc.co.uk:playlist | 2 | 2 |  |
 | BeaconTv | 2 | 7 |  |
