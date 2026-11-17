@@ -185,7 +185,7 @@ fn update_visitor_cookies(
         fail(
             extractor,
             id,
-            &format!("Failed to parse JSON  (caused by {error})"),
+            &format!("Failed to parse JSON (caused by {error})"),
         )
     })?;
     let bug = |key: &str| {
@@ -281,7 +281,7 @@ fn weibo_json_note(
         fail(
             extractor,
             id,
-            &format!("{id}: Failed to parse JSON  (caused by {error})"),
+            &format!("{id}: Failed to parse JSON (caused by {error})"),
         )
     })
 }

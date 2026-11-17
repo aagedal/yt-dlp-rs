@@ -84,7 +84,7 @@ impl Extractor for LinkedIn {
         let sources: Value = serde_json::from_str(sources).map_err(|error| {
             fail(
                 &video_id,
-                &format!("{video_id}: Failed to parse JSON  (caused by {error})"),
+                &format!("{video_id}: Failed to parse JSON (caused by {error})"),
             )
         })?;
         let mut formats = Vec::new();

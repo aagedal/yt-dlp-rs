@@ -69,7 +69,7 @@ impl Extractor for Hypem {
             })?;
         let data: Value = serde_json::from_str(&tracks).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {url_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {url_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let tracks = match data.get("tracks") {

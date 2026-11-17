@@ -64,12 +64,6 @@ static COUK_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
         r"^https?://(?:www\.)?bbc\.co\.uk/(?:programmes/|iplayer(?:/[^/]+)?/(?:episode/|playlist/)|music/(?:clips|audiovideo/popular)[/#]|radio/player/|events/[^/]+/play/[^/]+/)(?P<id>{ID_REGEX})"
     ))
 });
-/// `(?!/(?:episodes|broadcasts|clips))` after the ID.
-static COUK_EXCLUDED: LazyLock<UrlRegex> = LazyLock::new(|| {
-    UrlRegex::new(format!(
-        r"^https?://(?:www\.)?bbc\.co\.uk/programmes/articles/|^https?://(?:www\.)?bbc\.co\.uk/(?:programmes/|iplayer(?:/[^/]+)?/(?:episode/|playlist/)|music/(?:clips|audiovideo/popular)[/#]|radio/player/|events/[^/]+/play/[^/]+/){ID_REGEX}/(?:episodes|broadcasts|clips)"
-    ))
-});
 static BBC_URL: LazyLock<UrlRegex> = LazyLock::new(|| {
     UrlRegex::new(
         r"^https?://(?:www\.)?(?:bbc\.(?:com|co\.uk)|bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd\.onion|bbcweb3hytmzhn5d532owbu6oqadra5z3ar726vq5kgwwn6aucdccrad\.onion)/(?:[^/]+/)+(?P<id>[^/#?]+)",
@@ -189,7 +183,27 @@ static VXP: LazyLock<Regex> = LazyLock::new(|| {
 
 /// `BBCCoUkIE._match_valid_url`.
 pub fn couk_suitable(url: &str) -> bool {
-    COUK_URL.is_match(url) && !COUK_EXCLUDED.is_match(url)
+    couk_match_id(url).is_some()
+}
+
+/// `BBCCoUkIE._VALID_URL`'s `id`. Its `(?!/(?:episodes|broadcasts|clips))`
+/// lookahead backtracks into `w[\da-z]{7,14}`: a longer `w` ID followed by
+/// one of those paths still matches, one character short, and only an
+/// eight-character ID (or a fixed-length `[pbml]` one) is excluded.
+fn couk_match_id(url: &str) -> Option<String> {
+    let id = COUK_URL.captures(url)?.name("id")?;
+    let rest = &url[id.end()..];
+    let excluded = ["/episodes", "/broadcasts", "/clips"]
+        .iter()
+        .any(|path| rest.starts_with(path));
+    let id = id.as_str();
+    if !excluded {
+        Some(id.to_owned())
+    } else if id.starts_with('w') && id.len() > 8 {
+        Some(id[..id.len() - 1].to_owned())
+    } else {
+        None
+    }
 }
 
 /// `BBCIE.suitable`: not a `BBCCoUkIE`, article, iPlayer playlist or
@@ -214,7 +228,7 @@ pub(crate) fn bbc_embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
 }
 
 pub(crate) fn couk_temp_id(url: &str) -> Option<String> {
-    COUK_URL.captures(url).map(|found| found["id"].to_owned())
+    couk_match_id(url)
 }
 
 pub(crate) fn bbc_temp_id(url: &str) -> Option<String> {
@@ -391,13 +405,8 @@ fn parse_json_optional(name: &str, text: &str, id: &str) -> Option<Value> {
 
 /// `_parse_json(text, video_id)` (fatal).
 fn parse_json_fatal(text: &str, id: &str) -> Result<Value> {
-    crate::json::from_str::<Value>(text).map_err(|error| {
-        let text = crate::json::python_decode_error_text(text).unwrap_or_else(|| error.to_string());
-        Error::Reported(format!(
-            "{id}: Failed to parse JSON  (caused by JSONDecodeError('{text}')); {}",
-            crate::BUG_REPORTS_MESSAGE
-        ))
-    })
+    crate::json::from_str::<Value>(text)
+        .map_err(|error| super::json_parse_failure(&format!("{id}:"), text, &error))
 }
 
 /// A media-selection result's `MediaSelectionError` or any other failure.
@@ -461,25 +470,12 @@ impl Ctx<'_> {
     }
 
     /// `_download_xml(url, video_id, note)` (fatal): the parsed document's
-    /// text.
+    /// text. Without a video ID (`""`), errors get the URL's temporary ID.
     fn download_xml(&self, url: &str, id: &str, note: &str) -> Result<String> {
         let target = Url::parse(url)
             .map_err(|_| unsupported(&format!("relative or invalid XML URLs ({url})")))?;
-        let xml = super::download_xml_note(self.client, &target, self.name, id, note)?;
-        if let Err(error) = roxmltree::Document::parse(&xml) {
-            let text = super::expat_error(&xml).unwrap_or_else(|| error.to_string());
-            let prefix = if id.is_empty() {
-                String::new()
-            } else {
-                format!("{id}: ")
-            };
-            return Err(Error::Reported(format!(
-                "[{}] {prefix}Failed to parse XML  (caused by ParseError('{text}')); {}",
-                self.name,
-                crate::BUG_REPORTS_MESSAGE
-            )));
-        }
-        Ok(xml)
+        let error_id = if id.is_empty() { &self.temp_id } else { id };
+        super::download_xml_ids(self.client, &target, self.name, id, error_id, note)
     }
 
     /// `_download_xml(url, video_id, note, fatal=False)`: `None` after the
@@ -512,39 +508,14 @@ impl Ctx<'_> {
     /// `_download_json(url, programme_id, 'Downloading media selection
     /// JSON', expected_status=(403, 404))`.
     fn media_selection_json(&self, url: &Url, id: &str) -> Result<Value> {
-        use std::io::Read;
-        crate::screen::screen(&format!(
-            "[{}] {id}: Downloading media selection JSON",
-            self.name
-        ));
-        let mut response = super::direct::request_expecting(self.client, url, &[], &[403, 404])
-            .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
-                    Error::ExtractorRequest {
-                        extractor: self.name,
-                        id: id.to_owned(),
-                        what: "JSON metadata",
-                        source: Box::new(error),
-                    }
-                }
-                error => error,
-            })?;
-        let page_url = response.url().clone();
-        let mut body = Vec::new();
-        response
-            .read_to_end(&mut body)
-            .map_err(Error::ExtractionRead)?;
-        let body =
-            super::decode_content(response.headers(), body).map_err(Error::ExtractionRead)?;
-        crate::screen::expect_page(id, None, None);
-        crate::screen::page_read(&page_url, &body)?;
-        let text = super::decode_webpage(&body, response.headers());
-        crate::json::from_str(&text).map_err(|error| {
-            Error::Reported(format!(
-                "[{}] {id}: Failed to parse JSON  (caused by {error})",
-                self.name
-            ))
-        })
+        super::download_json_expecting(
+            self.client,
+            url,
+            self.name,
+            id,
+            "Downloading media selection JSON",
+            &[403, 404],
+        )
     }
 
     /// `_download_media_selector(programme_id)`.
@@ -2650,11 +2621,20 @@ fn media_meta_formats(
     page: &Page<'_>,
     media_meta: &Value,
 ) -> Result<(Vec<VideoFormat>, Option<Subtitles>, bool)> {
-    if let Some(Value::Object(source_files)) =
-        media_meta.get("sourceFiles").filter(|files| truthy(files))
-    {
+    if let Some(source_files) = media_meta.get("sourceFiles").filter(|files| truthy(files)) {
+        // `source_files.items()` and `f.get('url')` need dicts.
+        let Value::Object(source_files) = source_files else {
+            return Err(unsupported(
+                "media metadata source files that are not objects",
+            ));
+        };
         let mut formats = Vec::new();
         for (format_id, file) in source_files {
+            if !file.is_object() {
+                return Err(unsupported(
+                    "media metadata source files that are not objects",
+                ));
+            }
             let Some(file_url) = file.get("url").filter(|url| truthy(url)) else {
                 continue;
             };
@@ -2713,6 +2693,7 @@ mod tests {
             "http://www.bbc.co.uk/radio/player/p03cchwf",
             "https://www.bbc.co.uk/events/eppp5c/play/boclqd/p0pb2tlv",
             "https://www.bbc.co.uk/programmes/w172w4dww1jqt5s",
+            "https://www.bbc.co.uk/programmes/w172w4dww1jqt5s/episodes",
             "http://www.bbc.co.uk/iplayer/playlist/p01dvks4",
         ] {
             assert!(couk_suitable(url), "{url}");
@@ -2720,6 +2701,7 @@ mod tests {
         }
         for url in [
             "http://www.bbc.co.uk/programmes/b00mfl7n/clips",
+            "https://www.bbc.co.uk/programmes/w172w4dw/broadcasts",
             "http://www.bbc.co.uk/programmes/articles/3jNQLTMrPlYGTBn0WV6M2MS/x",
             "https://www.bbc.co.uk/iplayer/episodes/b094m5t9/doctor-foster",
             "https://www.bbc.co.uk/iplayer/group/p081d7j7",
@@ -2735,6 +2717,11 @@ mod tests {
         ] {
             assert!(bbc_suitable(url), "{url}");
         }
+        // Upstream's lookahead backtracks the long `w` ID by one character.
+        assert_eq!(
+            couk_temp_id("https://www.bbc.co.uk/programmes/w172w4dww1jqt5s/episodes").as_deref(),
+            Some("w172w4dww1jqt5")
+        );
         assert_eq!(
             bbc_temp_id("http://www.bbc.com/news/world-europe-32668511?x=1").as_deref(),
             Some("world-europe-32668511")

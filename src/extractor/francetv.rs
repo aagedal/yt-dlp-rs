@@ -132,7 +132,7 @@ fn download_json_optional(
         Ok(value) => Ok(Some(value)),
         Err(error) => {
             crate::screen::warning(&format!(
-                "[{TV_NAME}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{TV_NAME}] {id}: Failed to parse JSON (caused by {error})"
             ));
             Ok(None)
         }

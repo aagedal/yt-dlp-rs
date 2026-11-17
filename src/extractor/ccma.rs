@@ -196,22 +196,8 @@ impl Extractor for Ccma {
                     "CCMA subtitle URLs that are not strings are not supported natively".into(),
                 ));
             };
-            let language = ["iso", "text"]
-                .iter()
-                .find_map(|key| subtitle.get(*key).and_then(Value::as_str))
-                .filter(|language| !language.is_empty())
-                .unwrap_or("ca")
-                .to_owned();
-            // Processing names an untyped track by its URL's extension.
-            let track = crate::SubtitleFormat {
-                name: None,
-                url: Url::parse(sub_url)?,
-                ext: super::direct::determine_ext(sub_url)
-                    .unwrap_or_else(|| "unknown_video".into()),
-                protocol: None,
-                fragments: Vec::new(),
-                extra: serde_json::Map::new(),
-            };
+            let language = subtitle_language(subtitle)?;
+            let track = super::subtitle_track(sub_url, None)?;
             match subtitles
                 .entries
                 .iter_mut()
@@ -281,9 +267,36 @@ impl Extractor for Ccma {
     }
 }
 
+/// `st.get('iso') or st.get('text') or 'ca'`.
+fn subtitle_language(subtitle: &Value) -> Result<String> {
+    match ["iso", "text"].iter().find_map(|key| {
+        subtitle
+            .get(*key)
+            .filter(|value| super::nuxt::truthy(value))
+    }) {
+        None => Ok("ca".to_owned()),
+        Some(Value::String(language)) => Ok(language.clone()),
+        Some(_) => Err(Error::UnsupportedHtml5(
+            "CCMA subtitle languages that are not strings are not supported natively".into(),
+        )),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn subtitle_languages_fall_through_falsy_values() {
+        let language = |subtitle: Value| subtitle_language(&subtitle).unwrap();
+        assert_eq!(language(json!({"iso": "", "text": "Català"})), "Català");
+        assert_eq!(language(json!({"iso": "es", "text": "Castellà"})), "es");
+        assert_eq!(language(json!({"iso": null, "text": ""})), "ca");
+        assert!(matches!(
+            subtitle_language(&json!({"iso": 1})),
+            Err(Error::UnsupportedHtml5(_))
+        ));
+    }
 
     #[test]
     fn urls_follow_upstream_valid_url() {

@@ -60,7 +60,7 @@ impl Extractor for Elonet {
             .ok_or_else(|| bug(&video_id, "Unable to extract json"))?;
         let sources: Value = crate::json::from_str(&json).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let src = match sources.get(0).and_then(|source| source.get("src")) {

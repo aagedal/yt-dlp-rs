@@ -97,31 +97,7 @@ fn url_entry(target: &Url, id: &str, title: Option<&str>) -> VideoInfo {
 /// `_download_json(..., expected_status=403)`: the access JSON, whose error
 /// responses are parsed too.
 fn access_json(client: &Client, url: &Url, id: &str) -> Result<Value> {
-    use std::io::Read;
-    crate::screen::screen(&format!("[{VOD_NAME}] {id}: Downloading access JSON"));
-    let mut response =
-        direct::request_expecting(client, url, &[], &[403]).map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. } => {
-                Error::ExtractorRequest {
-                    extractor: VOD_NAME,
-                    id: id.to_owned(),
-                    what: "JSON metadata",
-                    source: Box::new(error),
-                }
-            }
-            error => error,
-        })?;
-    let mut body = Vec::new();
-    response
-        .read_to_end(&mut body)
-        .map_err(Error::ExtractionRead)?;
-    let body = super::decode_content(response.headers(), body).map_err(Error::ExtractionRead)?;
-    let text = super::decode_webpage(&body, response.headers());
-    crate::json::from_str(&text).map_err(|error| {
-        Error::Reported(format!(
-            "[{VOD_NAME}] {id}: Failed to parse JSON  (caused by {error})"
-        ))
-    })
+    super::download_json_expecting(client, url, VOD_NAME, id, "Downloading access JSON", &[403])
 }
 
 /// `_usp_signing_secret`: the player's rotating secret, or the fallback.

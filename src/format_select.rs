@@ -412,7 +412,7 @@ enum Filter {
 }
 
 /// Python `type(value).__name__` for a JSON value.
-fn type_name(value: &Value) -> &'static str {
+pub(crate) fn type_name(value: &Value) -> &'static str {
     match value {
         Value::Null => "NoneType",
         Value::Bool(_) => "bool",

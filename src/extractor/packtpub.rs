@@ -66,7 +66,7 @@ fn video_data(client: &Client, url: &Url, id: &str) -> Result<Value> {
     crate::screen::page_read(&page_url, &body)?;
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{NAME}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

@@ -187,7 +187,7 @@ fn read_json(response: reqwest::blocking::Response, extractor: &str, id: &str) -
         .map_err(Error::ExtractionRead)?;
     serde_json::from_slice(&body).map_err(|error| {
         Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{extractor}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

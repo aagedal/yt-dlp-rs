@@ -69,11 +69,11 @@ fn data_attr_in(
             Err(fail_in(
                 extractor,
                 id,
-                &format!("Failed to parse JSON  (caused by {error})"),
+                &format!("Failed to parse JSON (caused by {error})"),
             ))
         } else {
             crate::screen::warning(&format!(
-                "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{extractor}] {id}: Failed to parse JSON (caused by {error})"
             ));
             Ok(json!({}))
         }

@@ -94,7 +94,7 @@ fn download_feed(client: &Client, url: &Url, video_id: &str) -> Result<Value> {
     let text = response.text().map_err(Error::http)?;
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+            "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

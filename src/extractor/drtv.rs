@@ -401,9 +401,8 @@ impl Extractor for Drtv {
             Some(body),
             &[],
         )?;
-        let response = crate::json::from_str(&page.text).map_err(|error| {
-            session.error(&format!("Failed to parse JSON  (caused by {error})"))
-        })?;
+        let response = crate::json::from_str(&page.text)
+            .map_err(|error| session.error(&format!("Failed to parse JSON (caused by {error})")))?;
         let Some(token) = anonymous_token(&response) else {
             return Err(session.bug("Unable to get anonymous token"));
         };

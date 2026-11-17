@@ -119,7 +119,7 @@ fn api_response(
     let text = super::decode_webpage(&bytes, response.headers());
     let data: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {content_id}: Failed to parse JSON  (caused by {error})"
+            "[{name}] {content_id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     data.get("data")

@@ -75,7 +75,7 @@ impl Extractor for Tele13 {
         let sources: Value =
             crate::json::from_str(&crate::js_to_json::js_to_json(&raw)).map_err(|error| {
                 Error::Reported(format!(
-                    "[{NAME}] {display_id}: Failed to parse JSON  (caused by {error})"
+                    "[{NAME}] {display_id}: Failed to parse JSON (caused by {error})"
                 ))
             })?;
         let Value::Array(sources) = sources else {

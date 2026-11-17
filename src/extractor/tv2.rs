@@ -109,7 +109,7 @@ fn playback(client: &Client, video_id: &str, protocol: &str) -> Result<Value> {
     if status == 401 {
         let data: Value = crate::json::from_str(&text).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let error = data
@@ -148,7 +148,7 @@ fn playback(client: &Client, video_id: &str, protocol: &str) -> Result<Value> {
     }
     let data: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+            "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     data.get("playback")

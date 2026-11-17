@@ -92,7 +92,7 @@ fn playback_json(
         let body = String::from_utf8_lossy(&body);
         return crate::json::from_str(&body).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {media_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {media_id}: Failed to parse JSON (caused by {error})"
             ))
         });
     }

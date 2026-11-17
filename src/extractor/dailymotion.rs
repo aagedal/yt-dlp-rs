@@ -200,7 +200,7 @@ fn post_json(
         .map_err(Error::ExtractionRead)?;
     serde_json::from_slice(&body).map_err(|error| {
         Error::Reported(format!(
-            "[{ie}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{ie}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }
@@ -247,7 +247,7 @@ fn token(client: &Client, ie: &'static str, xid: &str) -> Result<String> {
     )?;
     let response: Value = crate::json::from_str(&page.text).map_err(|error| {
         Error::Reported(format!(
-            "[{ie}] {xid}: Failed to parse JSON  (caused by {error})"
+            "[{ie}] {xid}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     let key_error = |key: &str| {

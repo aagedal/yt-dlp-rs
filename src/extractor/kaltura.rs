@@ -245,7 +245,7 @@ fn api_call(
     let text = super::decode_webpage(&raw, response.headers());
     let data: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+            "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     let Value::Array(mut data) = data else {

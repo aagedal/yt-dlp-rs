@@ -54,6 +54,12 @@
   ]
  },
  {
+  "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=2",
+  "args": [
+   "--flat-playlist"
+  ]
+ },
+ {
   "url": "https://www.bbc.co.uk/iplayer/episodes/m0004c4v/beechgrove?page=3",
   "args": [
    "-J",

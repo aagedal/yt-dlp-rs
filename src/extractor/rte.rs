@@ -111,7 +111,7 @@ fn feed(client: &Client, url: &Url, name: &'static str, id: &str) -> Result<Feed
         Ok(data) => Feed::Json(data),
         Err(error) => Feed::Failed(
             Error::Reported(format!(
-                "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{name}] {id}: Failed to parse JSON (caused by {error})"
             )),
             None,
         ),

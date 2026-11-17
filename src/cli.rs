@@ -6596,8 +6596,6 @@ fn long_options() -> Vec<(String, bool)> {
             .iter()
             .map(|name| ((*name).to_owned(), true)),
     );
-    // Expanded before the parser runs.
-    options.extend(["--alias", "--preset-alias"].map(|name| (name.to_owned(), true)));
     options.sort();
     options.dedup();
     options
@@ -7092,6 +7090,20 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
             resolve_long(&token, &options, &aliases)?
         } else {
             token
+        };
+        // optparse puts an attached value back in front of the remaining
+        // arguments for an option taking several (`--alias=NAMES OPTIONS`).
+        let token = match token.split_once('=') {
+            Some((name, value))
+                if name == "--alias"
+                    || aliases
+                        .iter()
+                        .any(|(alias, nargs, ..)| alias == name && *nargs > 0) =>
+            {
+                queue.push_front(value.to_owned());
+                name.to_owned()
+            }
+            _ => token,
         };
         if token == "--alias" {
             let (Some(names), Some(options)) = (queue.pop_front(), queue.pop_front()) else {
@@ -11286,6 +11298,11 @@ mod tests {
             ])
             .unwrap(),
             ["-o", "a b", "-O", "{{x}}"]
+        );
+        // An attached value is the first of several (optparse `rargs`).
+        assert_eq!(
+            expand(&["--ali=o,-Z", "-o {}", "--o=a b", "-Z", "c"]).unwrap(),
+            ["-o", "a b", "-o", "c"]
         );
         assert_eq!(
             expand(&["--alias", "loop", "--loop", "--loop"]).unwrap_err(),

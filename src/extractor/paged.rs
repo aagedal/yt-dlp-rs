@@ -91,16 +91,7 @@ impl Paged<'_, '_> {
         }
         self.entries.truncate(index);
         let mut entry = (self.placeholder)()?;
-        // Raised while reading entries, outside `extract()`, the error has
-        // no `[extractor]` prefix upstream.
-        let text = error.to_string();
-        let text = match text
-            .strip_prefix('[')
-            .and_then(|rest| rest.split_once("] "))
-        {
-            Some((name, rest)) if !name.contains(' ') => rest.to_owned(),
-            _ => text,
-        };
+        let text = entries_error_text(&error);
         entry.extra.insert(crate::FETCH_ERROR.into(), text.into());
         entry
             .extra
@@ -155,6 +146,19 @@ impl Paged<'_, '_> {
                 .counts
                 .last()
                 .is_some_and(|count| count.is_some_and(|count| count < self.page_size))
+    }
+}
+
+/// An error's text as reported while reading entries: raised outside
+/// `extract()`, it has no `[extractor]` prefix upstream.
+pub(crate) fn entries_error_text(error: &Error) -> String {
+    let text = error.to_string();
+    match text
+        .strip_prefix('[')
+        .and_then(|rest| rest.split_once("] "))
+    {
+        Some((name, rest)) if !name.contains(' ') => rest.to_owned(),
+        _ => text,
     }
 }
 

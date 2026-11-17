@@ -177,7 +177,7 @@ impl Extractor for Odnoklassniki {
             serde_json::from_str(&crate::html::unescape_html(&options)).map_err(|error| {
                 fail(
                     &video_id,
-                    &format!("Failed to parse JSON  (caused by {error})"),
+                    &format!("Failed to parse JSON (caused by {error})"),
                 )
             })?;
         if truthy(player.get("isExternalPlayer")).is_some()
@@ -240,7 +240,7 @@ impl Extractor for Odnoklassniki {
                 serde_json::from_slice(&bytes).map_err(|error| {
                     fail(
                         &video_id,
-                        &format!("Failed to parse JSON  (caused by {error})"),
+                        &format!("Failed to parse JSON (caused by {error})"),
                     )
                 })?
             }

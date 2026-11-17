@@ -54,7 +54,7 @@ fn call_api(client: &Client, name: &'static str, path: &str, id: &str) -> Result
     let text = super::decode_webpage(&body, &headers);
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{name}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

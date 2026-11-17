@@ -354,7 +354,7 @@ fn api_json_optional(
         Ok(value) => Some(value),
         Err(error) => {
             crate::screen::warning(&format!(
-                "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{name}] {id}: Failed to parse JSON (caused by {error})"
             ));
             None
         }
@@ -886,7 +886,7 @@ fn media_info(client: &Client, video_id: &str, media_id: &str) -> Result<Option<
     let data: Value = serde_json::from_slice(&body).map_err(|error| {
         fail(
             video_id,
-            &format!("Failed to parse JSON  (caused by {error})"),
+            &format!("Failed to parse JSON (caused by {error})"),
         )
     })?;
     let key_error = |key: &str| {
@@ -1557,7 +1557,7 @@ fn timeline_playlist(
             fail_as(
                 name,
                 &item_id,
-                &format!("Failed to parse JSON  (caused by {error})"),
+                &format!("Failed to parse JSON (caused by {error})"),
             )
         })?,
         None => {
