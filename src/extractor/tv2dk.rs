@@ -172,7 +172,7 @@ fn specifik_video(client: &Client, video_id: &str) -> Result<Value> {
     let text = super::decode_webpage(&body, response.headers());
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{BORNHOLM_NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+            "[{BORNHOLM_NAME}] {video_id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

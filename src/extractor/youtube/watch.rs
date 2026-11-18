@@ -968,7 +968,7 @@ impl<'a> ApiRequest<'a> {
             })?;
         serde_json::from_str(&text).map_err(|error| Failure {
             error: Error::Reported(format!(
-                "[{extractor}] {item_id}: Failed to parse JSON  (caused by {error})"
+                "[{extractor}] {item_id}: Failed to parse JSON (caused by {error})"
             )),
             retry: false,
         })

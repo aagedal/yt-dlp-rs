@@ -102,7 +102,7 @@ impl Extractor for FootyRoom {
             })?;
         let playlist: Value = crate::json::from_str(&raw).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {playlist_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {playlist_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let title = crate::html::og_search_property(&webpage, "title");

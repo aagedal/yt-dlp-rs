@@ -143,7 +143,7 @@ fn post_json(
         .read_to_end(&mut bytes)
         .map_err(Error::ExtractionRead)?;
     serde_json::from_slice(&bytes)
-        .map_err(|error| fail(id, &format!("Failed to parse JSON  (caused by {error})")))
+        .map_err(|error| fail(id, &format!("Failed to parse JSON (caused by {error})")))
 }
 
 /// `_extract_formats(api_data, video_id)`.
@@ -503,7 +503,7 @@ impl Extractor for Niconico {
         let api_resp: Value = serde_json::from_slice(&bytes).map_err(|error| {
             fail(
                 &video_id,
-                &format!("Failed to parse JSON  (caused by {error})"),
+                &format!("Failed to parse JSON (caused by {error})"),
             )
         })?;
         let api_data = api_resp

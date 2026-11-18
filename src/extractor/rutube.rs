@@ -122,7 +122,7 @@ fn api_json(
         .map_err(Error::ExtractionRead)?;
     serde_json::from_slice(&bytes).map_err(|error| {
         Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{extractor}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

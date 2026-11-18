@@ -212,7 +212,7 @@ impl Extractor for Tumblr {
             match crate::json::from_str::<Value>(&page.text) {
                 Ok(value) => Ok(Some(value)),
                 Err(error) => {
-                    session.warning(&format!("Failed to parse JSON  (caused by {error})"));
+                    session.warning(&format!("Failed to parse JSON (caused by {error})"));
                     Ok(None)
                 }
             }

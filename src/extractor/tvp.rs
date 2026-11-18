@@ -398,14 +398,13 @@ fn embed(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
             continue;
         };
         let lang = str_or_none(sub.get("lang")).unwrap_or_default();
-        // Processing's `sanitize_url`: the API's `//s.tvp.pl/...` gets `http:`.
-        let parsed = Url::parse(&crate::info::sanitize_url(sub_url)).map_err(|_| {
+        // The API's `//s.tvp.pl/...` gets `http:`.
+        let track = super::subtitle_track(sub_url, str_or_none(sub.get("type"))).map_err(|_| {
             Error::UnsupportedHtml5(
                 "TVP subtitle URLs that are not absolute are not supported natively".into(),
             )
         })?;
-        let ext = str_or_none(sub.get("type")).unwrap_or_default();
-        subtitle_tracks.push((Some(lang), track(parsed, ext)));
+        subtitle_tracks.push((Some(lang), track));
     }
     let keys: Vec<&str> = info_fields.iter().map(|(key, _)| *key).collect();
     let shape = format!("dict;{};thumbnail=url,width,height", keys.join(","));
@@ -424,17 +423,6 @@ fn embed(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
 }
 
 /// A subtitle track of `url` in `ext`.
-fn track(url: Url, ext: String) -> crate::SubtitleFormat {
-    crate::SubtitleFormat {
-        name: None,
-        url,
-        ext,
-        protocol: None,
-        fragments: Vec::new(),
-        extra: Map::new(),
-    }
-}
-
 /// `str(value)` of a JSON text value.
 fn text_of(value: &Value) -> String {
     match value {
@@ -506,7 +494,7 @@ fn vod_video(client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some(sub_url) = sub.get("url").and_then(Value::as_str) else {
             continue;
         };
-        let format = track(Url::parse(sub_url)?, "ttml".to_owned());
+        let format = super::subtitle_track(sub_url, Some("ttml".to_owned()))?;
         match subtitles
             .entries
             .iter_mut()

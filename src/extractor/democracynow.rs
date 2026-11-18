@@ -84,7 +84,7 @@ impl Extractor for Democracynow {
             })?;
         let json_data: Value = crate::json::from_str(&json).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {display_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {display_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         if !json_data.is_object() {

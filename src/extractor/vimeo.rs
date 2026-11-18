@@ -652,7 +652,7 @@ fn request_failure(id: &str, errnote: &str, error: &Error) -> Error {
 fn parse_json(id: &str, text: &str) -> Result<Value> {
     crate::json::from_str(text).map_err(|error| {
         Error::Reported(
-            format!("[{NAME}] {id}: Failed to parse JSON  (caused by {error})")
+            format!("[{NAME}] {id}: Failed to parse JSON (caused by {error})")
                 .replacen("] : ", "] ", 1),
         )
     })
@@ -1994,7 +1994,7 @@ fn album_json(
     match fetch(client, url, (Some(id), note), headers, None)? {
         Fetched::Page(text) => crate::json::from_str(&text).map_err(|error| {
             Error::Reported(format!(
-                "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{name}] {id}: Failed to parse JSON (caused by {error})"
             ))
         }),
         Fetched::Status { error, .. } => Err(Error::Reported(super::request_errnote_text(
@@ -2085,7 +2085,7 @@ fn album_extract(client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         )? {
             Fetched::Page(text) => crate::json::from_str::<Value>(&text).map_err(|error| {
                 Error::Reported(format!(
-                    "[{ALBUM_NAME}] {album_id}: Failed to parse JSON  (caused by {error})"
+                    "[{ALBUM_NAME}] {album_id}: Failed to parse JSON (caused by {error})"
                 ))
             })?,
             Fetched::Status { status: 400, .. } => break,

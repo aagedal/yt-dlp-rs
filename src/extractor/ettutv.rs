@@ -58,7 +58,7 @@ fn post_json(client: &Client, url: &Url, id: &str) -> Result<Value> {
     let text = super::decode_webpage(&body, response.headers());
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{NAME}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

@@ -140,7 +140,7 @@ fn auth_params(client: &Client, id: &str, format_id: &str) -> Result<Option<Stri
         Ok(value) => value,
         Err(error) => {
             crate::screen::warning(&format!(
-                "[{NAME}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {id}: Failed to parse JSON (caused by {error})"
             ));
             return Ok(None);
         }

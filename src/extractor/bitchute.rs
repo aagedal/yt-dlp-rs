@@ -128,7 +128,7 @@ fn call_api(
     }
     serde_json::from_slice(&bytes)
         .map(Some)
-        .map_err(|error| fail(id, &format!("Failed to parse JSON  (caused by {error})")))
+        .map_err(|error| fail(id, &format!("Failed to parse JSON (caused by {error})")))
 }
 
 /// `_check_format(video_url, video_id)`: the first seed host answering a HEAD.
@@ -557,7 +557,7 @@ fn post_page(client: &Client, playlist_url: &str, playlist_id: &str, page: usize
     let text = super::decode_webpage(&bytes, response.headers());
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{CHANNEL_NAME}] {playlist_id}: Failed to parse JSON  (caused by {error})"
+            "[{CHANNEL_NAME}] {playlist_id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }

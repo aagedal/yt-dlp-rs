@@ -132,7 +132,7 @@ fn post(
         Err(_) if !fatal && bytes.is_empty() => {
             failure("Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)".into())
         }
-        Err(error) => failure(format!("Failed to parse JSON  (caused by {error})")),
+        Err(error) => failure(format!("Failed to parse JSON (caused by {error})")),
     }
 }
 

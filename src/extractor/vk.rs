@@ -445,7 +445,7 @@ fn download_payload(
         fail_as(
             name,
             Some(video_id),
-            &format!("Failed to parse JSON  (caused by {error})"),
+            &format!("Failed to parse JSON (caused by {error})"),
         )
     })?;
     let Some(pair) = json.get("payload") else {
@@ -764,7 +764,7 @@ impl Extractor for VkWallPost {
                     fail_as(
                         WALL_POST,
                         Some(&post_id),
-                        &format!("Failed to parse JSON  (caused by {error})"),
+                        &format!("Failed to parse JSON (caused by {error})"),
                     )
                 })?;
             let Some(audio) = audio.as_object() else {
@@ -1210,7 +1210,7 @@ impl Extractor for Vk {
             let player: Value = crate::json::from_str(&params[1]).map_err(|error| {
                 fail(
                     Some(&video_id),
-                    &format!("Failed to parse JSON  (caused by {error})"),
+                    &format!("Failed to parse JSON (caused by {error})"),
                 )
             })?;
             (video_id, info_page, player)

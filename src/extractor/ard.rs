@@ -922,7 +922,7 @@ fn graphql_query(client: &Client, name: &'static str, urn: &str, query: &str) ->
     let text = super::decode_webpage(&bytes, response.headers());
     let data: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {urn}: Failed to parse JSON  (caused by {error})"
+            "[{name}] {urn}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     match data {

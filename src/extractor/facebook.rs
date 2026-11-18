@@ -1329,7 +1329,7 @@ fn watch_party(
     let response: Value = serde_json::from_str(&text).map_err(|error| {
         fail(
             video_id,
-            &format!("Failed to parse JSON  (caused by {error})"),
+            &format!("Failed to parse JSON (caused by {error})"),
         )
     })?;
     let Some(living_room) = response.pointer("/data/living_room") else {

@@ -118,7 +118,7 @@ fn call_api(
         Error::Reported(prefixed(
             name,
             rf_id,
-            &format!("Failed to parse JSON  (caused by {error})"),
+            &format!("Failed to parse JSON (caused by {error})"),
         ))
     })
 }

@@ -301,7 +301,7 @@ fn music_search(client: &Client, page: &Url, title: &str, audio_id: &str) -> Res
     let text = super::decode_webpage(&body, response.headers());
     let reply: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{MUSIC_NAME}] {audio_id}: Failed to parse JSON  (caused by {error})"
+            "[{MUSIC_NAME}] {audio_id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     reply

@@ -285,7 +285,7 @@ pub(crate) fn request_json(
     crate::screen::page_read(&page_url, &bytes)?;
     let text = super::decode_webpage(&bytes, response.headers());
     crate::json::from_str(&text).map_err(|error| {
-        Error::Reported(format!("{prefix}Failed to parse JSON  (caused by {error})"))
+        Error::Reported(format!("{prefix}Failed to parse JSON (caused by {error})"))
     })
 }
 
@@ -424,18 +424,8 @@ fn extract_subtitles(captions: &[&Value]) -> Result<Subtitles> {
             },
             _ => "deu".to_owned(),
         };
-        let parsed = Url::parse(&subtitle_url)
+        let track = super::subtitle_track(&subtitle_url, None)
             .map_err(|_| unsupported("caption URLs that are not absolute"))?;
-        let ext = super::direct::determine_ext(&subtitle_url)
-            .map_or_else(|| "unknown_video".to_owned(), |ext| ext.to_lowercase());
-        let track = crate::SubtitleFormat {
-            name: None,
-            url: parsed,
-            ext,
-            protocol: None,
-            fragments: Vec::new(),
-            extra: Map::new(),
-        };
         let key = Some(language);
         match subtitles
             .entries

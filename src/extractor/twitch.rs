@@ -235,7 +235,7 @@ fn base_gql(
         .map_err(Error::ExtractionRead)?;
     serde_json::from_slice(&body).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{name}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }
@@ -1095,9 +1095,8 @@ fn perform_login(
             Some(crate::output::python_json_dumps(&body)),
             &[400],
         )?;
-        let response: Value = crate::json::from_str(&answer.text).map_err(|error| {
-            session.error(&format!("Failed to parse JSON  (caused by {error})"))
-        })?;
+        let response: Value = crate::json::from_str(&answer.text)
+            .map_err(|error| session.error(&format!("Failed to parse JSON (caused by {error})")))?;
         // `dict_get(response, ('error', 'error_description', 'error_code'))`.
         let error = ["error", "error_description", "error_code"]
             .into_iter()

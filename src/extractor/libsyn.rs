@@ -93,7 +93,7 @@ impl Extractor for Libsyn {
             .ok_or_else(|| regex_error(&video_id, "JSON data block"))?;
         let data: Value = serde_json::from_str(&block[1]).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let data = data

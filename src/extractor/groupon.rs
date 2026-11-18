@@ -69,7 +69,7 @@ impl Extractor for Groupon {
             })?;
         let payload: Value = crate::json::from_str(&raw).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {playlist_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {playlist_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let carousel = payload.get("carousel").ok_or_else(|| {

@@ -101,7 +101,7 @@ impl Extractor for Chilloutzone {
             .ok_or_else(|| unsupported("video data that do not decode"))?;
         let info: Value = crate::json::from_str(&decoded).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let Value::Object(info) = info else {

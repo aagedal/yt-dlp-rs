@@ -94,7 +94,7 @@ fn api(
     if status.is_client_error() || status.is_server_error() {
         let error: Value = crate::json::from_str(&text).map_err(|error| {
             Error::Reported(format!(
-                "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+                "[{name}] {id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let message = error
@@ -109,7 +109,7 @@ fn api(
     crate::screen::page_read(&page_url, &body)?;
     let data: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{name}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     data.get(key).cloned().ok_or_else(|| key_error(id, key))

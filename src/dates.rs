@@ -334,10 +334,27 @@ fn strptime_checked(regex: &Regex, data: &str, format: &str) -> Result<DateTime,
 
 /// Python `int(text)` for ASCII digits with an optional sign and underscores.
 pub(crate) fn py_int(text: &str) -> Option<i64> {
+    py_int_checked(text).ok()
+}
+
+/// Why [`py_int_checked`] has no value.
+#[derive(Debug, PartialEq)]
+pub(crate) enum PyIntError {
+    /// Python's `ValueError`.
+    Invalid,
+    /// Beyond 64 bits, or non-ASCII (Python accepts other Unicode digits).
+    Unsupported,
+}
+
+/// [`py_int`] telling Python's `ValueError` from what it does not model.
+pub(crate) fn py_int_checked(text: &str) -> Result<i64, PyIntError> {
     let text = text.trim_matches(is_py_space);
-    let (negative, digits) = match text.as_bytes().first()? {
-        b'-' => (true, &text[1..]),
-        b'+' => (false, &text[1..]),
+    if !text.is_ascii() {
+        return Err(PyIntError::Unsupported);
+    }
+    let (negative, digits) = match text.as_bytes().first() {
+        Some(b'-') => (true, &text[1..]),
+        Some(b'+') => (false, &text[1..]),
         _ => (false, text),
     };
     if digits.is_empty()
@@ -346,10 +363,13 @@ pub(crate) fn py_int(text: &str) -> Option<i64> {
         || digits.contains("__")
         || !digits.bytes().all(|b| b.is_ascii_digit() || b == b'_')
     {
-        return None;
+        return Err(PyIntError::Invalid);
     }
-    let value: i64 = digits.replace('_', "").parse().ok()?;
-    Some(if negative { -value } else { value })
+    let value: i64 = digits
+        .replace('_', "")
+        .parse()
+        .map_err(|_| PyIntError::Unsupported)?;
+    Ok(if negative { -value } else { value })
 }
 
 /// `email.utils.parsedate_tz`: the fields and the zone offset in seconds

@@ -543,7 +543,7 @@ fn gallery(
                 Ok(data) => data,
                 Err(error) => {
                     crate::screen::warning(&format!(
-                        "[{extractor}] {gallery_id}: Failed to parse JSON  (caused by {error})"
+                        "[{extractor}] {gallery_id}: Failed to parse JSON (caused by {error})"
                     ));
                     Value::Null
                 }

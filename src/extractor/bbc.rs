@@ -266,19 +266,6 @@ impl Raised {
     }
 }
 
-/// Python's type name of a JSON value.
-fn type_name(value: &Value) -> &'static str {
-    match value {
-        Value::Null => "NoneType",
-        Value::Bool(_) => "bool",
-        Value::Number(number) if number.is_f64() => "float",
-        Value::Number(_) => "int",
-        Value::String(_) => "str",
-        Value::Array(_) => "list",
-        Value::Object(_) => "dict",
-    }
-}
-
 fn unsupported(what: &str) -> Raised {
     Raised::Native(Error::UnsupportedHtml5(format!(
         "BBC iPlayer {what} are not supported natively"
@@ -297,7 +284,7 @@ fn subscript<'a>(value: &'a Value, key: &str) -> std::result::Result<&'a Value, 
         )),
         _ => Err(Raised::Other(format!(
             "'{}' object is not subscriptable",
-            type_name(value)
+            crate::format_select::type_name(value)
         ))),
     }
 }
@@ -308,7 +295,7 @@ fn get<'a>(value: &'a Value, key: &str) -> std::result::Result<Option<&'a Value>
         Value::Object(map) => Ok(map.get(key).filter(|value| !value.is_null())),
         _ => Err(Raised::Other(format!(
             "'{}' object has no attribute 'get'",
-            type_name(value)
+            crate::format_select::type_name(value)
         ))),
     }
 }
@@ -450,7 +437,7 @@ impl IPlayer {
                 Some(image) => {
                     return Err(Raised::Other(format!(
                         "'{}' object has no attribute 'replace'",
-                        type_name(image)
+                        crate::format_select::type_name(image)
                     )));
                 }
                 None => Value::Null,
@@ -462,7 +449,7 @@ impl IPlayer {
             let Value::String(episode_id) = episode_id else {
                 return Err(Raised::Other(format!(
                     "can only concatenate str (not \"{}\") to str",
-                    type_name(episode_id)
+                    crate::format_select::type_name(episode_id)
                 )));
             };
             let (title, series) = if self.episodes() {
@@ -564,37 +551,24 @@ impl IPlayer {
             .description(&playlist_data)
             .map_err(|raised| raised.in_extract(&pid))?;
 
-        let mut entries = Vec::new();
-        let mut pending = None;
-        if let Some(page) = page {
-            // `fetch_page(int(page) - 1)`: a generator read after
-            // extraction, whose exception ends it with a `None` entry.
-            if let Err(raised) = self.fetch_page(
-                client,
-                &pid,
-                EXPLICIT_PAGE_SIZE,
-                series_id.as_deref(),
-                page - 1,
-                &mut entries,
-            ) {
-                let text = generator_error_text(raised.in_entries())?;
-                let mut entry = super::direct::build_at(url.clone(), url, String::new());
-                entry.extra.insert(crate::FETCH_ERROR.into(), text.into());
-                entry
-                    .extra
-                    .insert(crate::FETCH_ERROR_COUNT.into(), entries.len().into());
-                entries.push(entry);
-            }
-        } else {
-            pending = Some(crate::PendingEntries {
-                state: json!({
-                    "kind": self.key,
-                    "pid": pid,
-                    "series_id": series_id,
-                    "random_access": true,
-                }),
-            });
-        }
+        // `fetch_page(int(page) - 1)` is a generator read after extraction;
+        // otherwise an `OnDemandPagedList`.
+        let state = match page {
+            Some(page) => json!({
+                "kind": self.key,
+                "pid": pid,
+                "series_id": series_id,
+                "page": page,
+                "url": url.as_str(),
+            }),
+            None => json!({
+                "kind": self.key,
+                "pid": pid,
+                "series_id": series_id,
+                "random_access": true,
+            }),
+        };
+        let pending = Some(crate::PendingEntries { state });
 
         let mut keys = vec!["id"];
         if title.is_some() {
@@ -624,7 +598,7 @@ impl IPlayer {
             extractor_key: self.key.into(),
             nested: Vec::new(),
             pending,
-            entries,
+            entries: Vec::new(),
             extra,
         })))
     }
@@ -637,50 +611,21 @@ fn generator_error_text(error: Error) -> Result<String> {
     if matches!(error, Error::UnsupportedHtml5(_) | Error::DownloadCancelled) {
         return Err(error);
     }
-    let text = error.to_string();
-    Ok(
-        match text
-            .strip_prefix('[')
-            .and_then(|rest| rest.split_once("] "))
-        {
-            Some((name, rest)) if !name.contains(' ') => rest.to_owned(),
-            _ => text,
-        },
-    )
+    Ok(super::paged::entries_error_text(&error))
 }
 
-/// `int(page)` of an ASCII string (Python accepts surrounding whitespace, a
-/// sign and `_` between digits).
+/// `int(page)`.
 fn python_int(text: &str) -> Result<i64> {
-    let stripped = crate::batch::py_strip(text);
-    if !stripped.is_ascii() {
-        return Err(Error::UnsupportedHtml5(
-            "BBC iPlayer page numbers with non-ASCII characters are not supported natively".into(),
-        ));
-    }
-    let (negative, digits) = match stripped.strip_prefix('-') {
-        Some(digits) => (true, digits),
-        None => (false, stripped.strip_prefix('+').unwrap_or(stripped)),
-    };
-    let valid = !digits.is_empty()
-        && digits
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || byte == b'_')
-        && !digits.starts_with('_')
-        && !digits.ends_with('_')
-        && !digits.contains("__");
-    if !valid {
-        return Err(Error::Reported(format!(
+    crate::dates::py_int_checked(text).map_err(|error| match error {
+        crate::dates::PyIntError::Invalid => Error::Reported(format!(
             "invalid literal for int() with base 10: {}",
             crate::output::traverse::py_repr_str(text)
-        )));
-    }
-    let value: i64 = digits.replace('_', "").parse().map_err(|_| {
-        Error::UnsupportedHtml5(
-            "BBC iPlayer page numbers beyond 64 bits are not supported natively".into(),
-        )
-    })?;
-    Ok(if negative { -value } else { value })
+        )),
+        crate::dates::PyIntError::Unsupported => Error::UnsupportedHtml5(
+            "BBC iPlayer page numbers beyond 64 bits or with non-ASCII characters are not supported natively"
+                .into(),
+        ),
+    })
 }
 
 /// Whether a playlist's pending state is a BBC iPlayer episodes or group
@@ -704,6 +649,30 @@ pub(crate) fn fetch_iplayer_pages(
     };
     let pid = state["pid"].as_str().unwrap_or_default().to_owned();
     let series_id = state["series_id"].as_str().map(str::to_owned);
+    if let Some(page) = state["page"].as_i64() {
+        // One page's generator, whose exception ends it with a `None` entry.
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        if let Err(raised) = ie.fetch_page(
+            client,
+            &pid,
+            EXPLICIT_PAGE_SIZE,
+            series_id.as_deref(),
+            page - 1,
+            entries,
+        ) {
+            let text = generator_error_text(raised.in_entries())?;
+            let url = Url::parse(state["url"].as_str().unwrap_or_default())?;
+            let mut entry = super::direct::build_at(url.clone(), &url, String::new());
+            entry.extra.insert(crate::FETCH_ERROR.into(), text.into());
+            entry
+                .extra
+                .insert(crate::FETCH_ERROR_COUNT.into(), entries.len().into());
+            entries.push(entry);
+        }
+        return Ok(None);
+    }
     let mut fetch = |page: usize| {
         let mut fetched = Vec::new();
         ie.fetch_page(

@@ -152,7 +152,7 @@ impl Extractor for Blogger {
         })?;
         let data: Value = serde_json::from_str(&decoded).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {token}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {token}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let key_error = |key: &str| {

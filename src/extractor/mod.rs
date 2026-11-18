@@ -2638,10 +2638,60 @@ fn download_json_with(
     crate::screen::page_read(&page_url, &body)?;
     let text = transform(&decode_webpage(&body, response.headers()))?;
     crate::json::from_str(&text).map_err(|error| {
-        crate::Error::Reported(format!(
-            "{prefix} Failed to parse JSON  (caused by {error})"
-        ))
+        crate::Error::Reported(format!("{prefix} Failed to parse JSON (caused by {error})"))
     })
+}
+
+/// Upstream `_parse_json(text, video_id)`'s fatal error after `prefix`
+/// (`[EXTRACTOR] ID:`): its `JSONDecodeError` cause and the bug-report note.
+pub(crate) fn json_parse_failure(
+    prefix: &str,
+    text: &str,
+    error: &dyn std::fmt::Display,
+) -> crate::Error {
+    let cause = crate::json::python_decode_error_text(text).unwrap_or_else(|| error.to_string());
+    crate::Error::Reported(format!(
+        "{prefix} Failed to parse JSON (caused by JSONDecodeError({})); {}",
+        crate::output::traverse::py_repr_str(&cause),
+        crate::BUG_REPORTS_MESSAGE
+    ))
+}
+
+/// [`download_json_note`] with `expected_status=`: those statuses' bodies
+/// are parsed instead of erroring.
+pub(crate) fn download_json_expecting(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    expected: &[u16],
+) -> Result<serde_json::Value> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    let mut response =
+        direct::request_expecting(client, url, &[], expected).map_err(|error| match error {
+            crate::Error::Http(_)
+            | crate::Error::HttpRetryAfter { .. }
+            | crate::Error::HttpStatus { .. } => crate::Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            },
+            error => error,
+        })?;
+    let page_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
+    crate::screen::expect_page(id, None, None);
+    crate::screen::page_read(&page_url, &body)?;
+    let text = decode_webpage(&body, response.headers());
+    crate::json::from_str(&text)
+        .map_err(|error| json_parse_failure(&format!("[{extractor}] {id}:"), &text, &error))
 }
 
 /// Upstream `_download_json(url, video_id, note, data=BODY, headers=...)`:
@@ -2785,7 +2835,7 @@ fn post_json_with(
     crate::screen::page_read(&page_url, &body)?;
     crate::json::from_str(&decode_webpage(&body, response.headers())).map_err(|error| {
         crate::Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{extractor}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })
 }
@@ -3238,20 +3288,36 @@ pub(crate) fn download_xml_note(
     id: &str,
     note: &str,
 ) -> Result<String> {
+    download_xml_ids(client, url, extractor, id, id, note)
+}
+
+/// [`download_xml_note`] whose note has `note_id` and whose errors have
+/// `error_id`: a `video_id=None` request's errors get `get_temp_id(url)`
+/// from `extract()`.
+pub(crate) fn download_xml_ids(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    note_id: &str,
+    error_id: &str,
+    note: &str,
+) -> Result<String> {
     use std::io::Read;
     // `video_id=None` omits the `ID: ` prefix.
-    let prefix = if id.is_empty() {
-        format!("[{extractor}]")
-    } else {
-        format!("[{extractor}] {id}:")
+    let prefix = |id: &str| {
+        if id.is_empty() {
+            format!("[{extractor}]")
+        } else {
+            format!("[{extractor}] {id}:")
+        }
     };
-    crate::screen::screen(&format!("{prefix} {note}"));
+    crate::screen::screen(&format!("{} {note}", prefix(note_id)));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_)
         | crate::Error::HttpRetryAfter { .. }
         | crate::Error::HttpStatus { .. } => crate::Error::ExtractorRequest {
             extractor,
-            id: id.to_owned(),
+            id: error_id.to_owned(),
             what: "XML",
             source: Box::new(error),
         },
@@ -3265,12 +3331,16 @@ pub(crate) fn download_xml_note(
     let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     let text = String::from_utf8(body).map_err(|_| {
         crate::Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse XML (not UTF-8)"
+            "{} Failed to parse XML (not UTF-8)",
+            prefix(error_id)
         ))
     })?;
     roxmltree::Document::parse(text.trim_start_matches('\u{feff}')).map_err(|error| {
+        let cause = expat_error(&text).unwrap_or_else(|| error.to_string());
         crate::Error::Reported(format!(
-            "[{extractor}] {id}: Failed to parse XML ({error}); {}",
+            "{} Failed to parse XML (caused by ParseError({})); {}",
+            prefix(error_id),
+            crate::output::traverse::py_repr_str(&cause),
             crate::BUG_REPORTS_MESSAGE
         ))
     })?;
@@ -3442,7 +3512,7 @@ pub(crate) fn search_nextjs_v13_data(
     for found in SEGMENT.captures_iter(html) {
         let segment: Value = serde_json::from_str(&found[1]).map_err(|error| {
             crate::Error::Reported(format!(
-                "[{extractor}] {id}: Failed to parse JSON  (caused by {error}); {}",
+                "[{extractor}] {id}: Failed to parse JSON (caused by {error}); {}",
                 crate::BUG_REPORTS_MESSAGE
             ))
         })?;
@@ -3970,6 +4040,27 @@ pub(crate) fn proto_relative_https(url: &str) -> String {
     }
 }
 
+/// An extractor's subtitle track as processing leaves it: `sanitize_url`
+/// (a protocol-relative `//host/sub.vtt` gets `http:`), and without an
+/// `ext`, `determine_ext(url).lower()`.
+pub(crate) fn subtitle_track(
+    url: &str,
+    ext: Option<String>,
+) -> std::result::Result<crate::SubtitleFormat, url::ParseError> {
+    let url = crate::info::sanitize_url(url);
+    let ext = ext.unwrap_or_else(|| {
+        direct::determine_ext(&url).map_or_else(|| "unknown_video".into(), |ext| ext.to_lowercase())
+    });
+    Ok(crate::SubtitleFormat {
+        name: None,
+        url: Url::parse(&url)?,
+        ext,
+        protocol: None,
+        fragments: Vec::new(),
+        extra: serde_json::Map::new(),
+    })
+}
+
 /// `InfoExtractor._extract_embed_urls(url, webpage)`: each pattern's `url`
 /// group (or `url2`, standing in for a quote backreference's other
 /// alternative), HTML-unescaped, joined to the page URL and kept when
@@ -4129,6 +4220,38 @@ pub(crate) fn dict_info(
 mod tests {
     use super::*;
     use reqwest::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderMap, HeaderValue};
+
+    #[test]
+    fn subtitle_tracks_are_processed_like_upstream() {
+        // `sanitize_url`, then `determine_ext(url).lower()` for an untyped track.
+        let track = subtitle_track("//host/sub.VTT?x=1", None).unwrap();
+        assert_eq!(track.url.as_str(), "http://host/sub.VTT?x=1");
+        assert_eq!(track.ext, "vtt");
+        assert_eq!(
+            subtitle_track("https://host/sub", None).unwrap().ext,
+            "unknown_video"
+        );
+        assert_eq!(
+            subtitle_track("https://host/sub.SRT", Some("SRT".into()))
+                .unwrap()
+                .ext,
+            "SRT"
+        );
+        assert!(subtitle_track("sub.vtt", None).is_err());
+    }
+
+    #[test]
+    fn json_parse_failures_repr_the_decode_error() {
+        // A message with a quote is repr'd in double quotes.
+        let error = crate::json::from_str::<serde_json::Value>("[1 2]").unwrap_err();
+        assert_eq!(
+            json_parse_failure("[x] id:", "[1 2]", &error).to_string(),
+            format!(
+                "[x] id: Failed to parse JSON (caused by JSONDecodeError(\"Expecting ',' delimiter in '[1 2]': line 1 column 4 (char 3)\")); {}",
+                crate::BUG_REPORTS_MESSAGE
+            )
+        );
+    }
 
     #[test]
     fn extractors_keep_upstreams_geo_attributes() {

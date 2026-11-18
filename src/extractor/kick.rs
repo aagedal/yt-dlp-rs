@@ -309,7 +309,7 @@ fn call_api(client: &Client, name: &'static str, call: ApiCall<'_>) -> Result<Va
     crate::screen::page_read(&page_url, &body)?;
     serde_json::from_slice(&body).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {}: Failed to parse JSON  (caused by {error})",
+            "[{name}] {}: Failed to parse JSON (caused by {error})",
             call.id
         ))
     })

@@ -132,7 +132,7 @@ fn player_response(client: &Client, api: &Url, video_id: &str) -> Result<Value> 
     let text = super::decode_webpage(&body, response.headers());
     let data: Value = crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+            "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     if matches!(status, 400 | 401 | 403) {

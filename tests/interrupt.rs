@@ -306,6 +306,14 @@ fn a_killed_runs_finished_download_is_recovered_by_the_next_run() {
     let (code, stderr, names) = finish(spawn(directory.path(), &[&other]), directory.path());
     assert_eq!(code, Some(0), "{stderr}");
     assert!(stderr.contains("Recovered "), "{stderr}");
+    // On Windows the killed run's FFmpeg can outlive it with its working
+    // directory in the emptied workspace, which then cannot be removed
+    // until a later run.
+    let names: Vec<String> = names
+        .into_iter()
+        .filter(|name| !(cfg!(windows) && name.starts_with(".yt-dlp-rs-process-")))
+        .collect();
+    assert!(!workspace_source());
     assert_eq!(names, ["fast-other.mp4", "fast.mp4"]);
     assert_eq!(part_size(directory.path(), "fast.mp4"), SIZE as u64);
 }

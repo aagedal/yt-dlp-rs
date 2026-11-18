@@ -84,7 +84,7 @@ impl Extractor for MassengeschmackTv {
         let sources: Value = serde_json::from_str(&crate::js_to_json::js_to_json(&media[1]))
             .map_err(|error| {
                 Error::Reported(format!(
-                    "[{NAME}] {episode}: Failed to parse JSON  (caused by {error})"
+                    "[{NAME}] {episode}: Failed to parse JSON (caused by {error})"
                 ))
             })?;
         let Value::Array(sources) = sources else {

@@ -307,7 +307,7 @@ impl Flow<'_> {
         let page = self.request(url, note, "JSON metadata", data, headers)?;
         let value = crate::json::from_str(&page.text).map_err(|error| {
             Error::Reported(format!(
-                "[{}] {}: Failed to parse JSON  (caused by {error})",
+                "[{}] {}: Failed to parse JSON (caused by {error})",
                 self.caller.extractor, self.caller.id
             ))
         })?;

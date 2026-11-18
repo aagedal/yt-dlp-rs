@@ -4,7 +4,7 @@
 //! details, and series as playlists of their programmes' `url` results.
 use super::{Extractor, dict_info, download_json, download_json_note, extract_m3u8_fatal_master};
 use crate::extractor::UrlRegex;
-use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
@@ -177,15 +177,8 @@ impl Extractor for S4c {
                 // Upstream keeps a `None` name in the track dict.
                 _ => return Err(unsupported("subtitles without names")),
             };
-            let track = SubtitleFormat {
-                name,
-                url: Url::parse(&sub_url)?,
-                ext: super::direct::determine_ext(&sub_url)
-                    .unwrap_or_else(|| "unknown_video".into()),
-                protocol: None,
-                fragments: Vec::new(),
-                extra: Default::default(),
-            };
+            let mut track = super::subtitle_track(&sub_url, None)?;
+            track.name = name;
             match subtitles
                 .entries
                 .iter_mut()

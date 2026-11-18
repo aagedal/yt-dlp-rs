@@ -100,7 +100,7 @@ fn call_api(
         .map_err(Error::ExtractionRead)?;
     let response: Value = serde_json::from_slice(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{name}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{name}] {id}: Failed to parse JSON (caused by {error})"
         ))
     })?;
     if let Some(error) = response

@@ -102,7 +102,7 @@ impl Extractor for KinoPoisk {
             })?;
         let data: Value = crate::json::from_str(&raw).map_err(|error| {
             Error::Reported(format!(
-                "[{NAME}] {video_id}: Failed to parse JSON  (caused by {error})"
+                "[{NAME}] {video_id}: Failed to parse JSON (caused by {error})"
             ))
         })?;
         let data = get(&data, "models", &video_id)?;

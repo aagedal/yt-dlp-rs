@@ -13,7 +13,7 @@
 //! ported: `orf:iptv` and `orf:fm4:story`.
 use super::{Extractor, dict_info, download_json, extract_m3u8_master_optional};
 use crate::extractor::UrlRegex;
-use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, Subtitles, VideoInfo};
 use base64::Engine;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
@@ -260,24 +260,10 @@ fn extract_video_info(
             let Some(subtitle_url) = url_or_none(subtitle.get(key)) else {
                 continue;
             };
-            let parsed = Url::parse(&subtitle_url)
+            let format = super::subtitle_track(&subtitle_url, None)
                 .map_err(|_| unsupported("subtitle URLs that are not absolute"))?;
-            // Processing's `determine_ext(url).lower()`.
-            let ext = super::direct::determine_ext(&subtitle_url)
-                .unwrap_or_else(|| "unknown_video".into())
-                .to_lowercase();
             let mut track = Subtitles::default();
-            track.entries.push((
-                Some("de".into()),
-                vec![SubtitleFormat {
-                    name: None,
-                    url: parsed,
-                    ext,
-                    protocol: None,
-                    fragments: Vec::new(),
-                    extra: Map::new(),
-                }],
-            ));
+            track.entries.push((Some("de".into()), vec![format]));
             super::svt::merge_subtitles(&mut subtitles, track);
         }
     }
