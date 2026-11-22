@@ -262,8 +262,10 @@ From 1.0, within one major version:
   port keeps the old shape until its next major version and lists the
   difference here. A change to `tests/fixtures/cli_contract/expected.json`
   that removes a key or changes a value's meaning needs a major release.
-- `--version` is not covered. It prints `yt-dlp-rs X.Y.Z`, where upstream
-  prints its release date.
+- `--version` is not covered. It prints `yt-dlp-rs X.Y.Z (yt-dlp
+  YYYY.MM.DD)`, this release and the upstream release it tracks, where
+  upstream prints only its release date. Versions follow semantic
+  versioning, not upstream's dates.
 
 Human-readable output, `--verbose` output and the full `%(info)j` dict are
 outside the contract (see the top of this page) and may change in any

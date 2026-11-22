@@ -119,14 +119,22 @@ jobs:
           merge-multiple: true
       - name: Checksums
         run: cd dist && sha256sum * > SHA256SUMS
-      # The version's CHANGELOG.md section, above GitHub's generated notes.
+      # The upstream baseline and the version's CHANGELOG.md section, above
+      # GitHub's generated notes; the title names the baseline too.
       - name: Release notes
         run: |
-          awk -v v="${GITHUB_REF_NAME#v}" '
-            /^## / { on = index($0, "## [" v "]") == 1; next }
-            on' CHANGELOG.md > notes.md
+          upstream=$(jq -r .upstream_version upstream/manifest.json)
+          baseline=$(jq -r .baseline upstream/manifest.json)
+          echo "TITLE=yt-dlp-rs ${GITHUB_REF_NAME#v} (yt-dlp $upstream)" >> "$GITHUB_ENV"
+          {
+            echo "Upstream baseline: yt-dlp [$upstream](https://github.com/yt-dlp/yt-dlp/releases/tag/$upstream) (\`${baseline:0:8}\`)."
+            awk -v v="${GITHUB_REF_NAME#v}" '
+              /^## / { on = index($0, "## [" v "]") == 1; next }
+              on' CHANGELOG.md
+          } > notes.md
       - uses: softprops/action-gh-release@v3
         with:
+          name: ${{ env.TITLE }}
           files: dist/*
           body_path: notes.md
           prerelease: ${{ contains(github.ref_name, '-') }}

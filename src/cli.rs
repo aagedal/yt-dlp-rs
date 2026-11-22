@@ -193,11 +193,7 @@ fn flush_validation_warnings() {
 }
 
 #[derive(Parser)]
-#[command(
-    version,
-    args_override_self = true,
-    about = "A native Rust port of yt-dlp"
-)]
+#[command(args_override_self = true, about = "A native Rust port of yt-dlp")]
 struct Args {
     urls: Vec<String>,
     /// Read URLs from FILE ("-" for stdin), one per line; "#", ";" and "]" lines are comments
@@ -6649,15 +6645,27 @@ fn resolve_long(
     }
 }
 
+/// `--version` and the verbose header: this release and the upstream
+/// release it tracks (the `upstream/manifest.json` baseline).
+static VERSION: std::sync::LazyLock<String> = std::sync::LazyLock::new(|| {
+    format!(
+        "{} (yt-dlp {})",
+        env!("CARGO_PKG_VERSION"),
+        crate::cache::UPSTREAM_VERSION
+    )
+});
+
 /// The parser, with optparse's value handling: an option that takes a
 /// value consumes the next argument even when it starts with `-`.
 /// `--alias` and `-t`/`--preset-alias` are only listed in `--help`:
 /// `expand_preset_aliases` consumes them before the parser runs.
 fn command() -> clap::Command {
-    let command = Args::command().mut_args(|argument| {
-        let takes_value = argument.get_action().takes_values() && !argument.is_positional();
-        argument.allow_hyphen_values(takes_value)
-    });
+    let command = Args::command()
+        .version(VERSION.as_str())
+        .mut_args(|argument| {
+            let takes_value = argument.get_action().takes_values() && !argument.is_positional();
+            argument.allow_hyphen_values(takes_value)
+        });
     let order = command
         .get_arguments()
         .find(|argument| argument.get_id() == "compat_options")
@@ -9041,7 +9049,7 @@ fn print_debug_header(
         encoding(stderr),
         encoding(screen)
     );
-    debug(&format!("yt-dlp-rs version {}", env!("CARGO_PKG_VERSION")));
+    debug(&format!("yt-dlp-rs version {}", *VERSION));
     if !compat.is_empty() {
         debug(&format!("Compatibility options: {}", compat.join(", ")));
     }
