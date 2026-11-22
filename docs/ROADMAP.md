@@ -508,8 +508,9 @@ Work in this order; each step lands with deterministic tests like any other chan
     in time. Update (2026-11-13): still open; upstream has published no
     release since 2026.10.26.
 
-Then a release candidate runs against the canaries for a few weeks before 1.0
-(not tagged yet). Release mechanics (2026-11-13): the release workflow
+Then a release candidate runs against the canaries before 1.0: 1.0.0-rc.1
+(2026-11-13) and rc.2 (2026-11-14), then 1.0.0 (prepared 2026-11-22, with
+yt-dlp 2026.10.26 as its baseline). Release mechanics (2026-11-13): the release workflow
 refuses a tag that does not match Cargo.toml or whose commit has no passing
 CI run, builds Linux on Ubuntu 24.04 (glibc 2.39 is the documented minimum)
 and ships `THIRD-PARTY-NOTICES.txt` and the CHANGELOG section. The crate is

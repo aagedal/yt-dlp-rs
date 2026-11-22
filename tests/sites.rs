@@ -353,7 +353,6 @@ fn storyboards_download_as_mhtml_like_upstream_mhtmlfd() {
     let upstream = std::fs::read(site.join("upstream-sb0.mhtml")).unwrap();
     let native = std::fs::read(work.path().join("StoryBoard1.mhtml")).unwrap();
     let generator = concat!("yt-dlp-rs ", env!("CARGO_PKG_VERSION"));
-    let shift = generator.len() - "yt-dlp 2026.08.19".len();
     let html = |document: &[u8]| {
         let text = String::from_utf8_lossy(document);
         let start = text.find("Content-Length: ").unwrap() + "Content-Length: ".len();
@@ -369,7 +368,12 @@ fn storyboards_download_as_mhtml_like_upstream_mhtmlfd() {
     aligned = replace_bytes(
         &aligned,
         format!("Content-Length: {}\r", html(&native)).as_bytes(),
-        format!("Content-Length: {}\r", html(&native) - shift).as_bytes(),
+        // The generator name's length differs from upstream's either way.
+        format!(
+            "Content-Length: {}\r",
+            html(&native) + "yt-dlp 2026.08.19".len() - generator.len()
+        )
+        .as_bytes(),
     );
     assert_eq!(
         String::from_utf8_lossy(&aligned),

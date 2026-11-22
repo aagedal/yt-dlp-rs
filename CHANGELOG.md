@@ -1,13 +1,29 @@
 # Changelog
 
 Notable changes in each release. A release tag publishes its section here
-above GitHub's list of merged pull requests. Releases before 1.0 are
+above GitHub's list of merged pull requests, after a line naming the
+upstream yt-dlp release it tracks (the baseline in `upstream/manifest.json`,
+also in the release title and `--version`). Releases before 1.0 are
 described only on the [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases)
 page.
 
 Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 
-## [Unreleased]
+## [1.0.0]
+
+The first stable release, tracking yt-dlp 2026.10.26. Versions follow
+semantic versioning, not upstream's dates; the README's
+[Stability](https://github.com/aagedal/yt-dlp-rs/blob/main/README.md#stability)
+section says what that covers. Besides the fixes below, it is
+1.0.0-rc.2.
+
+### Release
+
+- `--version` names the upstream release this one tracks:
+  `yt-dlp-rs 1.0.0 (yt-dlp 2026.10.26)`; so do the `--verbose` header
+  and the GitHub release title.
+- `url` 2.5.9 (RUSTSEC-2026-0592: stack overflow in `Url::origin()` on
+  nested `blob:` URLs).
 
 ### Fixed since 1.0.0-rc.2
 
@@ -17,6 +33,33 @@ Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
   its audio started up to a frame before its video. The cut now starts just
   before the first frame, so the timecode, the first frame and the audio
   agree; checked against full downloads in Resolve at 29.97 and 59.94 fps.
+- HLS and DASH manifests sent with a repeated `Content-Type` header (Yle
+  Areena) or with differing values that declare no foreign charset (DR)
+  are read like upstream instead of failing.
+- An HLS audio group whose first rendition is muxed into the variants and
+  whose others have a URI (RTVE's live channels) lists those renditions
+  as audio formats like upstream instead of finding no formats.
+- Protocol-relative (`//host/...`) format URLs get `http:` like upstream
+  (ERR, ARD Audiothek) instead of failing with "relative URL without a
+  base".
+- `--help` lists the 59 options upstream documents that it hid (among
+  them `--live-from-start` and `--video-multistreams`) and upstream's
+  aliases, with upstream's help text.
+
+### Sites
+
+- New: BBC iPlayer programmes, episodes and groups, BBC news, sport and
+  other pages, and BBC article playlists (`BBCCoUk`, `BBC`,
+  `BBCCoUkIPlayerEpisodes`, `BBCCoUkIPlayerGroup`, `BBCCoUkArticle`).
+- DR TV: programmes work again, using the item IDs of the unmerged
+  upstream fix [yt-dlp#17980](https://github.com/yt-dlp/yt-dlp/pull/17980)
+  (every program fails in yt-dlp 2026.10.26).
+- 3cat (CCMA) subtitles, TVP embeds' subtitles, current PolskieRadio
+  Trójka articles, LRT radio's audio-only formats (`m4a`) and RaiNews's
+  extractor name now match upstream.
+- 3sat, hr-fernsehen, WDR, CBC Player, OnDemandKorea, Ximalaya, 9Now,
+  Streaks and TVP embeds use upstream's geo-bypass settings (3sat lost
+  its DACH-only formats without them).
 
 ## [1.0.0-rc.2]
 

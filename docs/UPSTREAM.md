@@ -80,6 +80,9 @@ For each update, the agent should:
    deferrals and unresolved compatibility differences.
 5. Advance the baseline only once all intervening changes are accounted for.
    Never advance it merely because a scheduled report or CI job succeeded.
+   Set `UPSTREAM_VERSION` in `src/cache.rs` to the manifest's
+   `upstream_version` (`tests/version.rs` checks them): `--version` and the
+   release title and notes name it.
    With the new baseline, regenerate the extractor order that the archive's
    URL fallback searches: `tools/extractor_keys.py --upstream DIR --write`
    (without `--write` it checks `src/data/extractor_keys.tsv`). Then run
