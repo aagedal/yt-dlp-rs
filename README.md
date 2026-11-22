@@ -93,7 +93,10 @@ interface.
 
 ## Stability
 
-From 1.0, releases follow semantic versioning. Within a major version:
+From 1.0, releases follow semantic versioning. The version numbers are
+this port's own, not upstream's dates; `--version` and each release name
+the upstream yt-dlp release it tracks (`yt-dlp-rs 1.0.0 (yt-dlp
+2026.10.26)`). Within a major version:
 
 - **Stable:** the machine-readable CLI output in the
   [CLI output contract](docs/CLI_CONTRACT.md#versioning) (what its tests
@@ -254,8 +257,10 @@ To release, update `version` in Cargo.toml and the CHANGELOG, merge, and
 once CI has passed on that commit push a `vX.Y.Z[-PRE]` tag for it. The tag
 runs `.github/workflows/release.yml`, which refuses a tag that does not
 match the version or a commit without a passing CI run, and publishes the
-CHANGELOG section with the binaries. A tag with a pre-release suffix
-publishes a pre-release.
+CHANGELOG section with the binaries, under a title and a first line naming
+the upstream baseline from `upstream/manifest.json` (`yt-dlp-rs 1.0.0
+(yt-dlp 2026.10.26)`, as `--version` prints). A tag with a pre-release
+suffix publishes a pre-release.
 
 Upstream changes are tracked against the pinned baseline:
 

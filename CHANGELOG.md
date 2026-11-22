@@ -1,16 +1,27 @@
 # Changelog
 
 Notable changes in each release. A release tag publishes its section here
-above GitHub's list of merged pull requests. Releases before 1.0 are
+above GitHub's list of merged pull requests, after a line naming the
+upstream yt-dlp release it tracks (the baseline in `upstream/manifest.json`,
+also in the release title and `--version`). Releases before 1.0 are
 described only on the [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases)
 page.
 
 Upstream baseline: yt-dlp **2026.10.26** (`f264a6cb`).
 
-## [Unreleased]
+## [1.0.0]
+
+The first stable release, tracking yt-dlp 2026.10.26. Versions follow
+semantic versioning, not upstream's dates; the README's
+[Stability](https://github.com/aagedal/yt-dlp-rs/blob/main/README.md#stability)
+section says what that covers. Besides the fixes below, it is
+1.0.0-rc.2.
 
 ### Release
 
+- `--version` names the upstream release this one tracks:
+  `yt-dlp-rs 1.0.0 (yt-dlp 2026.10.26)`; so do the `--verbose` header
+  and the GitHub release title.
 - `url` 2.5.9 (RUSTSEC-2026-0592: stack overflow in `Url::origin()` on
   nested `blob:` URLs).
 
