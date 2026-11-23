@@ -24,6 +24,9 @@ section says what that covers. Besides the fixes below, it is
   and the GitHub release title.
 - `url` 2.5.9 (RUSTSEC-2026-0592: stack overflow in `Url::origin()` on
   nested `blob:` URLs).
+- `cookie` 0.18.3 (RUSTSEC-2026-0594: private-cookie nonces can repeat
+  after `fork()`; yt-dlp-rs doesn't use private cookies, so it was not
+  affected).
 
 ### Fixed since 1.0.0-rc.2
 
