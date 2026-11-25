@@ -372,9 +372,35 @@ mod transport {
             head.contains("\r\nsec-ch-ua-platform: \"windows\"\r\n"),
             "{head}"
         );
+        assert!(
+            head.contains("\r\nupgrade-insecure-requests: 1\r\n"),
+            "{head}"
+        );
+        assert!(head.contains("\r\nsec-fetch-user: ?1\r\n"), "{head}");
         let position = |name: &str| names.iter().position(|found| *found == name).unwrap();
-        assert!(position("sec-ch-ua") < position("user-agent"), "{names:?}");
-        assert!(position("user-agent") < position("accept"), "{names:?}");
+        let ordered = [
+            "sec-ch-ua",
+            "sec-ch-ua-mobile",
+            "sec-ch-ua-platform",
+            "upgrade-insecure-requests",
+            "user-agent",
+            "accept",
+            "sec-fetch-site",
+            "sec-fetch-mode",
+            "sec-fetch-user",
+            "sec-fetch-dest",
+            "accept-encoding",
+            "accept-language",
+            "priority",
+        ];
+        for pair in ordered.windows(2) {
+            assert!(
+                position(pair[0]) < position(pair[1]),
+                "{} before {}: {names:?}",
+                pair[0],
+                pair[1]
+            );
+        }
         // Upstream's `std_headers` values are dropped, and the port's
         // `Accept-Encoding: identity` gives way to the browser's.
         assert!(!head.contains("en-us,en;q=0.5"), "{head}");
