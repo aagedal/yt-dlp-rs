@@ -282,6 +282,57 @@ fn current() -> Result<Arc<Transport>> {
         .ok_or_else(|| error("impersonation with client certificates is not supported natively"))
 }
 
+/// Build `wreq`'s emulation for `target`.
+///
+/// `wreq-util`'s Chrome and Edge profiles omit `upgrade-insecure-requests`
+/// and `sec-fetch-user`, place `sec-fetch-*` before `accept` in reverse
+/// order, and leave `orig_headers` empty; Cloudflare Bot Management flags
+/// that header fingerprint (for example HTTP 401 on `player.vimeo.com`).
+/// Complete the Chromium navigation headers and order them like Chrome /
+/// `curl_cffi` so both HTTP/1.1 and HTTP/2 send a real browser header set.
+fn emulation_for(target: &Supported) -> wreq::Emulation {
+    use wreq::IntoEmulation as _;
+    use wreq::header::{HeaderName, HeaderValue, OrigHeaderMap};
+
+    let mut emulation = Emulation::builder()
+        .profile(target.emulation.browser)
+        .platform(target.emulation.platform)
+        .build()
+        .into_emulation();
+    if matches!(target.target.client.as_deref(), Some("chrome" | "edge")) {
+        emulation.headers.insert(
+            HeaderName::from_static("upgrade-insecure-requests"),
+            HeaderValue::from_static("1"),
+        );
+        emulation.headers.insert(
+            HeaderName::from_static("sec-fetch-user"),
+            HeaderValue::from_static("?1"),
+        );
+        let mut order = OrigHeaderMap::new();
+        for name in [
+            "Host",
+            "sec-ch-ua",
+            "sec-ch-ua-mobile",
+            "sec-ch-ua-platform",
+            "Upgrade-Insecure-Requests",
+            "User-Agent",
+            "Accept",
+            "Sec-Fetch-Site",
+            "Sec-Fetch-Mode",
+            "Sec-Fetch-User",
+            "Sec-Fetch-Dest",
+            "Referer",
+            "Accept-Encoding",
+            "Accept-Language",
+            "Priority",
+        ] {
+            order.insert(name);
+        }
+        emulation.orig_headers = order;
+    }
+    emulation
+}
+
 /// `request` as a `wreq` request impersonating `target` (with HttpFD's
 /// `Accept-Encoding` kept for `media`).
 fn prepare(
@@ -296,10 +347,7 @@ fn prepare(
         .body()
         .and_then(|body| body.as_bytes())
         .map(<[u8]>::to_vec);
-    let emulation = Emulation::builder()
-        .profile(target.emulation.browser)
-        .platform(target.emulation.platform)
-        .build();
+    let emulation = emulation_for(target);
     let mut outgoing = transport
         .client
         .request(request.method().clone(), request.url().as_str())
@@ -474,6 +522,51 @@ mod tests {
             impersonate_headers(&HeaderMap::new(), &request, true)["accept-encoding"],
             "identity"
         );
+    }
+
+    #[test]
+    fn chromium_emulation_includes_navigation_headers_and_order() {
+        let supported = targets();
+        let find = |client: &str| {
+            supported
+                .iter()
+                .find(|entry| entry.target.client.as_deref() == Some(client))
+                .unwrap()
+        };
+        for client in ["chrome", "edge"] {
+            let emulation = emulation_for(find(client));
+            assert_eq!(emulation.headers["upgrade-insecure-requests"], "1");
+            assert_eq!(emulation.headers["sec-fetch-user"], "?1");
+            let order: Vec<&str> = emulation
+                .orig_headers
+                .iter()
+                .map(|(name, _)| name.as_str())
+                .collect();
+            assert_eq!(
+                order,
+                [
+                    "host",
+                    "sec-ch-ua",
+                    "sec-ch-ua-mobile",
+                    "sec-ch-ua-platform",
+                    "upgrade-insecure-requests",
+                    "user-agent",
+                    "accept",
+                    "sec-fetch-site",
+                    "sec-fetch-mode",
+                    "sec-fetch-user",
+                    "sec-fetch-dest",
+                    "referer",
+                    "accept-encoding",
+                    "accept-language",
+                    "priority",
+                ]
+            );
+        }
+        for client in ["firefox", "safari"] {
+            let emulation = emulation_for(find(client));
+            assert!(emulation.orig_headers.is_empty(), "{client}");
+        }
     }
 
     fn set_std(headers: Vec<(String, String)>) {
