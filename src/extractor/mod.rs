@@ -4216,6 +4216,36 @@ pub(crate) fn dict_info(
     )
 }
 
+/// `InfoExtractor._generate_blockbuster_headers(min_headers=2, max_headers=8)`:
+/// 2–8 random consonant-only headers (8–24 char names, 16–32 char values) to
+/// randomize the HTTP header fingerprint.
+pub(crate) fn blockbuster_headers() -> Vec<(String, String)> {
+    use std::hash::{BuildHasher, Hasher};
+    const LETTERS: &[u8] = b"bcdfghjklmnpqrstvwxz";
+    let mut hasher = std::collections::hash_map::RandomState::new().build_hasher();
+    hasher.write_u128(
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |time| time.as_nanos()),
+    );
+    let mut state = hasher.finish() | 1;
+    let mut next = |bound: u64| {
+        // xorshift64.
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        state % bound
+    };
+    let count = 2 + next(7);
+    let mut word = |minimum: u64, maximum: u64| -> String {
+        let length = minimum + next(maximum - minimum + 1);
+        (0..length)
+            .map(|_| LETTERS[next(LETTERS.len() as u64) as usize] as char)
+            .collect()
+    };
+    (0..count).map(|_| (word(8, 24), word(16, 32))).collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -4418,5 +4448,23 @@ mod tests {
         assert_eq!(decode_content(&map, both).unwrap(), b"payload");
         let map = headers(&[(CONTENT_ENCODING, "br")]);
         assert_eq!(decode_content(&map, b"raw".to_vec()).unwrap(), b"raw");
+    }
+
+    #[test]
+    fn blockbuster_headers_match_upstreams_consonant_shape() {
+        let consonants = |text: &str| {
+            text.bytes()
+                .all(|byte| b"bcdfghjklmnpqrstvwxz".contains(&byte))
+        };
+        for _ in 0..8 {
+            let headers = blockbuster_headers();
+            assert!((2..=8).contains(&headers.len()), "{headers:?}");
+            for (name, value) in &headers {
+                assert!((8..=24).contains(&name.len()), "{name}");
+                assert!((16..=32).contains(&value.len()), "{value}");
+                assert!(consonants(name), "{name}");
+                assert!(consonants(value), "{value}");
+            }
+        }
     }
 }

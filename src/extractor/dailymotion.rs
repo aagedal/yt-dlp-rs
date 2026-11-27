@@ -139,34 +139,6 @@ fn fail(id: &str, message: &str) -> Error {
     Error::Reported(format!("[{NAME}] {id}: {message}"))
 }
 
-/// `_generate_blockbuster_headers()`: 2–8 random consonant headers.
-fn blockbuster_headers() -> Vec<(String, String)> {
-    use std::hash::{BuildHasher, Hasher};
-    const LETTERS: &[u8] = b"bcdfghjklmnpqrstvwxz";
-    let mut hasher = std::collections::hash_map::RandomState::new().build_hasher();
-    hasher.write_u128(
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map_or(0, |time| time.as_nanos()),
-    );
-    let mut state = hasher.finish() | 1;
-    let mut next = |bound: u64| {
-        // xorshift64.
-        state ^= state << 13;
-        state ^= state >> 7;
-        state ^= state << 17;
-        state % bound
-    };
-    let mut word = |minimum: u64, maximum: u64| -> String {
-        let length = minimum + next(maximum - minimum + 1);
-        (0..length)
-            .map(|_| LETTERS[next(LETTERS.len() as u64) as usize] as char)
-            .collect()
-    };
-    let count = 2 + (std::process::id() as u64 + 3) % 7;
-    (0..count).map(|_| (word(8, 24), word(16, 32))).collect()
-}
-
 fn post_json(
     client: &Client,
     ie: &'static str,
@@ -323,7 +295,7 @@ fn m3u8_formats(
     let Ok(manifest) = Url::parse(url) else {
         return (Vec::new(), Default::default(), None);
     };
-    let headers = blockbuster_headers();
+    let headers = super::blockbuster_headers();
     let headers: Vec<(&str, &str)> = headers
         .iter()
         .map(|(name, value)| (name.as_str(), value.as_str()))
