@@ -350,6 +350,7 @@ struct PageRequest<'a> {
     what: Option<&'static str>,
     fatal: bool,
     impersonate: bool,
+    headers: &'a [(&'a str, &'a str)],
 }
 
 /// `_download_webpage_handle(url, id, note, impersonate=...)`: the page and
@@ -377,6 +378,7 @@ fn download_page_target(
         what,
         fatal,
         impersonate,
+        headers,
     } = request;
     let scope = impersonate.then(|| {
         crate::impersonate::attempt(crate::impersonate::ANY, |message| {
@@ -384,7 +386,7 @@ fn download_page_target(
         })
     });
     crate::screen::screen(&format!("[{name}] {id}: {note}"));
-    let mut response = match super::direct::request(client, url, None) {
+    let mut response = match super::direct::request_with_headers(client, url, None, headers) {
         Ok(response) => response,
         Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. } | Error::HttpStatus { .. })) => {
             if !fatal {
@@ -426,6 +428,7 @@ fn webpage(
     id: &str,
     note: &str,
     fatal: bool,
+    headers: &[(&str, &str)],
 ) -> Result<Option<String>> {
     let request = PageRequest {
         name,
@@ -434,6 +437,7 @@ fn webpage(
         what: Some("webpage"),
         fatal,
         impersonate: true,
+        headers,
     };
     let Some((page, page_url, target)) = download_page_target(client, url, request)? else {
         return Ok(None);
@@ -464,7 +468,21 @@ fn web_data(
     fatal: bool,
 ) -> Result<(Value, i64)> {
     let unavailable = || (json!({}), -1);
-    let Some(page) = webpage(client, url, name, id, "Downloading webpage", fatal)? else {
+    let blockbuster = super::blockbuster_headers();
+    let headers: Vec<(&str, &str)> = blockbuster
+        .iter()
+        .map(|(name, value)| (name.as_str(), value.as_str()))
+        .collect();
+    let Some(page) = webpage(
+        client,
+        url,
+        name,
+        id,
+        "Downloading webpage",
+        fatal,
+        &headers,
+    )?
+    else {
         return Ok(unavailable());
     };
     let mut data = universal_data(&page);
@@ -484,6 +502,7 @@ fn web_data(
             id,
             "Downloading webpage with challenge cookie",
             fatal,
+            &headers,
         );
         for name in names {
             crate::cookies::clear_cookie(".tiktok.com", &name);
@@ -1803,6 +1822,7 @@ impl TikTokUser {
             what: None,
             fatal: false,
             impersonate: false,
+            headers: &[],
         };
         let page = download_page(client, &embed, request)?
             .map(|(page, _)| page)
@@ -2091,6 +2111,11 @@ impl Extractor for TikTokUser {
             (None, Some(matched.clone()), true)
         } else {
             let page_url = Url::parse(&format!("{TIKTOK_UPLOADER}{matched}"))?;
+            let blockbuster = super::blockbuster_headers();
+            let headers: Vec<(&str, &str)> = blockbuster
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_str()))
+                .collect();
             let request = PageRequest {
                 name: USER_NAME,
                 id: &matched,
@@ -2098,6 +2123,7 @@ impl Extractor for TikTokUser {
                 what: Some("user webpage"),
                 fatal: false,
                 impersonate: true,
+                headers: &headers,
             };
             let page = match download_page(client, &page_url, request)? {
                 Some((page, _)) => page,
@@ -2267,6 +2293,11 @@ impl Extractor for TikTokLive {
         if room_id.is_none() {
             let user = uploader.clone().unwrap_or_default();
             let page = Url::parse(&format!("{TIKTOK_UPLOADER}{user}"))?;
+            let blockbuster = super::blockbuster_headers();
+            let headers: Vec<(&str, &str)> = blockbuster
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_str()))
+                .collect();
             let request = PageRequest {
                 name: LIVE_NAME,
                 id: &user,
@@ -2274,6 +2305,7 @@ impl Extractor for TikTokLive {
                 what: Some("webpage"),
                 fatal: true,
                 impersonate: true,
+                headers: &headers,
             };
             let page = download_page(client, &page, request)?
                 .map(|(page, _)| page)
@@ -2295,6 +2327,7 @@ impl Extractor for TikTokLive {
                 what: Some("webpage"),
                 fatal: room_id.is_none(),
                 impersonate: false,
+                headers: &[],
             };
             let page = download_page(client, url, request)?
                 .map(|(page, _)| page)

@@ -426,6 +426,44 @@ mod transport {
     }
 
     #[test]
+    fn tiktok_webpages_send_blockbuster_headers_with_impersonation() {
+        let is_consonants = |text: &str| {
+            text.bytes()
+                .all(|byte| b"bcdfghjklmnpqrstvwxz".contains(&byte))
+        };
+        for url in [
+            "https://www.tiktok.com/@dancer/video/7300000000000000001",
+            "https://www.tiktok.com/@dancer",
+            "https://www.tiktok.com/@liver/live",
+        ] {
+            let (chrome, _) = captured(&[b"http/1.1"], &[], url);
+            let head = chrome.head.to_ascii_lowercase();
+            assert!(head.contains("\r\nsec-ch-ua: "), "{url}\n{head}");
+            assert!(
+                head.contains("\r\nupgrade-insecure-requests: 1\r\n"),
+                "{url}\n{head}"
+            );
+            assert!(head.contains("\r\nsec-fetch-user: ?1\r\n"), "{url}\n{head}");
+            let blockbuster: Vec<(&str, &str)> = head
+                .lines()
+                .skip(1)
+                .filter_map(|line| line.split_once(':'))
+                .map(|(name, value)| (name.trim(), value.trim()))
+                .filter(|(name, value)| {
+                    (8..=24).contains(&name.len())
+                        && (16..=32).contains(&value.len())
+                        && is_consonants(name)
+                        && is_consonants(value)
+                })
+                .collect();
+            assert!(
+                (2..=8).contains(&blockbuster.len()),
+                "{url}: expected 2..=8 blockbuster headers, got {blockbuster:?}\n{head}"
+            );
+        }
+    }
+
+    #[test]
     fn available_targets_are_listed_from_wreq() {
         let output = run(&["--list-impersonate-targets"]);
         assert!(output.status.success());
